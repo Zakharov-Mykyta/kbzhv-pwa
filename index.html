@@ -227,6 +227,179 @@
       .iphone-shell { padding-top: env(safe-area-inset-top); }
     }
     nav.shrink-0 { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+
+
+
+    /* New photo and barcode controls styled to match the original dark FoodNoms UI */
+    .barcode-field {
+      display:block; width:100%; min-width:0; max-width:100%; box-sizing:border-box;
+      background:#2C2C2E; color:#FFFFFF; border:1px solid rgba(255,255,255,.08);
+      border-radius:12px; padding:11px 12px; font-size:14px; outline:none;
+    }
+    .barcode-field:focus { border-color:#0A84FF; }
+    .barcode-field::placeholder { color:#8E8E93; }
+    .barcode-status {
+      padding:10px 12px; border-radius:12px; background:#2C2C2E;
+      border:1px solid rgba(255,255,255,.08); color:#EBEBF5; font-size:13px; line-height:1.45;
+    }
+    .barcode-status.error { background:rgba(255,69,58,.12); border-color:rgba(255,69,58,.28); color:#FF8A82; }
+    .barcode-status.success { background:rgba(48,209,88,.10); border-color:rgba(48,209,88,.24); color:#7EE49A; }
+    #barcodeReader { width:100%; min-height:220px; border-radius:14px; overflow:hidden; background:#070709; }
+    #barcodeReader video { width:100% !important; object-fit:cover !important; border-radius:12px; }
+    #barcodeReader img { display:none !important; }
+    .barcode-result-img { width:60px; height:60px; flex:0 0 60px; object-fit:contain; background:#1C1C1E; border-radius:10px; border:1px solid rgba(255,255,255,.08); }
+    #foodRequestPhoto { max-width:100%; object-fit:contain; }
+    #foodRequestGrams { min-width:0; max-width:100%; }
+    #barcodeSheet { padding-bottom:max(20px, env(safe-area-inset-bottom)); }
+    /* Compact messenger-style food composer */
+    #foodInputForm.composer-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .composer-attach,
+    .composer-mic,
+    .composer-send {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      line-height: 1;
+      transition: transform .16s ease, background-color .16s ease, color .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .composer-attach {
+      color: #D1D1D6;
+      background: #252527;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .composer-attach.is-open { transform: rotate(45deg); color: #0A84FF; }
+    .composer-field {
+      display: flex;
+      align-items: center;
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 42px;
+      padding: 0 13px;
+      border-radius: 21px;
+      background: #252527;
+      border: 1px solid rgba(255,255,255,.075);
+      transition: border-color .18s ease, background-color .18s ease;
+    }
+    .composer-field:focus-within { border-color: rgba(10,132,255,.42); background: #2B2B2E; }
+    .composer-input {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      padding: 10px 0;
+      border: 0;
+      outline: 0;
+      color: #FFFFFF;
+      background: transparent;
+      font: inherit;
+      font-size: 14px;
+      line-height: 19px;
+    }
+    .composer-input::placeholder { color: #85858B; opacity: 1; }
+    .composer-mic {
+      color: #D1D1D6;
+      background: #252527;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .composer-mic.is-recording {
+      color: #FF6259;
+      background: rgba(255,69,58,.13);
+      border-color: rgba(255,69,58,.28);
+      animation: micPulse 1.25s ease-in-out infinite;
+    }
+    .composer-send {
+      color: #07140B;
+      background: #28BE59;
+      border: 0;
+      box-shadow: none;
+    }
+    .composer-attach svg,
+    .composer-mic svg,
+    .composer-send svg {
+      display: block;
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+    }
+    .composer-send:active, .composer-mic:active, .composer-attach:active { transform: scale(.94); }
+    .composer-mic[hidden], .composer-send[hidden] { display: none !important; }
+    .attachment-menu {
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 10px);
+      z-index: 35;
+      width: min(258px, calc(100vw - 44px));
+      padding: 7px;
+      border-radius: 18px;
+      background: #1C1C1E;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 16px 42px rgba(0,0,0,.55);
+    }
+    .attachment-menu.hidden { display: none; }
+    .attachment-action {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      min-height: 48px;
+      padding: 6px 9px;
+      border-radius: 12px;
+      color: #F2F2F7;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 550;
+    }
+    .attachment-action:active { background: #2C2C2E; }
+    .attachment-action-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      border-radius: 9px;
+      color: #0A84FF;
+      background: rgba(10,132,255,.12);
+    }
+    /* Explicit SVG dimensions: the bundled Tailwind build does not include
+       arbitrary w-[19px]/h-[19px] utilities used by these menu icons. */
+    .attachment-action-icon svg {
+      display: block;
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      overflow: visible;
+    }
+    .attachment-action {
+      min-height: 46px;
+      gap: 10px;
+      padding: 5px 8px;
+      font-size: 13px;
+      line-height: 18px;
+    }
+    @keyframes micPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,69,58,0); }
+      50% { box-shadow: 0 0 0 5px rgba(255,69,58,.10); }
+    }
+    @media (max-width:380px) {
+      #foodInputForm.composer-row { gap: 7px; }
+      .composer-attach, .composer-mic, .composer-send { width: 34px; height: 34px; flex-basis: 34px; }
+      .composer-field { min-height: 40px; padding: 0 11px; }
+      .composer-input { font-size: 13.5px; }
+      .composer-attach svg, .composer-mic svg, .composer-send svg { width: 16px; height: 16px; flex-basis: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -427,37 +600,53 @@
           <span id="aiParsingLabel" class="text-[12px] font-medium text-[#0A84FF]">Рахую КБЖВ...</span>
         </div>
 
-        <!-- Row 2: Text Input + Mic + Send -->
-        <form id="foodInputForm" class="flex items-center gap-2">
-          <div class="flex-1 relative flex items-center bg-[#2C2C2E] rounded-full border border-white/[0.08] px-3.5 py-2">
-            <input
-              id="foodPromptInput"
-              type="text"
-              autocomplete="off"
-              placeholder="Надиктуй або опиши страву..."
-              class="w-full bg-transparent text-[15px] text-white placeholder-[#8E8E93] focus:outline-none pr-8"
-            />
-            <button
-              type="button"
-              id="micBtn"
-              title="Голосове диктування"
-              class="absolute right-2 w-7 h-7 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90 transition"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/>
-              </svg>
+        <div id="foodImagePreview" class="hidden mb-2 px-3 py-2 rounded-[14px] bg-[#2C2C2E] border border-white/[0.08] flex items-center gap-3">
+          <img id="foodImagePreviewImg" alt="Фото страви" class="w-14 h-14 rounded-[10px] object-cover border border-white/[0.08]" />
+          <div class="flex-1 min-w-0">
+            <p class="text-[13px] font-semibold text-white">Фото додано</p>
+            <p id="foodImagePreviewName" class="text-[11px] text-[#8E8E93] truncate">Фото страви</p>
+          </div>
+          <button type="button" onclick="removeFoodImage()" aria-label="Прибрати фото" class="w-8 h-8 rounded-full bg-[#3A3A3C] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
+        </div>
+
+        <!-- Messenger-style composer: attachments, message, voice/send -->
+        <form id="foodInputForm" class="composer-row">
+          <div id="attachmentMenu" class="attachment-menu hidden" role="menu" aria-label="Додати вкладення">
+            <button type="button" id="cameraPickBtn" class="attachment-action" role="menuitem" title="Зробити фото страви">
+              <span class="attachment-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h3l1.3-2h8.4l1.3 2h2A1.5 1.5 0 0121.5 9v9a1.5 1.5 0 01-1.5 1.5H4A1.5 1.5 0 012.5 18V9A1.5 1.5 0 014 7.5z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              </span>
+              <span>Сфотографувати</span>
+            </button>
+            <button type="button" id="galleryPickBtn" class="attachment-action" role="menuitem" title="Обрати фото з галереї">
+              <span class="attachment-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="m4.5 17 5-5 3.2 3 2.2-2 4.6 4"/></svg>
+              </span>
+              <span>Обрати з галереї</span>
+            </button>
+            <button type="button" id="barcodeOpenBtn" class="attachment-action" role="menuitem" title="Сканувати штрихкод">
+              <span class="attachment-action-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5v14M6 5v14M9 5v14M12 5v14M15 5v14M18 5v14M21 5v14"/></svg>
+              </span>
+              <span>Сканувати штрихкод</span>
             </button>
           </div>
 
-          <button
-            type="submit"
-            id="foodSubmitBtn"
-            aria-label="Додати"
-            class="w-10 h-10 shrink-0 rounded-full bg-[#30D158] hover:bg-[#28BD4C] active:scale-90 transition flex items-center justify-center text-black shadow-md"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+          <button type="button" id="attachmentMenuBtn" class="composer-attach" aria-label="Додати фото або сканувати штрихкод" aria-expanded="false" aria-controls="attachmentMenu" title="Вкладення">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+          </button>
+
+          <div class="composer-field">
+            <input id="foodPromptInput" type="text" autocomplete="off" enterkeyhint="send" placeholder="Опиши, що з’їв…" class="composer-input" />
+          </div>
+          <input id="foodCameraInput" type="file" accept="image/*" capture="environment" class="hidden" aria-label="Зробити фото страви" />
+          <input id="foodGalleryInput" type="file" accept="image/*" class="hidden" aria-label="Обрати фото з галереї" />
+
+          <button type="button" id="micBtn" title="Голосове диктування" aria-label="Голосове введення" aria-pressed="false" class="composer-mic">
+            <svg class="w-[20px] h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg>
+          </button>
+          <button type="submit" id="foodSubmitBtn" aria-label="Надіслати повідомлення" title="Надіслати" class="composer-send" hidden>
+            <svg class="w-[21px] h-[21px]" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
       </div>
@@ -916,11 +1105,21 @@
       </div>
 
       <div class="rounded-[14px] bg-[#2C2C2E] border border-white/[0.06] px-3.5 py-3 mb-4">
-        <div class="text-[10px] font-semibold uppercase tracking-wider text-[#8E8E93] mb-1">Твій запит</div>
+        <div class="text-[11px] font-semibold text-[#8E8E93] mb-1">Твій запит</div>
         <p id="foodRequestText" class="text-[14px] leading-relaxed text-white break-words"></p>
+        <div id="foodRequestPhotoWrap" class="hidden mt-3"><img id="foodRequestPhoto" alt="Фото для розпізнавання" class="max-h-36 max-w-full rounded-[12px] object-cover border border-white/[0.08]" /><p class="text-[11px] text-[#8E8E93] mt-2">Фото буде надіслано до Gemini API для аналізу. Зображення не зберігається в щоденнику.</p></div>
       </div>
 
       <div class="space-y-4">
+        <div class="space-y-1.5">
+          <label for="foodRequestGrams" class="text-[12px] text-[#8E8E93] font-medium block">Загальна вага страви</label>
+          <div class="flex items-center gap-2">
+            <input id="foodRequestGrams" type="number" min="1" max="10000" inputmode="numeric" placeholder="Не вказано" class="w-full min-w-0 bg-[#2C2C2E] text-white text-[16px] font-semibold rounded-[12px] px-3 py-3 border border-white/[0.08] focus:outline-none focus:border-[#0A84FF]" />
+            <span class="text-[14px] font-semibold text-[#8E8E93]">г</span>
+          </div>
+          <p id="foodRequestWeightHint" class="text-[11px] text-[#8E8E93]" aria-live="polite">Можеш вказати вагу однієї страви або загальну вагу всіх продуктів у запиті.</p>
+          <label class="flex items-start gap-2 text-[12px] text-white/80 mt-2"><input id="foodRequestIncludesPlate" type="checkbox" class="mt-0.5" /> <span>Ця вага включає посуд — відняти тару вибраного посуду</span></label>
+        </div>
         <div class="space-y-1.5">
           <label for="foodRequestPlateSelect" class="text-[12px] text-[#8E8E93] font-medium block">Посуд для зважування</label>
           <select id="foodRequestPlateSelect" class="w-full min-w-0 bg-[#2C2C2E] text-white text-[14px] rounded-[12px] px-3 py-3 border border-white/[0.08] focus:outline-none focus:border-[#0A84FF]">
@@ -1046,13 +1245,49 @@
     </div>
 
   </div>
+
+  <!-- Сканер штрихкодів і картка знайденого продукту -->
+  <div id="barcodeBackdrop" onclick="closeBarcodeSheet()" class="sheet-backdrop absolute inset-0 z-40"></div>
+  <section id="barcodeSheet" class="bottom-sheet absolute bottom-0 left-0 right-0 z-50 p-5 max-h-[92%] overflow-y-auto no-scrollbar bg-[#1C1C1E] rounded-t-[28px] border-t border-white/15 shadow-2xl">
+    <div class="w-10 h-1.5 rounded-full bg-white/20 mx-auto mb-4"></div>
+    <div class="flex items-center justify-between mb-3">
+      <div><h3 class="text-[19px] font-semibold text-white">Сканер продуктів</h3><p class="text-[12px] text-[#8E8E93] mt-0.5">Наведи камеру на штрихкод упаковки</p></div>
+      <button type="button" onclick="closeBarcodeSheet()" aria-label="Закрити сканер" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
+    </div>
+    <div id="barcodeReader" class="mb-3"></div>
+    <p id="barcodeStatus" class="barcode-status mb-3" role="status" aria-live="polite">Готую камеру… Дозволь доступ до камери.</p>
+    <div class="grid grid-cols-[1fr_auto] gap-2 mb-4">
+      <input id="barcodeManualInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Або введи штрихкод вручну" class="barcode-field" />
+      <button type="button" id="barcodeLookupBtn" onclick="lookupBarcodeManually()" class="px-4 rounded-[12px] bg-[#0A84FF] text-white text-[13px] font-semibold">Знайти</button>
+    </div>
+    <div id="barcodeProductPanel" class="hidden border border-white/[0.08] rounded-[16px] p-3.5 bg-[#2C2C2E]">
+      <div class="flex gap-3 items-start mb-3">
+        <img id="barcodeProductImage" class="barcode-result-img" alt="Фото продукту" />
+        <div class="min-w-0 flex-1"><p id="barcodeProductBrand" class="text-[11px] text-[#8E8E93]"></p><h4 id="barcodeProductName" class="font-semibold text-[15px] leading-snug break-words text-white"></h4><p id="barcodeProductCode" class="text-[11px] text-[#8E8E93] mt-1"></p></div>
+      </div>
+      <div class="grid grid-cols-4 gap-2 rounded-[12px] bg-[#1C1C1E] p-2.5 mb-3 text-center">
+        <div><p class="text-[10px] text-[#8E8E93]">Ккал</p><b id="barcodeKcal100" class="text-[14px] text-[#30D158]">—</b></div>
+        <div><p class="text-[10px] text-[#8E8E93]">Білки</p><b id="barcodeProtein100" class="text-[14px] text-white">—</b></div>
+        <div><p class="text-[10px] text-[#8E8E93]">Жири</p><b id="barcodeFat100" class="text-[14px] text-white">—</b></div>
+        <div><p class="text-[10px] text-[#8E8E93]">Вуглев.</p><b id="barcodeCarb100" class="text-[14px] text-white">—</b></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <label class="text-[12px] font-semibold text-white">Порція, г<input id="barcodeServingGrams" type="number" min="1" max="5000" value="100" class="barcode-field mt-1" /></label>
+        <label class="text-[12px] font-semibold text-white">Прийом їжі<select id="barcodeMeal" class="barcode-field mt-1"><option value="breakfast">Сніданок</option><option value="lunch">Обід</option><option value="dinner">Вечеря</option><option value="snack">Перекус</option></select></label>
+      </div>
+      <label class="text-[12px] font-semibold text-white">Час запису<input id="barcodeTime" type="time" class="barcode-field mt-1" /></label>
+      <div class="mt-3 flex items-center justify-between"><span class="text-[12px] text-[#8E8E93]">Калорійність порції</span><b id="barcodeServingKcal" class="text-[18px] text-[#30D158]">— ккал</b></div>
+      <button type="button" onclick="addScannedProduct()" class="w-full rounded-[12px] py-3 mt-3 font-semibold bg-[#30D158] text-black active:scale-95 transition">Додати продукт</button>
+    </div>
+    <p class="text-[10px] text-[#8E8E93] leading-relaxed mt-3">Дані надає <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener noreferrer" class="text-[#0A84FF] underline">Open Food Facts</a> (ODbL). Перевіряй етикетку: дані спільноти можуть бути неповними або застарілими.</p>
+  </section>
 </div>
 
 <script>
   // ==================== CONSTANTS & HISTORICAL DATA ====================
   let TODAY_KEY = toDateKey(new Date());
 
-  const DEFAULT_GEMINI_PROMPT = `Ти — уважний помічник для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та перетвори його на список з'їдених або випитих позицій.
+  const DEFAULT_GEMINI_PROMPT = `Ти — уважний помічник для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
 
 Правила:
 1. Розбий повідомлення на окремі продукти та страви, якщо користувач назвав кілька позицій.
@@ -1061,7 +1296,9 @@
 4. Не вигадуй додаткові інгредієнти, олію, цукор чи соуси, якщо їх не згадано. Якщо спосіб приготування суттєво впливає на КБЖВ, обери найбільш звичайний варіант і врахуй невизначеність.
 5. Якщо користувач указав вагу всієї страви, не призначай повну вагу кожному інгредієнту. Розподіли її між позиціями логічно.
 6. Визнач прийом їжі: breakfast, lunch, dinner або snack. Якщо вказівки немає, орієнтуйся на контекст повідомлення.
-7. Відповідай виключно коректним JSON-масивом без Markdown, пояснень чи тексту до/після JSON.
+7. Якщо є фото, використовуй його для визначення видимих продуктів, способу подачі та приблизного розміру порції. Не вигадуй приховані інгредієнти; текст користувача має пріоритет щодо складу та ваги. Якщо фото і текст суперечать одне одному, орієнтуйся на текст.
+8. Якщо користувач указав загальну вагу кількох позицій, сума grams у всіх елементах має дорівнювати цій вазі; розподіли її між позиціями пропорційно реалістичній порції.
+9. Відповідай виключно коректним JSON-масивом без Markdown, пояснень чи тексту до/після JSON.
 
 Формат кожного елемента: {"name":"назва","meal":"breakfast|lunch|dinner|snack","grams":100,"kcal":150,"protein":5,"fat":4,"carb":20}. Усі числові значення мають бути невід'ємними числами. Не повертай одиниці вимірювання всередині чисел.`;
 
@@ -1119,6 +1356,11 @@
   let statMacro = 'kcal';
   let editingItemState = null;
   let pendingFoodRequest = null;
+  let pendingFoodImage = null;
+  let barcodeScannerInstance = null;
+  let barcodeScannerStarting = false;
+  let scannedProduct = null;
+  let barcodeLibraryPromise = null;
   let geminiAvailableModels = [];
   let isParsingFood = false;
   let targetsInputsDirty = false;
@@ -1208,6 +1450,7 @@
     closeFoodRequestSheet();
     closeEditSheet();
     closeCalendarSheet();
+    if (document.getElementById('barcodeSheet')?.classList.contains('open')) closeBarcodeSheet();
   }
 
   document.addEventListener('click', (e) => {
@@ -1625,8 +1868,39 @@
     const map = { breakfast: 'На сніданок ', lunch: 'На обід ', dinner: 'На вечерю ', snack: 'Перекус ' };
     const input = document.getElementById('foodPromptInput');
     input.value = map[mealId] || '';
+    updateComposerActions();
     input.focus();
   }
+
+  function updateComposerActions() {
+    const input = document.getElementById('foodPromptInput');
+    const mic = document.getElementById('micBtn');
+    const send = document.getElementById('foodSubmitBtn');
+    if (!input || !mic || !send) return;
+    const isRecording = mic.classList.contains('is-recording');
+    const hasContent = Boolean(input.value.trim()) || Boolean(pendingFoodImage);
+    mic.hidden = hasContent && !isRecording;
+    send.hidden = !hasContent || isRecording;
+  }
+
+  const attachmentMenu = document.getElementById('attachmentMenu');
+  const attachmentMenuBtn = document.getElementById('attachmentMenuBtn');
+  function closeAttachmentMenu() {
+    attachmentMenu.classList.add('hidden');
+    attachmentMenuBtn.classList.remove('is-open');
+    attachmentMenuBtn.setAttribute('aria-expanded', 'false');
+  }
+  attachmentMenuBtn.addEventListener('click', () => {
+    const willOpen = attachmentMenu.classList.contains('hidden');
+    attachmentMenu.classList.toggle('hidden', !willOpen);
+    attachmentMenuBtn.classList.toggle('is-open', willOpen);
+    attachmentMenuBtn.setAttribute('aria-expanded', String(willOpen));
+  });
+  document.addEventListener('click', event => {
+    if (!attachmentMenu.contains(event.target) && !attachmentMenuBtn.contains(event.target)) closeAttachmentMenu();
+  });
+  document.getElementById('foodPromptInput').addEventListener('input', updateComposerActions);
+  updateComposerActions();
 
   let _rec = null;
   document.getElementById('micBtn').addEventListener('click', () => {
@@ -1638,10 +1912,10 @@
     const rec = new SR(); _rec = rec;
     rec.lang = 'uk-UA'; rec.interimResults = true; rec.continuous = false;
     const base = input.value ? input.value.trim() + ' ' : '';
-    rec.onstart = () => banner.classList.remove('hidden');
-    rec.onresult = e => { input.value = base + Array.from(e.results).map(r => r[0].transcript).join(' '); };
+    rec.onstart = () => { banner.classList.remove('hidden'); document.getElementById('micBtn').classList.add('is-recording'); document.getElementById('micBtn').setAttribute('aria-pressed', 'true'); };
+    rec.onresult = e => { input.value = base + Array.from(e.results).map(r => r[0].transcript).join(' '); updateComposerActions(); };
     rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') showToast('Немає доступу до мікрофона', '⚠️'); };
-    rec.onend = () => { _rec = null; banner.classList.add('hidden'); input.focus(); };
+    rec.onend = () => { _rec = null; banner.classList.add('hidden'); document.getElementById('micBtn').classList.remove('is-recording'); document.getElementById('micBtn').setAttribute('aria-pressed', 'false'); updateComposerActions(); input.focus(); };
     try { rec.start(); } catch (e) { _rec = null; }
   });
 
@@ -1798,7 +2072,16 @@
     return instruction;
   }
 
-  async function geminiRequest(model, key, systemInstruction, userText) {
+  async function geminiRequest(model, key, systemInstruction, userText, imageDataUrl = null) {
+    const userParts = [];
+    if (imageDataUrl) {
+      const match = String(imageDataUrl).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+      if (!match) throw new Error('Не вдалося підготувати зображення для Gemini. Додай фото ще раз.');
+      userParts.push({ inlineData: { mimeType: match[1], data: match[2] } });
+    }
+    if (userText && userText.trim()) userParts.push({ text: userText.trim() });
+    if (!userParts.length) userParts.push({ text: 'Проаналізуй їжу на доданому фото.' });
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
       {
@@ -1806,7 +2089,7 @@
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemInstruction }] },
-          contents: [{ role: 'user', parts: [{ text: userText }] }],
+          contents: [{ role: 'user', parts: userParts }],
           generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
         })
       }
@@ -1876,19 +2159,66 @@
     return items;
   }
 
-  async function parseWithGeminiIfAvailable(promptText, activePlate = null) {
-    const key = (appState.apiKey || '').trim();
-    if (!key) {
-      await new Promise(resolve => setTimeout(resolve, 180));
-      return { items: offlineSmartParse(promptText, activePlate), source: 'offline' };
-    }
-
-    const model = appState.geminiModel || 'gemini-2.5-flash';
-    const raw = await geminiRequest(model, key, buildGeminiSystemInstruction(activePlate), promptText);
-    return { items: parseGeminiFoodResponse(raw), source: 'gemini' };
+  function normalizeItemsToTotalGrams(items, totalGrams) {
+    const target = Number(totalGrams);
+    if (!Number.isFinite(target) || target <= 0 || !items.length) return items;
+    if (target < items.length) throw new Error(`Загальна вага ${target} г замала для ${items.length} окремих позицій. Збільш вагу або об'єднай страви.`);
+    const sourceTotal = items.reduce((sum, item) => sum + Number(item.grams || 0), 0);
+    if (!sourceTotal) return items;
+    let assigned = 0;
+    return items.map((item, index) => {
+      const grams = index === items.length - 1
+        ? Math.max(1, Math.round(target - assigned))
+        : Math.max(1, Math.round(target * item.grams / sourceTotal));
+      assigned += grams;
+      const ratio = grams / item.grams;
+      return {
+        ...item, grams,
+        kcal: Math.round(item.kcal * ratio),
+        protein: Math.round(item.protein * ratio * 10) / 10,
+        fat: Math.round(item.fat * ratio * 10) / 10,
+        carb: Math.round(item.carb * ratio * 10) / 10
+      };
+    });
   }
 
-  function openFoodRequestSheet(promptText) {
+  async function parseWithGeminiIfAvailable(promptText, activePlate = null, imageDataUrl = null, totalGrams = null) {
+    const key = (appState.apiKey || '').trim();
+    if (!key) {
+      if (imageDataUrl) throw new Error('Для розпізнавання фото потрібен Gemini API-ключ. Додай ключ у Налаштуваннях → ШІ.');
+      await new Promise(resolve => setTimeout(resolve, 180));
+      const offlineItems = offlineSmartParse(promptText, totalGrams ? null : activePlate);
+      return { items: normalizeItemsToTotalGrams(offlineItems, totalGrams), source: 'offline' };
+    }
+
+    const extra = totalGrams ? `Користувач підтвердив загальну ЧИСТУ вагу їжі: ${totalGrams} г. Сума поля grams для всіх позицій повинна дорівнювати рівно ${totalGrams} г. Не призначай цю вагу кожній позиції окремо. Тару вже враховано застосунком — нічого більше не віднімай.` : '';
+    const model = appState.geminiModel || 'gemini-2.5-flash';
+    const raw = await geminiRequest(model, key, buildGeminiSystemInstruction(totalGrams ? null : activePlate, extra), promptText, imageDataUrl);
+    const items = normalizeItemsToTotalGrams(parseGeminiFoodResponse(raw), totalGrams);
+    return { items, source: 'gemini' };
+  }
+
+  function parseExplicitFoodGrams(promptText) {
+    const matches = [...String(promptText || '').matchAll(/(\d+(?:[.,]\d+)?)\s*(кг|г|гр|грам(?:а|и|ів)?)(?=\s|$|[,.!?;:])/giu)];
+    if (!matches.length) return null;
+    const values = matches.map(match => {
+      const amount = Number(match[1].replace(',', '.'));
+      return Math.round(amount * (match[2].toLowerCase() === 'кг' ? 1000 : 1));
+    }).filter(value => Number.isFinite(value) && value > 0);
+    return values.length ? values.reduce((sum, value) => sum + value, 0) : null;
+  }
+
+  function updateFoodRequestWeightHint() {
+    const input = document.getElementById('foodRequestGrams');
+    const hint = document.getElementById('foodRequestWeightHint');
+    if (!input || !hint) return;
+    const value = Number(input.value);
+    hint.textContent = Number.isFinite(value) && value > 0
+      ? `До розпізнавання буде передано загальну вагу ${Math.round(value)} г. Gemini розподілить її між розпізнаними позиціями.`
+      : 'Вагу не визначено. Можеш ввести її вручну або залишити поле порожнім.';
+  }
+
+  function openFoodRequestSheet(promptText, imageDataUrl = pendingFoodImage) {
     closeEditSheet();
     closeCalendarSheet();
     document.getElementById('periodDropdownMenu').classList.add('hidden');
@@ -1897,12 +2227,22 @@
       ? appState.selectedPlateId : '';
     pendingFoodRequest = {
       text: promptText,
+      imageDataUrl: imageDataUrl || null,
+      totalGrams: parseExplicitFoodGrams(promptText),
       meal: detectMealCategory(promptText),
       time: getCurrentTimeStr(),
       plateId: rememberedPlate
     };
 
-    document.getElementById('foodRequestText').textContent = promptText;
+    document.getElementById('foodRequestText').textContent = promptText || (imageDataUrl ? 'Розпізнати їжу на фото' : '');
+    const gramsInput = document.getElementById('foodRequestGrams');
+    gramsInput.value = pendingFoodRequest.totalGrams || '';
+    updateFoodRequestWeightHint();
+    document.getElementById('foodRequestIncludesPlate').checked = false;
+    const photoWrap = document.getElementById('foodRequestPhotoWrap');
+    const photo = document.getElementById('foodRequestPhoto');
+    if (imageDataUrl) { photo.src = imageDataUrl; photoWrap.classList.remove('hidden'); }
+    else { photo.removeAttribute('src'); photoWrap.classList.add('hidden'); }
     const plateSelect = document.getElementById('foodRequestPlateSelect');
     plateSelect.innerHTML = `<option value="">Без посуду</option>` +
       appState.plates.map(p => `<option value="${p.id}">${esc(p.name)} · ${p.weight} г</option>`).join('');
@@ -1956,13 +2296,33 @@
     const aiBanner = document.getElementById('aiParsingBanner');
     const aiLabel = document.getElementById('aiParsingLabel');
     const text = pendingFoodRequest.text;
+    const imageDataUrl = pendingFoodRequest.imageDataUrl || null;
     const meal = pendingFoodRequest.meal;
     const time = document.getElementById('foodRequestTime').value || getCurrentTimeStr();
+    const gramsValue = Number(document.getElementById('foodRequestGrams').value);
+    const enteredTotalGrams = Number.isFinite(gramsValue) && gramsValue > 0 ? Math.round(gramsValue) : null;
     const plateId = document.getElementById('foodRequestPlateSelect').value;
     const activePlate = appState.plates.find(p => p.id === plateId) || null;
+    const includesPlateWeight = document.getElementById('foodRequestIncludesPlate').checked;
+    if (includesPlateWeight && !activePlate) {
+      const errorEl = document.getElementById('foodRequestError');
+      errorEl.textContent = 'Щоб відняти тару, спочатку вибери посуд.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    const totalGrams = enteredTotalGrams
+      ? enteredTotalGrams - (includesPlateWeight && activePlate ? activePlate.weight : 0)
+      : null;
+    if (totalGrams !== null && totalGrams <= 0) {
+      const errorEl = document.getElementById('foodRequestError');
+      errorEl.textContent = 'Вага їжі має бути більшою за вагу посуду.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
 
-    if (!text.trim()) return;
+    if (!text.trim() && !imageDataUrl) return;
     pendingFoodRequest.time = time;
+    pendingFoodRequest.totalGrams = totalGrams;
     pendingFoodRequest.plateId = plateId;
     appState.selectedPlateId = plateId || null;
 
@@ -1973,12 +2333,13 @@
     submitButton.classList.add('opacity-50');
     aiLabel.textContent = appState.apiKey
       ? `Gemini · ${appState.geminiModel || 'обрана модель'}…`
-      : 'Локальний парсер…';
+      : (imageDataUrl ? 'Для фото потрібен Gemini API…' : 'Локальний парсер…');
     aiBanner.classList.remove('hidden');
     input.disabled = true;
 
     try {
-      const result = await parseWithGeminiIfAvailable(text, activePlate);
+      const requestText = text || 'Проаналізуй їжу на доданому фото. Визнач видимі продукти та приблизну порцію.';
+      const result = await parseWithGeminiIfAvailable(requestText, activePlate, imageDataUrl, totalGrams);
       const parsedItems = result.items;
       if (!parsedItems.length) throw new Error('Не вдалося розпізнати позиції.');
 
@@ -1986,7 +2347,7 @@
       let totalAdded = 0;
       parsedItems.forEach((item, index) => {
         totalAdded += item.kcal;
-        const grossMatch = activePlate && index === 0 ? text.match(/(\d{2,4})\s*(?:г|гр|мл)\b/i) : null;
+        const grossMatch = !totalGrams && activePlate && index === 0 ? text.match(/(\d{2,4})\s*(?:г|гр|мл)\b/i) : null;
         const grossGrams = grossMatch ? parseInt(grossMatch[1], 10) : null;
         const tareApplied = !!(grossGrams && grossGrams > activePlate.weight + 20 && item.grams < grossGrams);
         appState.logs[selectedDateKey].push({
@@ -1999,6 +2360,7 @@
           plateId: tareApplied ? activePlate.id : null,
           grossGrams: tareApplied ? grossGrams : null,
           plateNote: tareApplied ? `${grossGrams} г − ${activePlate.weight} г тари` : null,
+          source: result.source === 'gemini' ? (imageDataUrl ? 'gemini-photo' : 'gemini') : 'offline',
           kcal: item.kcal,
           protein: item.protein,
           fat: item.fat,
@@ -2008,6 +2370,8 @@
 
       persistState();
       input.value = '';
+      removeFoodImage();
+      updateComposerActions();
       isParsingFood = false;
       closeFoodRequestSheet();
       renderDiary();
@@ -2033,13 +2397,261 @@
     }
   }
 
+  function imageFileToDataUrl(file, maxDimension = 1600, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      if (!file || !file.type || !file.type.startsWith('image/')) return reject(new Error('Обери файл зображення.'));
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Не вдалося прочитати фото.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Не вдалося відкрити фото.'));
+        img.onload = () => {
+          const scale = Math.min(1, maxDimension / Math.max(img.naturalWidth, img.naturalHeight));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+          canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+          const ctx = canvas.getContext('2d', { alpha: false });
+          if (!ctx) return reject(new Error('Браузер не зміг обробити фото.'));
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removeFoodImage() {
+    pendingFoodImage = null;
+    ['foodCameraInput', 'foodGalleryInput'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.value = '';
+    });
+    document.getElementById('foodImagePreview').classList.add('hidden');
+    document.getElementById('foodImagePreviewImg').removeAttribute('src');
+    document.getElementById('foodImagePreviewName').textContent = '';
+    updateComposerActions();
+  }
+
+  function handleFoodImageSelection(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    (async () => {
+      try {
+        pendingFoodImage = await imageFileToDataUrl(file);
+        document.getElementById('foodImagePreviewImg').src = pendingFoodImage;
+        document.getElementById('foodImagePreviewName').textContent = file.name || 'Фото страви';
+        document.getElementById('foodImagePreview').classList.remove('hidden');
+        updateComposerActions();
+        showToast('Фото додано до запиту', '📷');
+      } catch (error) {
+        removeFoodImage();
+        showToast(error.message || 'Не вдалося додати фото', '⚠️');
+      }
+    })();
+  }
+
+  document.getElementById('cameraPickBtn').addEventListener('click', () => {
+    closeAttachmentMenu();
+    document.getElementById('foodCameraInput').click();
+  });
+  document.getElementById('galleryPickBtn').addEventListener('click', () => {
+    closeAttachmentMenu();
+    document.getElementById('foodGalleryInput').click();
+  });
+  document.getElementById('foodCameraInput').addEventListener('change', handleFoodImageSelection);
+  document.getElementById('foodGalleryInput').addEventListener('change', handleFoodImageSelection);
+
+  document.getElementById('foodRequestGrams').addEventListener('input', updateFoodRequestWeightHint);
+
   document.getElementById('foodInputForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const input = document.getElementById('foodPromptInput');
     const text = input.value.trim();
-    if (!text || isParsingFood) return;
-    openFoodRequestSheet(text);
+    if ((!text && !pendingFoodImage) || isParsingFood) return;
+    openFoodRequestSheet(text, pendingFoodImage);
   });
+
+  // ==================== BARCODE SCANNER / OPEN FOOD FACTS ====================
+  function setBarcodeStatus(message, kind = '') {
+    const el = document.getElementById('barcodeStatus');
+    if (!el) return;
+    el.textContent = message;
+    el.className = `barcode-status mb-3${kind ? ' ' + kind : ''}`;
+  }
+
+  function loadBarcodeLibrary() {
+    if (window.Html5Qrcode) return Promise.resolve(window.Html5Qrcode);
+    if (barcodeLibraryPromise) return barcodeLibraryPromise;
+    barcodeLibraryPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+      script.async = true;
+      script.onload = () => window.Html5Qrcode ? resolve(window.Html5Qrcode) : reject(new Error('Бібліотека сканера не завантажилася.'));
+      script.onerror = () => reject(new Error('Не вдалося завантажити сканер. Перевір підключення до інтернету.'));
+      document.head.appendChild(script);
+    });
+    return barcodeLibraryPromise;
+  }
+
+  async function openBarcodeSheet() {
+    scannedProduct = null;
+    document.getElementById('barcodeProductPanel').classList.add('hidden');
+    document.getElementById('barcodeManualInput').value = '';
+    document.getElementById('barcodeServingGrams').value = 100;
+    document.getElementById('barcodeTime').value = getCurrentTimeStr();
+    setBarcodeStatus('Підключаю камеру… Дозволь доступ до камери, коли браузер запитає.');
+    document.getElementById('barcodeBackdrop').classList.add('visible');
+    document.getElementById('barcodeSheet').classList.add('visible');
+    requestAnimationFrame(() => {
+      document.getElementById('barcodeBackdrop').classList.add('open');
+      document.getElementById('barcodeSheet').classList.add('open');
+    });
+    try {
+      const Scanner = await loadBarcodeLibrary();
+      if (!document.getElementById('barcodeSheet').classList.contains('open')) return;
+      const formats = window.Html5QrcodeSupportedFormats;
+      const supported = formats ? [formats.EAN_13, formats.EAN_8, formats.UPC_A, formats.UPC_E, formats.CODE_128, formats.ITF].filter(v => v !== undefined) : undefined;
+      barcodeScannerInstance = new Scanner('barcodeReader', { formatsToSupport: supported, verbose: false });
+      barcodeScannerStarting = true;
+      const scanner = barcodeScannerInstance;
+      await scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 270, height: 140 }, aspectRatio: 1.7, rememberLastUsedCamera: true },
+        code => handleBarcodeDetected(code),
+        () => {}
+      );
+      barcodeScannerStarting = false;
+      if (!document.getElementById('barcodeSheet').classList.contains('open')) {
+        try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
+        try { scanner.clear(); } catch (e) {}
+        if (barcodeScannerInstance === scanner) barcodeScannerInstance = null;
+        return;
+      }
+      setBarcodeStatus('Камера активна. Наведи штрихкод у рамку.');
+    } catch (error) {
+      barcodeScannerStarting = false;
+      setBarcodeStatus(`${error.message || 'Не вдалося запустити камеру.'} Можеш ввести код вручну. Переконайся, що сайт відкритий через HTTPS.`, 'error');
+    }
+  }
+
+  async function stopBarcodeScanner() {
+    const scanner = barcodeScannerInstance;
+    barcodeScannerInstance = null;
+    if (scanner) {
+      try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
+      try { scanner.clear(); } catch (e) {}
+    }
+    barcodeScannerStarting = false;
+    const reader = document.getElementById('barcodeReader');
+    if (reader) reader.innerHTML = '';
+  }
+
+  async function closeBarcodeSheet() {
+    document.getElementById('barcodeBackdrop').classList.remove('open');
+    document.getElementById('barcodeSheet').classList.remove('open');
+    await stopBarcodeScanner();
+    setTimeout(() => {
+      if (!document.getElementById('barcodeSheet').classList.contains('open')) {
+        document.getElementById('barcodeBackdrop').classList.remove('visible');
+        document.getElementById('barcodeSheet').classList.remove('visible');
+      }
+    }, 340);
+  }
+
+  async function handleBarcodeDetected(code) {
+    if (barcodeScannerStarting || !barcodeScannerInstance) return;
+    const normalized = String(code || '').replace(/\s+/g, '');
+    if (!/^\d{8,14}$/.test(normalized)) return;
+    const scanner = barcodeScannerInstance;
+    barcodeScannerInstance = null;
+    try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
+    try { scanner.clear(); } catch (e) {}
+    const reader = document.getElementById('barcodeReader');
+    if (reader) reader.innerHTML = '';
+    await lookupOpenFoodFacts(normalized);
+  }
+
+  async function lookupBarcodeManually() {
+    const code = document.getElementById('barcodeManualInput').value.trim().replace(/\s+/g, '');
+    if (!/^\d{8,14}$/.test(code)) {
+      setBarcodeStatus('Введи коректний штрихкод довжиною 8–14 цифр.', 'error');
+      return;
+    }
+    await lookupOpenFoodFacts(code);
+  }
+
+  async function lookupOpenFoodFacts(code) {
+    setBarcodeStatus(`Шукаю продукт за кодом ${code} у базі Open Food Facts…`);
+    document.getElementById('barcodeProductPanel').classList.add('hidden');
+    try {
+      const url = `https://world.openfoodfacts.org/api/v3/product/${encodeURIComponent(code)}?fields=code,status,product_name,product_name_uk,product_name_en,brands,quantity,image_front_small_url,nutriments&lc=uk&cc=ua`;
+      const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!response.ok) throw new Error(`Сервіс продуктів відповів HTTP ${response.status}.`);
+      const data = await response.json();
+      if (!['success', 'success_with_warnings'].includes(data.status) || !data.product) throw new Error('Продукт не знайдений у базі. Можеш додати його вручну через поле опису їжі.');
+      const product = data.product;
+      const n = product.nutriments || {};
+      const kcal = Number(n['energy-kcal_100g'] ?? (Number(n['energy-kj_100g']) / 4.184));
+      const protein = Number(n.proteins_100g);
+      const fat = Number(n.fat_100g);
+      const carb = Number(n.carbohydrates_100g);
+      if (![kcal, protein, fat, carb].every(v => Number.isFinite(v) && v >= 0)) throw new Error('У картці продукту немає повних даних КБЖВ на 100 г.');
+      scannedProduct = {
+        code,
+        name: String(product.product_name_uk || product.product_name || product.product_name_en || '').trim() || `Продукт ${code}`,
+        brand: String(product.brands || '').trim(),
+        image: String(product.image_front_small_url || ''),
+        kcal, protein, fat, carb
+      };
+      document.getElementById('barcodeProductName').textContent = scannedProduct.name;
+      document.getElementById('barcodeProductBrand').textContent = scannedProduct.brand;
+      document.getElementById('barcodeProductCode').textContent = `Штрихкод · ${code}`;
+      const image = document.getElementById('barcodeProductImage');
+      if (scannedProduct.image) image.src = scannedProduct.image; else image.removeAttribute('src');
+      document.getElementById('barcodeKcal100').textContent = Math.round(kcal);
+      document.getElementById('barcodeProtein100').textContent = `${protein.toFixed(1)} г`;
+      document.getElementById('barcodeFat100').textContent = `${fat.toFixed(1)} г`;
+      document.getElementById('barcodeCarb100').textContent = `${carb.toFixed(1)} г`;
+      document.getElementById('barcodeMeal').value = detectMealCategory('');
+      document.getElementById('barcodeTime').value = getCurrentTimeStr();
+      document.getElementById('barcodeProductPanel').classList.remove('hidden');
+      updateBarcodeServingPreview();
+      setBarcodeStatus('Продукт знайдено. Перевір дані, вкажи свою порцію та додай запис.', 'success');
+    } catch (error) {
+      setBarcodeStatus(error.message || 'Не вдалося отримати дані продукту.', 'error');
+    }
+  }
+
+  function updateBarcodeServingPreview() {
+    if (!scannedProduct) return;
+    const grams = Math.max(1, Number(document.getElementById('barcodeServingGrams').value) || 1);
+    document.getElementById('barcodeServingKcal').textContent = `${Math.round(scannedProduct.kcal * grams / 100)} ккал`;
+  }
+
+  function addScannedProduct() {
+    if (!scannedProduct) return;
+    const grams = Math.max(1, Math.min(5000, Number(document.getElementById('barcodeServingGrams').value) || 100));
+    const time = document.getElementById('barcodeTime').value || getCurrentTimeStr();
+    const meal = document.getElementById('barcodeMeal').value;
+    if (!appState.logs[selectedDateKey]) appState.logs[selectedDateKey] = [];
+    appState.logs[selectedDateKey].push({
+      id: 'barcode_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      mod: Date.now(), meal, time, name: scannedProduct.name, grams,
+      kcal: Math.round(scannedProduct.kcal * grams / 100),
+      protein: Math.round(scannedProduct.protein * grams / 100 * 10) / 10,
+      fat: Math.round(scannedProduct.fat * grams / 100 * 10) / 10,
+      carb: Math.round(scannedProduct.carb * grams / 100 * 10) / 10,
+      source: 'barcode', barcode: scannedProduct.code
+    });
+    persistState();
+    renderDiary();
+    closeBarcodeSheet();
+    showToast('Продукт додано зі штрихкоду', '✅');
+  }
+
+  document.getElementById('barcodeOpenBtn').addEventListener('click', () => { closeAttachmentMenu(); openBarcodeSheet(); });
+  document.getElementById('barcodeServingGrams').addEventListener('input', updateBarcodeServingPreview);
 
   // ==================== EDIT ITEM SHEET (WITH PLATE TARE) ====================
   function openEditSheet(itemId) {

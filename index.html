@@ -404,7 +404,7 @@
             <button type="button" id="plateSelectorBtn" onclick="togglePlateDropdown(event)"
                     class="h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition border border-white/[0.12] flex items-center gap-1 text-[12px] font-medium text-white">
               <span>🍽</span>
-              <span id="selectedPlateLabel" class="truncate max-w-[115px]">Без тарілки</span>
+              <span id="selectedPlateLabel" class="truncate max-w-[115px]">Без посуду</span>
               <svg class="w-3 h-3 text-[#8E8E93] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
               </svg>
@@ -413,12 +413,12 @@
             <!-- Opaque Plate Popover Menu -->
             <div id="plateDropdownMenu" class="hidden opaque-menu absolute bottom-full left-0 mb-2 w-64 rounded-[16px] overflow-hidden z-[60]">
               <div class="px-3.5 py-2 border-b border-white/[0.08] text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93] bg-[#2C2C2E]">
-                Авто-віднімання тари
+                Автоматичне віднімання тари
               </div>
               <div id="plateDropdownOptions" class="max-h-52 overflow-y-auto divide-y divide-white/[0.07] bg-[#2C2C2E]"></div>
               <button type="button" onclick="goToPlatesSettings(event)"
                       class="w-full px-3.5 py-2.5 text-left text-[13px] font-semibold text-[#0A84FF] bg-[#2C2C2E] hover:bg-[#3A3A3C] border-t border-white/[0.08] flex items-center justify-between">
-                <span>Налаштувати тарілки...</span>
+                <span>Налаштувати посуд...</span>
                 <span>⚙️</span>
               </button>
             </div>
@@ -498,6 +498,7 @@
 
           <button
             type="submit"
+            id="foodSubmitBtn"
             aria-label="Додати"
             class="w-10 h-10 shrink-0 rounded-full bg-[#30D158] hover:bg-[#28BD4C] active:scale-90 transition flex items-center justify-center text-black shadow-md"
           >
@@ -741,7 +742,7 @@
     <div id="viewSettings" class="hidden flex-1 flex flex-col overflow-hidden">
       <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08]">
         <h1 class="text-[22px] font-bold tracking-tight text-white">Налаштування</h1>
-        <p class="text-[12px] text-[#8E8E93] mt-0.5">Посуд, хмарна синхронізація та цілі</p>
+        <p class="text-[12px] text-[#8E8E93] mt-0.5">ШІ, посуд, цілі та резервні копії</p>
       </header>
 
       <main id="settingsScrollArea" class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-24 space-y-5">
@@ -781,7 +782,7 @@
         <!-- 2. My Plates (Auto-Tare) -->
         <div id="platesSettingsSection" class="rounded-[22px] transition-all duration-500">
           <div class="flex items-center justify-between px-1 mb-2">
-            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Мої тарілки (авто-тара)</h2>
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Мій посуд (авто-тара)</h2>
             <span class="text-[11px] text-[#8E8E93]">Віднімається автоматично</span>
           </div>
 
@@ -789,9 +790,9 @@
             <div id="platesSettingsList" class="divide-y divide-white/[0.07]"></div>
 
             <form onsubmit="addNewPlate(event)" class="p-3 bg-[#2C2C2E]/40 border-t border-white/[0.07] flex items-center gap-2">
-              <input id="newPlateName" type="text" placeholder="Напр. Біла глибока"
+              <input id="newPlateName" type="text" placeholder="Напр. Чашка, піала або тарілка"
                      class="flex-1 min-w-0 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-3 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
-              <input id="newPlateWeight" type="number" min="10" max="2500" placeholder="Вага (г)"
+              <input id="newPlateWeight" type="number" min="10" max="2500" placeholder="Тара (г)"
                      class="w-24 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-2.5 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
               <button type="submit" class="px-3.5 py-2 rounded-[10px] bg-[#30D158] text-black font-bold text-[13px] active:scale-95 transition">
                 +
@@ -826,34 +827,55 @@
           </button>
         </div>
 
-        <!-- 4. Gemini AI Key -->
-        <div>
-          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">ШІ-парсер страв</h2>
-          <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-2">
-            <label for="apiKeyInput" class="text-[14px] font-medium text-white block">Gemini API-ключ (необов'язково)</label>
-            <div class="flex gap-2">
-              <input id="apiKeyInput" type="password" placeholder="AIzaSy..."
-                     class="flex-1 bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
-              <button type="button" onclick="toggleApiKeyVisibility()" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[13px] text-[#8E8E93] hover:text-white">
-                👁️
-              </button>
-            </div>
+        <!-- 4. Gemini AI -->
+        <section class="rounded-[22px]">
+          <div class="px-1 mb-2">
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">ШІ-помічник · Gemini</h2>
+            <p class="text-[11px] text-[#8E8E93] mt-1">Розпізнає опис їжі та оцінює КБЖВ. Без ключа працює простий локальний парсер.</p>
           </div>
-        </div>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
+            <div class="space-y-1.5">
+              <label for="apiKeyInput" class="text-[14px] font-medium text-white block">Gemini API-ключ</label>
+              <div class="flex gap-2">
+                <input id="apiKeyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Встав API-ключ Google AI Studio"
+                       class="flex-1 min-w-0 bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+                <button type="button" onclick="toggleApiKeyVisibility()" aria-label="Показати або приховати ключ" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[13px] text-[#8E8E93] hover:text-white">👁️</button>
+              </div>
+              <p class="text-[11px] text-[#8E8E93] leading-relaxed">Ключ зберігається лише в локальному сховищі цього браузера й не додається до резервної копії або Google Диска. Не публікуй його у відкритому коді.</p>
+            </div>
 
-        <!-- 5. Local Backup & Reset -->
+            <button id="loadGeminiModelsBtn" type="button" onclick="loadGeminiModels()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-[0.99] transition text-[13px] font-semibold text-[#0A84FF]">Перевірити ключ і завантажити моделі</button>
+            <p id="geminiStatus" role="status" aria-live="polite" class="text-[11px] text-[#8E8E93] leading-relaxed">Ще не перевірено. Встав ключ і завантаж доступні моделі.</p>
+
+            <div class="pt-3 border-t border-white/[0.07] space-y-1.5">
+              <label for="geminiModelSelect" class="text-[13px] font-medium text-white block">Модель для розрахунку</label>
+              <select id="geminiModelSelect" class="w-full bg-[#2C2C2E] text-white text-[13px] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]">
+                <option value="">Спочатку завантаж моделі</option>
+              </select>
+              <p class="text-[11px] text-[#8E8E93]">У списку показуються моделі, які твій ключ може викликати через generateContent.</p>
+              <button id="testGeminiBtn" type="button" onclick="testGeminiConnection()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.99] transition text-[13px] font-semibold text-white">Тестувати роботу ШІ</button>
+            </div>
+
+            <div class="pt-3 border-t border-white/[0.07] space-y-1.5">
+              <label for="geminiPromptInput" class="text-[13px] font-medium text-white block">Інструкція для ШІ (промт)</label>
+              <textarea id="geminiPromptInput" rows="7" class="w-full resize-y bg-[#2C2C2E] text-[12px] leading-relaxed text-white placeholder:text-[#8E8E93] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]"></textarea>
+              <p class="text-[11px] text-[#8E8E93]">Саме ця інструкція визначає, як ШІ розбиває опис на позиції та оцінює КБЖВ. Можеш залишити стандартний текст або змінити його.</p>
+            </div>
+
+            <button type="button" onclick="saveGeminiSettings()" class="w-full py-3 rounded-[14px] bg-[#0A84FF] active:scale-[0.98] transition text-[14px] font-semibold text-white">Зберегти налаштування ШІ</button>
+          </div>
+        </section>
+
+        <!-- 5. Destructive actions -->
         <div>
-          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Дані</h2>
-          <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] divide-y divide-white/[0.07]">
-            <button onclick="exportDataJson()" class="w-full px-4 py-3.5 flex items-center justify-between text-left active:bg-[#2C2C2E] transition rounded-t-[20px]">
-              <span class="text-[15px] font-medium text-[#0A84FF]">Експорт у JSON</span>
-              <span class="text-base">📤</span>
-            </button>
-            <button onclick="clearAllData()" class="w-full px-4 py-3.5 flex items-center justify-between text-left active:bg-[#2C2C2E] transition rounded-b-[20px]">
-              <span class="text-[15px] font-medium text-[#FF453A]">Видалити всі дані</span>
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Скидання</h2>
+          <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08]">
+            <button onclick="clearAllData()" class="w-full px-4 py-3.5 flex items-center justify-between text-left active:bg-[#2C2C2E] transition rounded-[20px]">
+              <span class="text-[15px] font-medium text-[#FF453A]">Видалити всі дані та налаштування</span>
               <span class="text-base">↺</span>
             </button>
           </div>
+          <p class="text-[11px] text-[#8E8E93] px-1 mt-2">Перед скиданням радимо створити резервну копію вище.</p>
         </div>
 
       </main>
@@ -944,10 +966,15 @@
           <input id="editItemName" type="text" class="w-full bg-[#2C2C2E] text-white text-[15px] font-medium rounded-[12px] px-3.5 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#0A84FF]" />
         </div>
 
+        <div>
+          <label class="text-[12px] text-[#8E8E93] font-medium block mb-1">Час запису</label>
+          <input id="editItemTime" type="time" class="w-full bg-[#2C2C2E] text-white text-[15px] font-medium rounded-[12px] px-3.5 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#0A84FF]" />
+        </div>
+
         <!-- Weight + Plate Auto-Tare Block -->
         <div class="bg-[#2C2C2E] rounded-[16px] p-3.5 border border-white/[0.08] space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] font-medium text-white">🍽 Тарілка (тара)</span>
+            <span class="text-[13px] font-medium text-white">🍽 Посуд (тара)</span>
             <select id="editItemPlateSelect" onchange="handleEditPlateChange()"
                     class="bg-[#1C1C1E] text-white text-[13px] font-medium rounded-[10px] px-2.5 py-1.5 border border-white/[0.1] focus:outline-none">
             </select>
@@ -1023,6 +1050,19 @@
   // ==================== CONSTANTS & HISTORICAL DATA ====================
   let TODAY_KEY = toDateKey(new Date());
 
+  const DEFAULT_GEMINI_PROMPT = `Ти — уважний помічник для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та перетвори його на список з'їдених або випитих позицій.
+
+Правила:
+1. Розбий повідомлення на окремі продукти та страви, якщо користувач назвав кілька позицій.
+2. Для кожної позиції оціни їстівну кількість у грамах. Для напоїв мілілітри можна приблизно прирівнювати до грамів. Якщо кількість не вказана, оціни реалістичну порцію.
+3. Оціни калорійність, білки, жири та вуглеводи для вказаної кількості, а не на 100 г.
+4. Не вигадуй додаткові інгредієнти, олію, цукор чи соуси, якщо їх не згадано. Якщо спосіб приготування суттєво впливає на КБЖВ, обери найбільш звичайний варіант і врахуй невизначеність.
+5. Якщо користувач указав вагу всієї страви, не призначай повну вагу кожному інгредієнту. Розподіли її між позиціями логічно.
+6. Визнач прийом їжі: breakfast, lunch, dinner або snack. Якщо вказівки немає, орієнтуйся на контекст повідомлення.
+7. Відповідай виключно коректним JSON-масивом без Markdown, пояснень чи тексту до/після JSON.
+
+Формат кожного елемента: {"name":"назва","meal":"breakfast|lunch|dinner|snack","grams":100,"kcal":150,"protein":5,"fat":4,"carb":20}. Усі числові значення мають бути невід'ємними числами. Не повертай одиниці вимірювання всередині чисел.`;
+
   const MEAL_META = [
     { id: 'breakfast', title: 'Сніданок', icon: '🌅' },
     { id: 'lunch', title: 'Обід', icon: '☀️' },
@@ -1048,6 +1088,8 @@
     targets: { kcal: 1800, protein: 115, fat: 65, carb: 170 },
     calorieDisplayMode: 'remaining',
     apiKey: '',
+    geminiModel: '',
+    geminiPrompt: DEFAULT_GEMINI_PROMPT,
     gdrive: { clientId: '', connected: false, autoSync: true, lastSync: '', needsAuth: false },
     tombstones: {},
     settingsMod: 0,
@@ -1074,6 +1116,10 @@
   let statPeriod = '7d';
   let statMacro = 'kcal';
   let editingItemState = null;
+  let geminiAvailableModels = [];
+  let isParsingFood = false;
+  let targetsInputsDirty = false;
+  let geminiInputsDirty = false;
 
   const VOICE_SAMPLES = [
     'На вечерю гречка із вареним філе 840 г',
@@ -1279,7 +1325,7 @@
     container.innerHTML = '';
 
     MEAL_META.forEach(mealMeta => {
-      const mealItems = items.filter(i => i.meal === mealMeta.id);
+      const mealItems = items.filter(i => i.meal === mealMeta.id).sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')));
       const mealKcal = mealItems.reduce((s, i) => s + i.kcal, 0);
 
       const card = document.createElement('section');
@@ -1308,7 +1354,7 @@
               <div class="text-[14px] font-medium text-white truncate">${esc(item.name)}</div>
               <div class="flex items-center gap-1.5 mt-1 flex-wrap">
                 <span class="text-[11px] text-[#8E8E93]">${item.time} · ${item.grams} г</span>
-                ${item.plateNote ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-[#2C2C2E] text-[#8E8E93]">🍽 ${item.plateNote}</span>` : ''}
+                ${item.plateNote ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-[#2C2C2E] text-[#8E8E93]">⚖ ${esc(String(item.plateNote).replace(/тарілка/gi, 'посуд'))}</span>` : ''}
                 <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#0A84FF]/15 text-[#0A84FF]">Б ${formatOneDecimal(item.protein)}</span>
                 <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#FF9F0A]/15 text-[#FF9F0A]">Ж ${formatOneDecimal(item.fat)}</span>
                 <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#BF5AF2]/15 text-[#BF5AF2]">В ${formatOneDecimal(item.carb)}</span>
@@ -1450,7 +1496,7 @@
       label.textContent = `${selected.name} -${selected.weight}г`;
       btn.classList.add('border-[#30D158]/50', 'text-[#30D158]');
     } else {
-      label.textContent = 'Без тарілки';
+      label.textContent = 'Без посуду';
       btn.classList.remove('border-[#30D158]/50', 'text-[#30D158]');
     }
 
@@ -1458,7 +1504,7 @@
     opts.innerHTML = `
       <button type="button" onclick="selectPlate(null, event)"
               class="w-full px-3.5 py-2.5 text-left text-[13px] bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-between ${!selected ? 'text-white font-semibold' : 'text-white/80'}">
-        <span>Без тарілки (чиста вага)</span>
+        <span>Без посуду (чиста вага)</span>
         ${!selected ? '<span class="text-[#30D158] font-bold">✓</span>' : ''}
       </button>
     ` + appState.plates.map(p => `
@@ -1507,7 +1553,7 @@
   function renderPlatesSettingsList() {
     const list = document.getElementById('platesSettingsList');
     if (appState.plates.length === 0) {
-      list.innerHTML = `<div class="px-4 py-3 text-[13px] text-[#8E8E93]">Поки немає збережених тарілок</div>`;
+      list.innerHTML = `<div class="px-4 py-3 text-[13px] text-[#8E8E93]">Поки немає збереженого посуду</div>`;
       return;
     }
     list.innerHTML = appState.plates.map(p => `
@@ -1531,7 +1577,7 @@
     const weight = parseInt(weightInp.value, 10);
 
     if (!name || !weight || weight <= 0) {
-      showToast('Вкажи назву та вагу тарілки', '⚠️');
+      showToast('Вкажи назву посуду та його вагу', '⚠️');
       return;
     }
 
@@ -1541,7 +1587,7 @@
     persistState();
     renderPlatesSettingsList();
     renderPlateSelectorUI();
-    showToast(`Тарілку «${name}» додано`, '🍽');
+    showToast(`Посуд «${name}» додано`, '🍽');
   }
 
   function deletePlate(plateId) {
@@ -1550,7 +1596,7 @@
     persistState();
     renderPlatesSettingsList();
     renderPlateSelectorUI();
-    showToast('Тарілку видалено', '🗑️');
+    showToast('Посуд видалено', '🗑️');
   }
 
   // ==================== QUICK ADD & VOICE ====================
@@ -1705,7 +1751,7 @@
           grams: portionGrams,
           plateId: idx === 0 && appliedPlate ? appliedPlate.id : null,
           grossGrams: idx === 0 && appliedPlate ? totalGross : null,
-          plateNote: idx === 0 && appliedPlate ? `тарілка −${appliedPlate.weight}г` : null,
+          plateNote: idx === 0 && appliedPlate ? `посуд −${appliedPlate.weight}г` : null,
           kcal: Math.round(entry.matched.per100.kcal * factor),
           protein: Math.round(entry.matched.per100.p * factor * 10) / 10,
           fat: Math.round(entry.matched.per100.f * factor * 10) / 10,
@@ -1742,60 +1788,151 @@
     });
   }
 
+  function buildGeminiSystemInstruction() {
+    const base = (appState.geminiPrompt || DEFAULT_GEMINI_PROMPT).trim();
+    const activeDishware = getSelectedPlate();
+    if (!activeDishware) return base;
+    return `${base}\n\nКонтекст тари: користувач обрав посуд «${activeDishware.name}» вагою ${activeDishware.weight} г. Якщо описана вага є загальною вагою посуду разом із вмістом, відніми цю тару ОДИН раз від загальної ваги їжі. Не віднімай її окремо від кожної позиції. Якщо вага вказана без тари або неясно, чи включено посуд, не віднімай її повторно.`;
+  }
+
+  async function geminiRequest(model, key, systemInstruction, userText) {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ text: userText }] }],
+          generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const raw = await response.text();
+      let message = '';
+      try { message = JSON.parse(raw).error?.message || ''; } catch (e) {}
+      const err = new Error(message || `HTTP ${response.status}`);
+      err.status = response.status;
+      throw err;
+    }
+
+    const data = await response.json();
+    const parts = data.candidates?.[0]?.content?.parts || [];
+    const output = parts.map(part => part.text || '').filter(Boolean).join('\n').trim();
+    if (!output) {
+      const reason = data.promptFeedback?.blockReason || data.candidates?.[0]?.finishReason || 'Порожня відповідь';
+      throw new Error(`Gemini не повернув текст (${reason}).`);
+    }
+    return output;
+  }
+
+  function parseGeminiFoodResponse(raw) {
+    let text = String(raw || '').trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      const first = text.indexOf('[');
+      const last = text.lastIndexOf(']');
+      if (first < 0 || last <= first) throw new Error('Відповідь Gemini не є коректним JSON-масивом.');
+      parsed = JSON.parse(text.slice(first, last + 1));
+    }
+    if (!Array.isArray(parsed) && Array.isArray(parsed?.items)) parsed = parsed.items;
+    if (!Array.isArray(parsed) || !parsed.length) throw new Error('Gemini не знайшов жодної позиції.');
+
+    const allowedMeals = ['breakfast', 'lunch', 'dinner', 'snack'];
+    const items = parsed.map((item, index) => {
+      const name = String(item?.name || '').trim();
+      const grams = Number(item?.grams);
+      const kcal = Number(item?.kcal);
+      const protein = Number(item?.protein);
+      const fat = Number(item?.fat);
+      const carb = Number(item?.carb);
+      if (!name || !Number.isFinite(grams) || grams <= 0 || grams > 10000 ||
+          ![kcal, protein, fat, carb].every(v => Number.isFinite(v) && v >= 0)) {
+        throw new Error(`Gemini повернув некоректні дані для позиції №${index + 1}.`);
+      }
+      return {
+        name,
+        meal: allowedMeals.includes(item.meal) ? item.meal : 'snack',
+        grams: Math.round(grams),
+        kcal: Math.round(kcal),
+        protein: Math.round(protein * 10) / 10,
+        fat: Math.round(fat * 10) / 10,
+        carb: Math.round(carb * 10) / 10,
+        plateId: null,
+        grossGrams: null,
+        plateNote: null
+      };
+    });
+    return items;
+  }
+
   async function parseWithGeminiIfAvailable(promptText) {
     const key = (appState.apiKey || '').trim();
     if (!key) {
-      await new Promise(r => setTimeout(r, 420));
-      return offlineSmartParse(promptText);
+      await new Promise(resolve => setTimeout(resolve, 180));
+      return { items: offlineSmartParse(promptText), source: 'offline' };
     }
 
-    const activePlate = getSelectedPlate();
-    const plateInstruction = activePlate
-      ? `Користувач зважував їжу на тарілці "${activePlate.name}" вагою ${activePlate.weight} г. Відніми ${activePlate.weight} г від загальної ваги страви перед розрахунком КБЖВ.`
-      : '';
-
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Ти нутриціолог. Розбий запит українською мовою на окремі страви та порахуй КБЖВ. ${plateInstruction} Поверни JSON-масив об'єктів з полями: name, meal ("breakfast"|"lunch"|"dinner"|"snack"), grams, kcal, protein, fat, carb. Запит: "${promptText}"`
-              }]
-            }],
-            generationConfig: { responseMimeType: 'application/json' }
-          })
-        }
-      );
-
-      if (!response.ok) throw new Error('API Error');
-      const data = await response.json();
-      const parsed = JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      return offlineSmartParse(promptText);
-    } catch (err) {
-      return offlineSmartParse(promptText);
-    }
+    const model = appState.geminiModel || 'gemini-2.5-flash';
+    const raw = await geminiRequest(model, key, buildGeminiSystemInstruction(), promptText);
+    return { items: parseGeminiFoodResponse(raw), source: 'gemini' };
   }
 
   document.getElementById('foodInputForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('foodPromptInput');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || isParsingFood) return;
 
+    isParsingFood = true;
+    const submitButton = document.getElementById('foodSubmitBtn');
+    submitButton.disabled = true;
+    submitButton.classList.add('opacity-50');
     const aiBanner = document.getElementById('aiParsingBanner');
+    const aiLabel = document.getElementById('aiParsingLabel');
+    aiLabel.textContent = appState.apiKey
+      ? `Gemini · ${appState.geminiModel || 'обрана модель'}…`
+      : 'Локальний парсер…';
     aiBanner.classList.remove('hidden');
     input.disabled = true;
 
-    const parsedItems = await parseWithGeminiIfAvailable(text);
+    let result;
+    try {
+      result = await parseWithGeminiIfAvailable(text);
+    } catch (error) {
+      aiBanner.classList.add('hidden');
+      input.disabled = false;
+      isParsingFood = false;
+      submitButton.disabled = false;
+      submitButton.classList.remove('opacity-50');
+      input.value = text;
+      const message = String(error.message || 'Невідома помилка').replace(/\s+/g, ' ').slice(0, 125);
+      showToast(`Gemini: ${message}`, '⚠️');
+      setGeminiStatus(`Помилка запиту: ${message}`, true);
+      input.focus();
+      return;
+    }
 
     aiBanner.classList.add('hidden');
     input.disabled = false;
+    isParsingFood = false;
+    submitButton.disabled = false;
+    submitButton.classList.remove('opacity-50');
     input.value = '';
+
+    const parsedItems = result.items;
+    if (!parsedItems.length) {
+      input.value = text;
+      showToast('Не вдалося розпізнати позиції', '⚠️');
+      return;
+    }
 
     if (!appState.logs[selectedDateKey]) appState.logs[selectedDateKey] = [];
     const nowTime = getCurrentTimeStr();
@@ -1822,7 +1959,11 @@
 
     persistState();
     renderDiary();
-    showToast(`Додано ${parsedItems.length} поз. (+${Math.round(totalAdded)} ккал)`, '✨');
+    if (result.source === 'gemini') {
+      showToast(`Gemini: додано ${parsedItems.length} поз. · ${Math.round(totalAdded)} ккал`, '✨');
+    } else {
+      showToast(`Локально: додано ${parsedItems.length} поз. · ${Math.round(totalAdded)} ккал`, 'ℹ️');
+    }
   });
 
   // ==================== EDIT ITEM SHEET (WITH PLATE TARE) ====================
@@ -1833,7 +1974,7 @@
 
     const safeGrams = item.grams > 0 ? item.grams : 100;
     const plateSelect = document.getElementById('editItemPlateSelect');
-    plateSelect.innerHTML = `<option value="">Без тарілки</option>` +
+    plateSelect.innerHTML = `<option value="">Без посуду</option>` +
       appState.plates.map(p => `<option value="${p.id}">${esc(p.name)} (−${p.weight} г)</option>`).join('');
 
     const initialPlateId = item.plateId || '';
@@ -1852,6 +1993,7 @@
     };
 
     document.getElementById('editItemName').value = item.name;
+    document.getElementById('editItemTime').value = item.time || getCurrentTimeStr();
     document.getElementById('editItemGrams').value = item.grams;
     document.getElementById('editItemSlider').value = Math.min(800, item.grams);
 
@@ -2001,6 +2143,7 @@
       mod: Date.now(),
       name: newName,
       meal,
+      time: document.getElementById('editItemTime').value || items[idx].time || getCurrentTimeStr(),
       grams: newGrams,
       plateId: plate ? plate.id : null,
       grossGrams: grossVal,
@@ -2630,11 +2773,17 @@
 
   // ==================== SETTINGS ====================
   function populateSettingsInputs() {
-    document.getElementById('settingKcal').value = appState.targets.kcal;
-    document.getElementById('settingProtein').value = appState.targets.protein;
-    document.getElementById('settingFat').value = appState.targets.fat;
-    document.getElementById('settingCarb').value = appState.targets.carb;
-    document.getElementById('apiKeyInput').value = appState.apiKey || '';
+    if (!targetsInputsDirty) {
+      document.getElementById('settingKcal').value = appState.targets.kcal;
+      document.getElementById('settingProtein').value = appState.targets.protein;
+      document.getElementById('settingFat').value = appState.targets.fat;
+      document.getElementById('settingCarb').value = appState.targets.carb;
+    }
+    if (!geminiInputsDirty) {
+      document.getElementById('apiKeyInput').value = appState.apiKey || '';
+      document.getElementById('geminiPromptInput').value = appState.geminiPrompt || DEFAULT_GEMINI_PROMPT;
+      renderGeminiModelsSelect(appState.geminiModel || '');
+    }
     renderPlatesSettingsList();
     document.getElementById('gdriveClientId').value = appState.gdrive.clientId || '';
     updateGdriveUI();
@@ -2646,11 +2795,171 @@
     appState.targets.protein = Math.max(40, parseInt(document.getElementById('settingProtein').value, 10) || 115);
     appState.targets.fat = Math.max(20, parseInt(document.getElementById('settingFat').value, 10) || 65);
     appState.targets.carb = Math.max(30, parseInt(document.getElementById('settingCarb').value, 10) || 170);
-    appState.apiKey = document.getElementById('apiKeyInput').value.trim();
+    targetsInputsDirty = false;
 
     persistState();
     renderDiary();
-    showToast('Цілі збережено');
+    showToast('Денні цілі збережено');
+  }
+
+  function setGeminiStatus(message, isError = false) {
+    const status = document.getElementById('geminiStatus');
+    if (!status) return;
+    status.textContent = message;
+    status.className = `text-[11px] leading-relaxed ${isError ? 'text-[#FF9F0A]' : 'text-[#8E8E93]'}`;
+  }
+
+  function renderGeminiModelsSelect(preferred = '') {
+    const select = document.getElementById('geminiModelSelect');
+    if (!select) return;
+    const current = preferred || select.value || appState.geminiModel || '';
+    if (!geminiAvailableModels.length) {
+      select.innerHTML = current
+        ? `<option value="${esc(current)}">${esc(current)} · збережена модель</option>`
+        : '<option value="">Спочатку завантаж моделі</option>';
+      return;
+    }
+    select.innerHTML = geminiAvailableModels.map(model =>
+      `<option value="${esc(model.id)}" title="${esc(model.description || '')}">${esc(model.label)} · ${esc(model.id)}</option>`
+    ).join('');
+    if (current && geminiAvailableModels.some(model => model.id === current)) select.value = current;
+    else select.value = geminiAvailableModels[0].id;
+  }
+
+  function compareGeminiModels(a, b) {
+    const aFlash = /flash/i.test(a.id) ? 1 : 0;
+    const bFlash = /flash/i.test(b.id) ? 1 : 0;
+    if (aFlash !== bFlash) return bFlash - aFlash;
+    const aStable = !/(preview|experimental|exp)/i.test(a.id) ? 1 : 0;
+    const bStable = !/(preview|experimental|exp)/i.test(b.id) ? 1 : 0;
+    if (aStable !== bStable) return bStable - aStable;
+    const aNums = (a.id.match(/\d+/g) || []).map(Number);
+    const bNums = (b.id.match(/\d+/g) || []).map(Number);
+    for (let i = 0; i < Math.max(aNums.length, bNums.length); i++) {
+      const diff = (bNums[i] || 0) - (aNums[i] || 0);
+      if (diff) return diff;
+    }
+    return a.id.localeCompare(b.id);
+  }
+
+  async function readGeminiApiError(response) {
+    const raw = await response.text();
+    try {
+      const parsed = JSON.parse(raw);
+      return parsed.error?.message || `HTTP ${response.status}`;
+    } catch (e) {
+      return raw.slice(0, 240) || `HTTP ${response.status}`;
+    }
+  }
+
+  async function loadGeminiModels() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    const button = document.getElementById('loadGeminiModelsBtn');
+    if (!key) {
+      setGeminiStatus('Спочатку встав API-ключ Google AI Studio.', true);
+      showToast('Потрібен Gemini API-ключ', '⚠️');
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Завантажую список моделей…';
+    setGeminiStatus('Перевіряю ключ і запитую моделі в Gemini API…');
+
+    try {
+      const all = [];
+      let pageToken = '';
+      let pages = 0;
+      do {
+        const url = new URL('https://generativelanguage.googleapis.com/v1beta/models');
+        url.searchParams.set('pageSize', '1000');
+        if (pageToken) url.searchParams.set('pageToken', pageToken);
+        const response = await fetch(url.toString(), { headers: { 'x-goog-api-key': key } });
+        if (!response.ok) throw new Error(await readGeminiApiError(response));
+        const data = await response.json();
+        all.push(...(data.models || []));
+        pageToken = data.nextPageToken || '';
+        pages++;
+      } while (pageToken && pages < 20);
+
+      const excluded = /(embedding|tts|transcribe|live|robotics|image|computer|deep-research|veo|lyria)/i;
+      const byId = new Map();
+      all.forEach(model => {
+        const id = model.baseModelId || String(model.name || '').replace(/^models\//, '');
+        if (!id.startsWith('gemini-') || excluded.test(id)) return;
+        if (!(model.supportedGenerationMethods || []).includes('generateContent')) return;
+        if (!byId.has(id)) byId.set(id, {
+          id,
+          label: model.displayName || id,
+          description: model.description || ''
+        });
+      });
+      geminiAvailableModels = [...byId.values()].sort(compareGeminiModels);
+      if (!geminiAvailableModels.length) {
+        throw new Error('Ключ прийнято, але API не повернув текстових Gemini-моделей із підтримкою generateContent. Перевір доступ до моделей у Google AI Studio.');
+      }
+
+      const savedChoice = document.getElementById('geminiModelSelect').value || appState.geminiModel;
+      renderGeminiModelsSelect(savedChoice);
+      setGeminiStatus(`Ключ працює. Знайдено ${geminiAvailableModels.length} доступних текстових моделей. Обери модель і натисни «Зберегти налаштування ШІ».`);
+      showToast(`Знайдено моделей: ${geminiAvailableModels.length}`, '✅');
+    } catch (error) {
+      const message = String(error.message || 'Невідома помилка').replace(/\s+/g, ' ').slice(0, 220);
+      setGeminiStatus(`Не вдалося завантажити моделі: ${message}`, true);
+      showToast('Не вдалося перевірити Gemini', '⚠️');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Перевірити ключ і завантажити моделі';
+    }
+  }
+
+  function saveGeminiSettings() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    const model = document.getElementById('geminiModelSelect').value;
+    const prompt = document.getElementById('geminiPromptInput').value.trim();
+    if (key && !model) {
+      showToast('Спочатку завантаж і вибери модель', '⚠️');
+      return;
+    }
+    if (!prompt) {
+      showToast('Інструкція для ШІ не може бути порожньою', '⚠️');
+      return;
+    }
+    appState.apiKey = key;
+    appState.geminiModel = model || '';
+    appState.geminiPrompt = prompt;
+    geminiInputsDirty = false;
+    persistState(true);
+    setGeminiStatus(key ? `Збережено. Активна модель: ${model}.` : 'Збережено. Без API-ключа використовуватиметься локальний парсер.');
+    showToast('Налаштування ШІ збережено', '✨');
+  }
+
+  async function testGeminiConnection() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    const model = document.getElementById('geminiModelSelect').value || appState.geminiModel;
+    const button = document.getElementById('testGeminiBtn');
+    if (!key || !model) {
+      setGeminiStatus('Встав ключ, завантаж моделі та вибери одну з них перед тестом.', true);
+      showToast('Немає ключа або моделі', '⚠️');
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Перевіряю…';
+    setGeminiStatus(`Надсилаю короткий тестовий запит до ${model}…`);
+    try {
+      const raw = await geminiRequest(model, key,
+        'Ти перевіряєш з’єднання. Відповідай тільки коротким JSON-об’єктом.',
+        'Поверни JSON: {"status":"ok"}');
+      JSON.parse(raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim());
+      setGeminiStatus(`Тест успішний. Модель ${model} прийняла запит і повернула JSON.`);
+      showToast('Gemini працює', '✅');
+    } catch (error) {
+      const message = String(error.message || 'Невідома помилка').replace(/\s+/g, ' ').slice(0, 220);
+      setGeminiStatus(`Тест не пройшов: ${message}`, true);
+      showToast('Gemini не пройшов тест', '⚠️');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Тестувати роботу ШІ';
+    }
   }
 
   function toggleApiKeyVisibility() {
@@ -2677,6 +2986,7 @@
     Object.values(appState.logs).flat().forEach(i => { tomb[i.id] = Date.now(); });
     appState = JSON.parse(JSON.stringify(DEFAULT_DATA));
     appState.tombstones = tomb; appState.gdrive = g;
+    targetsInputsDirty = false; geminiInputsDirty = false;
     selectedDateKey = TODAY_KEY;
     persistState();
     populateSettingsInputs();
@@ -2695,6 +3005,7 @@
         if (!confirm('Замінити поточні дані даними з файлу?')) return;
         appState = { ...JSON.parse(JSON.stringify(DEFAULT_DATA)), ...p, apiKey: appState.apiKey, gdrive: appState.gdrive,
           reminders: { ...DEFAULT_DATA.reminders, ...(p.reminders || {}) } };
+        targetsInputsDirty = false; geminiInputsDirty = false;
         persistState(); populateSettingsInputs(); renderDiary();
         showToast('Дані відновлено', '📥');
       } catch (e) { showToast('Невірний файл копії', '⚠️'); }
@@ -2712,6 +3023,13 @@
 
   // ==================== BOOTSTRAP ====================
   window.addEventListener('DOMContentLoaded', () => {
+    ['settingKcal', 'settingProtein', 'settingFat', 'settingCarb'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { targetsInputsDirty = true; });
+    });
+    ['apiKeyInput', 'geminiPromptInput'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { geminiInputsDirty = true; });
+    });
+    document.getElementById('geminiModelSelect').addEventListener('change', () => { geminiInputsDirty = true; });
     renderDiary();
     renderRemindersTab();
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();

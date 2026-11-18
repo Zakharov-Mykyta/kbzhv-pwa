@@ -493,7 +493,27 @@
     .backup-action-secondary .backup-action-icon { background:rgba(10,132,255,.12); }
     .settings-tab-icon { stroke-width:1.8 !important; }
     @media (max-width:380px) { .assistant-action-card,.assistant-summary-card { margin-left:0; max-width:100%; } .assistant-bubble { max-width:91%; } }
-  </style>
+  
+    /* v16.1: keep edit actions above the persistent bottom navigation */
+    #editSheet {
+      bottom: calc(64px + env(safe-area-inset-bottom));
+      max-height: calc(88% - 64px);
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
+      overscroll-behavior: contain;
+    }
+
+    /* v16.1: transparent assistant composer and dock */
+    .assistant-composer-dock {
+      background: transparent !important;
+    }
+    .composer-field,
+    .composer-field:focus-within {
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+</style>
 </head>
 <body>
 

@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="uk" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="КБЖВ Трекер" />
+  <title>FoodNoms UA — Трекер КБЖВ</title>
+  <meta name="theme-color" content="#000000" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="tailwind.css" />
+  <style>
+    :root {
+      --bg-canvas: #000000;
+      --bg-surface-1: #1C1C1E;
+      --bg-surface-2: #2C2C2E;
+      --bg-surface-3: #3A3A3C;
+      --glass-bar: rgba(20, 20, 22, 0.88);
+      --border-hairline: rgba(255, 255, 255, 0.08);
+      --text-primary: #FFFFFF;
+      --text-secondary: #8E8E93;
+      --color-kcal: #30D158;
+      --color-protein: #0A84FF;
+      --color-fat: #FF9F0A;
+      --color-carb: #BF5AF2;
+      --color-danger: #FF453A;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      background-color: #070709;
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Desktop iPhone 16 Pro Viewport */
+    @media (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .desktop-stage {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 16px;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(10, 132, 255, 0.10), transparent 42%),
+          radial-gradient(circle at 80% 85%, rgba(48, 209, 88, 0.08), transparent 42%),
+          #070709;
+      }
+
+      .iphone-shell {
+        width: 402px;
+        height: 856px;
+        max-height: 94vh;
+        background: var(--bg-canvas);
+        border-radius: 52px;
+        border: 3px solid var(--bg-surface-2);
+        box-shadow:
+          0 0 0 2px #141416,
+          0 32px 84px rgba(0, 0, 0, 0.88);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    /* Mobile Fullscreen PWA */
+    @media not all and (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .desktop-stage {
+        height: 100dvh;
+        width: 100vw;
+        background: var(--bg-canvas);
+      }
+
+      .iphone-shell {
+        width: 100%;
+        height: 100dvh;
+        background: var(--bg-canvas);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .desktop-only-status {
+        display: none !important;
+      }
+    }
+
+    .spring-transition {
+      transition: all 0.34s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* Strict Sheet Visibility (Never lingers on screen) */
+    .sheet-backdrop {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sheet-backdrop.visible {
+      display: block;
+    }
+    .sheet-backdrop.open {
+      opacity: 1;
+    }
+
+    .bottom-sheet {
+      display: none;
+      transform: translateY(100%);
+      transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .bottom-sheet.visible {
+      display: block;
+    }
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+
+    /* Opaque Popover Menus */
+    .opaque-menu {
+      background-color: var(--bg-surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Voice Waveform */
+    @keyframes waveBar {
+      0%, 100% { height: 5px; }
+      50% { height: 18px; }
+    }
+    .wave-bar {
+      width: 3px;
+      background-color: var(--color-danger);
+      border-radius: 999px;
+      animation: waveBar 0.7s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.25s; }
+
+    /* iOS Toast & Push Preview Banner */
+    .ios-toast {
+      transform: translate(-50%, -28px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .ios-toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    .ios-push-banner {
+      transform: translateY(-130%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .ios-push-banner.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* iOS Range Slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: #1C1C1E;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      margin-top: -9px;
+    }
+
+    /* Native Time Input Dark Styling */
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+      @media not all and (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .iphone-shell { padding-top: env(safe-area-inset-top); }
+    }
+    nav.shrink-0 { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  </style>
+</head>
+<body>
+
+<div class="desktop-stage">
+  <div class="iphone-shell" id="appShell">
+
+    <!-- iOS Status Bar (Desktop Preview Only) -->
+    <div class="desktop-only-status shrink-0 px-7 pt-3 pb-2 flex items-center justify-between bg-black z-30 select-none">
+      <span class="text-[14px] font-semibold tracking-tight text-white">11:08</span>
+      <div class="w-[114px] h-[30px] bg-[#0B0B0D] border border-white/[0.06] rounded-full flex items-center justify-end px-3">
+        <div class="w-2.5 h-2.5 rounded-full bg-[#161925] border border-white/10"></div>
+      </div>
+      <div class="flex items-center gap-1.5 text-white">
+        <svg class="w-4 h-3.5" viewBox="0 0 18 12" fill="currentColor">
+          <rect x="0" y="8" width="3" height="4" rx="1"/>
+          <rect x="4.5" y="5.5" width="3" height="6.5" rx="1"/>
+          <rect x="9" y="3" width="3" height="9" rx="1"/>
+          <rect x="13.5" y="0" width="3" height="12" rx="1"/>
+        </svg>
+        <svg class="w-4 h-3.5" viewBox="0 0 16 12" fill="currentColor">
+          <path d="M8 9.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zm-3.6-2.2a5.2 5.2 0 017.2 0l1.2-1.3a7 7 0 00-9.6 0l1.2 1.3zm-2.8-2.8a9.2 9.2 0 0112.8 0l1.2-1.3a11 11 0 00-15.2 0l1.2 1.3z"/>
+        </svg>
+        <div class="w-[22px] h-[11px] rounded-[3.5px] border border-white/40 p-[1.5px] flex items-center">
+          <div class="w-full h-full bg-[#30D158] rounded-[1.5px]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating iOS Toast Banner -->
+    <div id="iosToast" class="ios-toast absolute top-14 left-1/2 z-50 bg-[#2C2C2E] border border-white/15 px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 whitespace-nowrap">
+      <span id="toastIcon" class="text-sm">✅</span>
+      <span id="toastText" class="text-[13px] font-medium text-white">Збережено</span>
+    </div>
+
+    <!-- Simulated iOS Notification Banner (for Reminder Preview) -->
+    <div id="iosPushBanner" onclick="hidePushBanner()" class="ios-push-banner absolute top-12 left-3 right-3 z-50 bg-[#2C2C2E]/95 backdrop-blur-2xl border border-white/15 rounded-[22px] p-3.5 shadow-2xl cursor-pointer">
+      <div class="flex items-start gap-3">
+        <div class="w-9 h-9 rounded-[10px] bg-[#30D158]/20 border border-[#30D158]/40 flex items-center justify-center text-lg shrink-0">
+          🚶‍♂️
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <span class="text-[12px] font-semibold text-white/90">КБЖВ Трекер</span>
+            <span class="text-[11px] text-[#8E8E93]">зараз</span>
+          </div>
+          <p id="pushBannerBody" class="text-[13px] text-white mt-0.5 leading-snug">
+            Час встати, розім’ятися та випити води 🚶‍♂️
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 1: ЩОДЕННИК ==================== -->
+    <div id="viewDiary" class="flex-1 flex flex-col overflow-hidden">
+      <!-- Clean Header: Date pill itself opens Calendar (No extra calendar button) -->
+      <header class="shrink-0 px-4 pt-2 pb-2.5 bg-black/90 backdrop-blur-md z-20 flex items-center justify-between border-b border-white/[0.08]">
+        <button id="prevDayBtn" aria-label="Попередній день" class="w-9 h-9 rounded-full bg-[#1C1C1E] active:scale-95 transition flex items-center justify-center text-[#0A84FF]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <button onclick="openCalendarSheet()" class="px-3.5 py-1.5 rounded-full bg-[#1C1C1E]/80 hover:bg-[#1C1C1E] active:scale-95 transition flex flex-col items-center">
+          <div class="flex items-center gap-1">
+            <span id="currentDateTitle" class="text-[16px] font-semibold tracking-tight text-white">Сьогодні, 18 лист.</span>
+            <svg class="w-3.5 h-3.5 text-[#8E8E93]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <span id="currentDateSubtitle" class="text-[11px] text-[#8E8E93] font-medium">Середа · Ціль 1 800 ккал</span>
+        </button>
+
+        <button id="nextDayBtn" aria-label="Наступний день" class="w-9 h-9 rounded-full bg-[#1C1C1E] active:scale-95 transition flex items-center justify-center text-[#0A84FF]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Scrollable Diary Body -->
+      <main id="diaryScrollArea" class="flex-1 overflow-y-auto no-scrollbar px-4 pt-3 pb-44 space-y-3.5">
+
+        <!-- Main Summary Card -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08]">
+          <div class="flex items-start justify-between gap-2 mb-3">
+            <span id="heroCardLabel" class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] pt-1">
+              Залишилось на сьогодні
+            </span>
+
+            <!-- iOS Segmented Toggle: Залишилось | Спожито -->
+            <div class="bg-[#2C2C2E] p-0.5 rounded-[10px] flex items-center border border-white/[0.06]">
+              <button id="modeRemainingBtn" onclick="setCalorieDisplayMode('remaining')" class="px-2.5 py-1 rounded-[8px] text-[11px] font-semibold bg-[#3A3A3C] text-white shadow transition">
+                Залишилось
+              </button>
+              <button id="modeConsumedBtn" onclick="setCalorieDisplayMode('consumed')" class="px-2.5 py-1 rounded-[8px] text-[11px] font-semibold text-[#8E8E93] transition">
+                Спожито
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-3">
+            <div onclick="toggleCalorieDisplayMode()" class="cursor-pointer select-none">
+              <div class="flex items-baseline gap-1.5">
+                <span id="heroKcalValue" class="text-[32px] font-bold tracking-tight text-white leading-none">1 435</span>
+                <span class="text-[16px] font-semibold text-[#30D158]">ккал</span>
+              </div>
+              <p id="heroSubtext" class="text-[13px] text-[#8E8E93] mt-1.5">
+                З'їдено <span class="text-white font-medium">365</span> з <span class="text-white font-medium">1 800</span> ккал
+              </p>
+            </div>
+
+            <!-- Activity Ring -->
+            <div class="relative w-[74px] h-[74px] shrink-0 flex items-center justify-center">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32" stroke="#2C2C2E" stroke-width="8" fill="none" />
+                <circle id="calorieRing" cx="40" cy="40" r="32" stroke="#30D158" stroke-width="8" stroke-linecap="round" fill="none"
+                        stroke-dasharray="201.06" stroke-dashoffset="160" class="spring-transition" />
+              </svg>
+              <span id="caloriePercent" class="absolute text-[13px] font-bold text-white">20%</span>
+            </div>
+          </div>
+
+          <div class="h-[1px] bg-white/[0.07] my-3.5"></div>
+
+          <!-- 3 Macro Progress Cards -->
+          <div class="grid grid-cols-3 gap-2.5">
+            <!-- Protein (Blue) -->
+            <div class="bg-[#2C2C2E]/70 rounded-[14px] p-2.5 border border-white/[0.05]">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[12px] font-medium text-[#EBEBF5]/85">Білки</span>
+                <span id="proteinBadge" class="hidden text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-[#0A84FF]/20 text-[#0A84FF]">Ціль</span>
+              </div>
+              <div class="text-[13px] font-semibold text-white">
+                <span id="proteinCurrent">14.3</span><span class="text-[#8E8E93] font-normal text-[11px]"> / <span id="proteinTargetText">115</span>г</span>
+              </div>
+              <div id="proteinRemText" class="text-[10px] text-[#8E8E93] mt-0.5 mb-1.5">залиш. 100.7 г</div>
+              <div class="w-full h-1.5 bg-[#1C1C1E] rounded-full overflow-hidden">
+                <div id="proteinBar" class="h-full bg-[#0A84FF] rounded-full spring-transition" style="width: 12%"></div>
+              </div>
+            </div>
+
+            <!-- Fats (Orange) -->
+            <div class="bg-[#2C2C2E]/70 rounded-[14px] p-2.5 border border-white/[0.05]">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[12px] font-medium text-[#EBEBF5]/85">Жири</span>
+              </div>
+              <div class="text-[13px] font-semibold text-white">
+                <span id="fatCurrent">14.7</span><span class="text-[#8E8E93] font-normal text-[11px]"> / <span id="fatTargetText">65</span>г</span>
+              </div>
+              <div id="fatRemText" class="text-[10px] text-[#8E8E93] mt-0.5 mb-1.5">залиш. 50.3 г</div>
+              <div class="w-full h-1.5 bg-[#1C1C1E] rounded-full overflow-hidden">
+                <div id="fatBar" class="h-full bg-[#FF9F0A] rounded-full spring-transition" style="width: 22%"></div>
+              </div>
+            </div>
+
+            <!-- Carbs (Purple) -->
+            <div class="bg-[#2C2C2E]/70 rounded-[14px] p-2.5 border border-white/[0.05]">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[12px] font-medium text-[#EBEBF5]/85">Вуглеводи</span>
+              </div>
+              <div class="text-[13px] font-semibold text-white">
+                <span id="carbCurrent">37.6</span><span class="text-[#8E8E93] font-normal text-[11px]"> / <span id="carbTargetText">170</span>г</span>
+              </div>
+              <div id="carbRemText" class="text-[10px] text-[#8E8E93] mt-0.5 mb-1.5">залиш. 132.4 г</div>
+              <div class="w-full h-1.5 bg-[#1C1C1E] rounded-full overflow-hidden">
+                <div id="carbBar" class="h-full bg-[#BF5AF2] rounded-full spring-transition" style="width: 22%"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Meal Groups Container -->
+        <div id="mealsContainer" class="space-y-3"></div>
+      </main>
+
+      <!-- Bottom Input Dock (Plate Selector + Quick Meal Chips + Input Field) -->
+      <div class="shrink-0 bg-[#141416]/92 backdrop-blur-2xl border-t border-white/[0.08] px-3 pt-2 pb-2 z-20 relative">
+
+        <!-- Row 1: Opaque Plate Selector + Quick Meal Chips -->
+        <div class="flex items-center gap-1.5 pb-2">
+          <!-- Plate Tare Selector -->
+          <div class="relative shrink-0" id="plateSelectorWrapper">
+            <button type="button" id="plateSelectorBtn" onclick="togglePlateDropdown(event)"
+                    class="h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition border border-white/[0.12] flex items-center gap-1 text-[12px] font-medium text-white">
+              <span>🍽</span>
+              <span id="selectedPlateLabel" class="truncate max-w-[115px]">Без тарілки</span>
+              <svg class="w-3 h-3 text-[#8E8E93] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <!-- Opaque Plate Popover Menu -->
+            <div id="plateDropdownMenu" class="hidden opaque-menu absolute bottom-full left-0 mb-2 w-64 rounded-[16px] overflow-hidden z-[60]">
+              <div class="px-3.5 py-2 border-b border-white/[0.08] text-[11px] font-semibold uppercase tracking-wider text-[#8E8E93] bg-[#2C2C2E]">
+                Авто-віднімання тари
+              </div>
+              <div id="plateDropdownOptions" class="max-h-52 overflow-y-auto divide-y divide-white/[0.07] bg-[#2C2C2E]"></div>
+              <button type="button" onclick="goToPlatesSettings(event)"
+                      class="w-full px-3.5 py-2.5 text-left text-[13px] font-semibold text-[#0A84FF] bg-[#2C2C2E] hover:bg-[#3A3A3C] border-t border-white/[0.08] flex items-center justify-between">
+                <span>Налаштувати тарілки...</span>
+                <span>⚙️</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Horizontal Quick-Tap Meal Chips -->
+          <div class="flex-1 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <button type="button" onclick="quickAddItem('2 смажених яйця', 85, 168, 10.8, 13.5, 0.6, 'breakfast')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🥚 2 яйця
+            </button>
+            <button type="button" onclick="quickAddItem('2 тости з хліба', 45, 115, 3.5, 1.2, 22.0, 'breakfast')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🍞 2 тости
+            </button>
+            <button type="button" onclick="quickAddItem('Чай з цукром (1 ч.л.)', 250, 20, 0, 0, 5.0, 'snack')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🍵 Чай з цукром
+            </button>
+            <button type="button" onclick="quickAddItem('Гречка відварна', 200, 220, 8.4, 2.2, 42.6, 'lunch')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🥣 Гречка 200г
+            </button>
+            <button type="button" onclick="quickAddItem('Куряче філе варене', 150, 248, 34.5, 5.4, 0, 'lunch')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🍗 Філе 150г
+            </button>
+            <button type="button" onclick="quickAddItem('Борщ український', 350, 203, 11.2, 9.8, 18.2, 'lunch')"
+                    class="shrink-0 h-[30px] px-2.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-95 transition text-[12px] font-medium text-white/95 border border-white/[0.07]">
+              🍲 Борщ 350г
+            </button>
+          </div>
+        </div>
+
+        <!-- Voice Recording Banner -->
+        <div id="voiceBanner" class="hidden mb-2 px-3 py-2 rounded-[14px] bg-[#FF453A]/15 border border-[#FF453A]/30 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-1 h-4">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+            <span class="text-[12px] font-medium text-[#FF453A]">Диктування iOS...</span>
+          </div>
+          <span class="text-[11px] text-white/70">Слухаю</span>
+        </div>
+
+        <!-- AI Parsing Banner -->
+        <div id="aiParsingBanner" class="hidden mb-2 px-3 py-2 rounded-[14px] bg-[#0A84FF]/15 border border-[#0A84FF]/30 flex items-center gap-2">
+          <span class="text-sm">✨</span>
+          <span id="aiParsingLabel" class="text-[12px] font-medium text-[#0A84FF]">Рахую КБЖВ...</span>
+        </div>
+
+        <!-- Row 2: Text Input + Mic + Send -->
+        <form id="foodInputForm" class="flex items-center gap-2">
+          <div class="flex-1 relative flex items-center bg-[#2C2C2E] rounded-full border border-white/[0.08] px-3.5 py-2">
+            <input
+              id="foodPromptInput"
+              type="text"
+              autocomplete="off"
+              placeholder="Надиктуй або опиши страву..."
+              class="w-full bg-transparent text-[15px] text-white placeholder-[#8E8E93] focus:outline-none pr-8"
+            />
+            <button
+              type="button"
+              id="micBtn"
+              title="Голосове диктування"
+              class="absolute right-2 w-7 h-7 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90 transition"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/>
+              </svg>
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            aria-label="Додати"
+            class="w-10 h-10 shrink-0 rounded-full bg-[#30D158] hover:bg-[#28BD4C] active:scale-90 transition flex items-center justify-center text-black shadow-md"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: СТАТИСТИКА ==================== -->
+    <div id="viewStats" class="hidden flex-1 flex flex-col overflow-hidden">
+      <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08] flex items-center justify-between gap-2">
+        <div>
+          <h1 class="text-[22px] font-bold tracking-tight text-white">Статистика</h1>
+          <p id="statHeaderSubtitle" class="text-[12px] text-[#8E8E93] mt-0.5">Останні 7 днів</p>
+        </div>
+
+        <!-- Period Dropdown -->
+        <div class="relative" id="periodDropdownWrapper">
+          <button type="button" onclick="togglePeriodDropdown(event)"
+                  class="h-[36px] px-3 rounded-[11px] bg-[#1C1C1E] hover:bg-[#2C2C2E] border border-white/[0.1] flex items-center gap-1.5 text-[13px] font-semibold text-white">
+            <span id="periodDropdownLabel">7 днів</span>
+            <svg class="w-3.5 h-3.5 text-[#8E8E93]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <div id="periodDropdownMenu" class="hidden opaque-menu absolute right-0 top-full mt-1.5 w-48 rounded-[16px] overflow-hidden z-[60] divide-y divide-white/[0.07]">
+            <button type="button" onclick="selectStatPeriod('7d', '7 днів')" class="w-full px-3.5 py-2.5 text-left text-[13px] font-medium text-white hover:bg-[#3A3A3C] flex items-center justify-between">
+              <span>Останні 7 днів</span>
+              <span data-period-check="7d" class="text-[#30D158] font-bold">✓</span>
+            </button>
+            <button type="button" onclick="selectStatPeriod('30d', 'Місяць')" class="w-full px-3.5 py-2.5 text-left text-[13px] font-medium text-white hover:bg-[#3A3A3C] flex items-center justify-between">
+              <span>За місяць (30 дн.)</span>
+              <span data-period-check="30d" class="text-[#30D158] font-bold hidden">✓</span>
+            </button>
+            <button type="button" onclick="selectStatPeriod('1y', 'Рік')" class="w-full px-3.5 py-2.5 text-left text-[13px] font-medium text-white hover:bg-[#3A3A3C] flex items-center justify-between">
+              <span>За рік (12 міс.)</span>
+              <span data-period-check="1y" class="text-[#30D158] font-bold hidden">✓</span>
+            </button>
+            <button type="button" onclick="selectStatPeriod('custom', 'Власний')" class="w-full px-3.5 py-2.5 text-left text-[13px] font-medium text-white hover:bg-[#3A3A3C] flex items-center justify-between">
+              <span>Власний період...</span>
+              <span data-period-check="custom" class="text-[#30D158] font-bold hidden">✓</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-3.5 pb-24 space-y-3.5">
+        <!-- Custom Date Range Picker -->
+        <div id="customRangeBar" class="hidden bg-[#1C1C1E] rounded-[16px] p-3 border border-white/[0.08] grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-[11px] text-[#8E8E93] block mb-1">Від дати</label>
+            <input id="customStartInput" type="date" onchange="renderStats()" class="w-full bg-[#2C2C2E] text-white text-[13px] rounded-[10px] px-2.5 py-1.5 border border-white/[0.06] focus:outline-none" />
+          </div>
+          <div>
+            <label class="text-[11px] text-[#8E8E93] block mb-1">До дати</label>
+            <input id="customEndInput" type="date" onchange="renderStats()" class="w-full bg-[#2C2C2E] text-white text-[13px] rounded-[10px] px-2.5 py-1.5 border border-white/[0.06] focus:outline-none" />
+          </div>
+        </div>
+
+        <!-- 4-Macro Segmented Switcher -->
+        <div class="bg-[#1C1C1E] p-1 rounded-[12px] grid grid-cols-4 border border-white/[0.08] h-[36px]">
+          <button id="macroBtn_kcal" onclick="setStatMacro('kcal')" class="rounded-[9px] text-[12px] font-semibold bg-[#2C2C2E] text-white shadow transition">
+            Калорії
+          </button>
+          <button id="macroBtn_protein" onclick="setStatMacro('protein')" class="rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">
+            Білки
+          </button>
+          <button id="macroBtn_fat" onclick="setStatMacro('fat')" class="rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">
+            Жири
+          </button>
+          <button id="macroBtn_carb" onclick="setStatMacro('carb')" class="rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">
+            Вуглев.
+          </button>
+        </div>
+
+        <!-- Chart Card -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08]">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <span id="chartMetricSubtitle" class="text-[11px] uppercase tracking-wider text-[#8E8E93] font-semibold">Середнє за день</span>
+              <div class="flex items-baseline gap-1.5 mt-0.5">
+                <span id="chartAvgValue" class="text-[26px] font-bold text-white">1 725</span>
+                <span id="chartAvgUnit" class="text-[14px] font-semibold text-[#30D158]">ккал</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[11px] text-[#8E8E93] block">Денна ціль</span>
+              <span id="chartTargetValue" class="text-[13px] font-semibold text-white">1 800 ккал</span>
+            </div>
+          </div>
+
+          <!-- Interactive Bar Tooltip -->
+          <div id="barDetailPill" class="mb-2 px-3 py-1.5 rounded-[10px] bg-[#2C2C2E] text-[12px] text-white flex items-center justify-between">
+            <span id="barDetailLabel" class="text-[#8E8E93]">Натисни на стовпчик для деталей</span>
+            <span id="barDetailVal" class="font-semibold text-white"></span>
+          </div>
+
+          <!-- Chart Plot Area -->
+          <div class="relative pt-4">
+            <div id="chartPlotArea" class="relative h-[140px] flex items-end justify-between border-b border-white/[0.08]">
+              <div id="chartTargetLine" class="absolute left-0 right-0 border-t border-dashed border-white/30 pointer-events-none z-10" style="bottom: 100px;">
+                <span class="text-[9px] text-white/70 bg-[#1C1C1E] px-1 absolute right-0 -top-3.5">ціль</span>
+              </div>
+            </div>
+            <div id="chartXAxis" class="flex items-center justify-between pt-2"></div>
+          </div>
+        </section>
+
+        <!-- 2x2 Averages Summary -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
+            <span class="text-[12px] text-[#8E8E93] block">Середні калорії</span>
+            <span id="avgGridKcal" class="text-[20px] font-bold text-[#30D158] mt-0.5 block">1 725 ккал</span>
+            <span id="avgGridDeficit" class="text-[11px] text-[#8E8E93] mt-0.5 block">Дефіцит ~775 ккал/д</span>
+          </div>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
+            <span class="text-[12px] text-[#8E8E93] block">Середній білок</span>
+            <span id="avgGridProtein" class="text-[20px] font-bold text-[#0A84FF] mt-0.5 block">112 г</span>
+            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Захист м'язів та кору</span>
+          </div>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
+            <span class="text-[12px] text-[#8E8E93] block">Середні жири</span>
+            <span id="avgGridFat" class="text-[20px] font-bold text-[#FF9F0A] mt-0.5 block">61 г</span>
+            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Гормональний баланс</span>
+          </div>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
+            <span class="text-[12px] text-[#8E8E93] block">Середні вуглеводи</span>
+            <span id="avgGridCarb" class="text-[20px] font-bold text-[#BF5AF2] mt-0.5 block">164 г</span>
+            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Енергія на орбітрек</span>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ==================== TAB 3: НАГАДУВАННЯ ==================== -->
+    <div id="viewReminders" class="hidden flex-1 flex flex-col overflow-hidden">
+      <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08]">
+        <h1 class="text-[22px] font-bold tracking-tight text-white">Нагадування</h1>
+        <p class="text-[12px] text-[#8E8E93] mt-0.5">Розминка та рух протягом робочого дня</p>
+      </header>
+
+      <main class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-24 space-y-4">
+
+        <!-- Master Toggle Card -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08]">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-[12px] bg-[#30D158]/15 text-[#30D158] flex items-center justify-center text-lg">
+                🚶‍♂️
+              </div>
+              <div>
+                <h2 class="text-[16px] font-semibold text-white">Нагадувати порухатися</h2>
+                <p id="reminderStatusSubtitle" class="text-[12px] text-[#30D158] font-medium">Увімкнено · кожну годину</p>
+              </div>
+            </div>
+
+            <!-- iOS Switch -->
+            <button type="button" id="reminderMasterToggle" onclick="toggleReminderMaster()"
+                    class="w-[51px] h-[31px] rounded-full bg-[#30D158] p-[2px] transition-colors flex items-center justify-end">
+              <span class="w-[27px] h-[27px] rounded-full bg-white shadow-md block"></span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Days of Week Selector -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[14px] font-semibold text-white">Дні тижня</span>
+            <span id="selectedDaysSummary" class="text-[12px] text-[#8E8E93]">Будні (Пн–Пт)</span>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5" id="weekDaysGrid">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </section>
+
+        <!-- Time Range & Interval Card -->
+        <section class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] divide-y divide-white/[0.07]">
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-[15px] text-white">Початок</span>
+            <input id="reminderStartTime" type="time" value="10:00" onchange="updateReminderSettings()"
+                   class="bg-[#2C2C2E] text-white font-semibold text-[15px] rounded-[10px] px-3 py-1.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+          </div>
+          <div class="flex items-center justify-between px-4 py-3">
+            <span class="text-[15px] text-white">Кінець</span>
+            <input id="reminderEndTime" type="time" value="19:00" onchange="updateReminderSettings()"
+                   class="bg-[#2C2C2E] text-white font-semibold text-[15px] rounded-[10px] px-3 py-1.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+          </div>
+          <div class="p-4 space-y-2">
+            <span class="text-[13px] font-medium text-[#8E8E93] block">Інтервал повторення</span>
+            <div class="grid grid-cols-4 gap-1 bg-[#2C2C2E] p-1 rounded-[12px]" id="intervalSelector">
+              <button type="button" data-mins="30" onclick="selectReminderInterval(30)" class="py-1.5 rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">30 хв</button>
+              <button type="button" data-mins="60" onclick="selectReminderInterval(60)" class="py-1.5 rounded-[9px] text-[12px] font-semibold bg-[#3A3A3C] text-white shadow transition">1 год</button>
+              <button type="button" data-mins="90" onclick="selectReminderInterval(90)" class="py-1.5 rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">1.5 год</button>
+              <button type="button" data-mins="120" onclick="selectReminderInterval(120)" class="py-1.5 rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition">2 год</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Custom Notification Text -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-2.5">
+          <label for="reminderCustomText" class="text-[14px] font-semibold text-white block">Текст нагадування</label>
+          <input id="reminderCustomText" type="text" oninput="updateReminderSettings()"
+                 value="Час встати, розім’ятися та випити води 🚶‍♂️"
+                 placeholder="Введи свій текст..."
+                 class="w-full bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3.5 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+          <div class="flex items-center justify-between pt-1">
+            <span id="reminderSchedulePreview" class="text-[11px] text-[#8E8E93] truncate pr-2">
+              Сьогодні: 10:00 · 11:00 · 12:00 ... 19:00
+            </span>
+            <button type="button" onclick="triggerTestReminder()"
+                    class="shrink-0 px-3 py-1.5 rounded-[10px] bg-[#0A84FF]/15 hover:bg-[#0A84FF]/25 active:scale-95 transition text-[12px] font-semibold text-[#0A84FF]">
+              Перевірити 🔔
+            </button>
+          </div>
+        </section>
+
+        <!-- Honest iOS PWA Compatibility Card -->
+        <section class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="text-sm">📱</span>
+            <h3 class="text-[13px] font-semibold text-white">Як це працює на iPhone</h3>
+          </div>
+          <p class="text-[12px] text-[#8E8E93] leading-relaxed">
+            Починаючи з <span class="text-white font-medium">iOS 16.4</span>, PWA підтримує системні push-сповіщення після додавання на екран «Початок». Оскільки iOS може присипляти фонові таймери браузера, для 100% залізної роботи без інтернету можеш також вивантажити цей розклад у системний «Календар» iPhone одним натисканням:
+          </p>
+          <button type="button" onclick="downloadReminderCalendarICS()"
+                  class="w-full mt-1 py-2.5 rounded-[12px] bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-[0.98] transition text-[13px] font-semibold text-[#0A84FF]">
+            Додати розклад у Календар iPhone (.ics)
+          </button>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ==================== TAB 4: НАЛАШТУВАННЯ ==================== -->
+    <div id="viewSettings" class="hidden flex-1 flex flex-col overflow-hidden">
+      <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08]">
+        <h1 class="text-[22px] font-bold tracking-tight text-white">Налаштування</h1>
+        <p class="text-[12px] text-[#8E8E93] mt-0.5">Посуд, хмарна синхронізація та цілі</p>
+      </header>
+
+      <main id="settingsScrollArea" class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-24 space-y-5">
+
+        <!-- 1. Backup -->
+        <div>
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Резервна копія</h2>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
+            <p class="text-[12px] text-[#8E8E93]">Дані зберігаються на пристрої. Збережи копію у «Файли», iCloud або Google Диск і відновлюй її на будь-якому пристрої.</p>
+            <button type="button" onclick="shareBackup()" class="w-full py-3 rounded-[14px] bg-white active:scale-[0.98] transition text-[15px] font-semibold text-black">☁️ Зберегти копію у Файли / Диск</button>
+            <button type="button" onclick="document.getElementById('importFileInput').click()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.98] transition text-[13px] font-semibold text-[#0A84FF]">📥 Відновити з файлу JSON</button>
+            <input id="importFileInput" type="file" accept="application/json,.json" class="hidden" onchange="importDataJson(event)" />
+            <div class="pt-3 border-t border-white/[0.07] space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-[12px] bg-[#2C2C2E] flex items-center justify-center text-lg shrink-0">☁️</div>
+                <div class="min-w-0">
+                  <h3 class="text-[15px] font-semibold text-white">Синхронізація Google Диск</h3>
+                  <p id="gdriveStatus" class="text-[12px] text-[#8E8E93]">Не підключено</p>
+                </div>
+              </div>
+              <div id="gdriveSetupView" class="space-y-2">
+                <input id="gdriveClientId" type="text" onfocus="gdLoadLib().catch(()=>{})" placeholder="OAuth Client ID (…apps.googleusercontent.com)" autocapitalize="off" autocorrect="off" spellcheck="false" class="w-full bg-[#2C2C2E] rounded-[12px] px-3 py-2.5 text-[13px] text-white outline-none placeholder:text-[#8E8E93]" />
+                <button type="button" onclick="connectGdrive()" class="w-full py-3 rounded-[14px] bg-white active:scale-[0.98] transition text-[15px] font-semibold text-black">Підключити Google Диск</button>
+              </div>
+              <div id="gdriveConnectedView" class="hidden space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-[13px] text-white">Автосинхронізація змін</span>
+                  <button type="button" id="gdriveAutoToggle" onclick="toggleGdriveAutoSync()" class="w-[46px] h-[28px] rounded-full bg-[#30D158] p-[2px] transition-colors flex items-center justify-end"><span class="w-[24px] h-[24px] rounded-full bg-white shadow block"></span></button>
+                </div>
+                <button type="button" onclick="syncGdrive('', false)" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.98] transition text-[13px] font-semibold text-[#0A84FF]">Синхронізувати зараз</button>
+                <button type="button" onclick="disconnectGdrive()" class="w-full py-2 text-[12px] font-semibold text-[#FF453A]">Відключити</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. My Plates (Auto-Tare) -->
+        <div id="platesSettingsSection" class="rounded-[22px] transition-all duration-500">
+          <div class="flex items-center justify-between px-1 mb-2">
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Мої тарілки (авто-тара)</h2>
+            <span class="text-[11px] text-[#8E8E93]">Віднімається автоматично</span>
+          </div>
+
+          <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] overflow-hidden">
+            <div id="platesSettingsList" class="divide-y divide-white/[0.07]"></div>
+
+            <form onsubmit="addNewPlate(event)" class="p-3 bg-[#2C2C2E]/40 border-t border-white/[0.07] flex items-center gap-2">
+              <input id="newPlateName" type="text" placeholder="Напр. Біла глибока"
+                     class="flex-1 min-w-0 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-3 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+              <input id="newPlateWeight" type="number" min="10" max="2500" placeholder="Вага (г)"
+                     class="w-24 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-2.5 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+              <button type="submit" class="px-3.5 py-2 rounded-[10px] bg-[#30D158] text-black font-bold text-[13px] active:scale-95 transition">
+                +
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- 3. Daily Targets -->
+        <div>
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Денні цілі КБЖВ</h2>
+          <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] divide-y divide-white/[0.07]">
+            <div class="flex items-center justify-between px-4 py-3">
+              <span class="text-[15px] text-white">Калорії (ккал)</span>
+              <input id="settingKcal" type="number" value="1800" class="w-24 text-right bg-[#2C2C2E] text-[#30D158] font-semibold text-[15px] rounded-[10px] px-2.5 py-1 focus:outline-none" />
+            </div>
+            <div class="flex items-center justify-between px-4 py-3">
+              <span class="text-[15px] text-white">Білки (г)</span>
+              <input id="settingProtein" type="number" value="115" class="w-24 text-right bg-[#2C2C2E] text-[#0A84FF] font-semibold text-[15px] rounded-[10px] px-2.5 py-1 focus:outline-none" />
+            </div>
+            <div class="flex items-center justify-between px-4 py-3">
+              <span class="text-[15px] text-white">Жири (г)</span>
+              <input id="settingFat" type="number" value="65" class="w-24 text-right bg-[#2C2C2E] text-[#FF9F0A] font-semibold text-[15px] rounded-[10px] px-2.5 py-1 focus:outline-none" />
+            </div>
+            <div class="flex items-center justify-between px-4 py-3">
+              <span class="text-[15px] text-white">Вуглеводи (г)</span>
+              <input id="settingCarb" type="number" value="170" class="w-24 text-right bg-[#2C2C2E] text-[#BF5AF2] font-semibold text-[15px] rounded-[10px] px-2.5 py-1 focus:outline-none" />
+            </div>
+          </div>
+          <button onclick="saveSettings()" class="mt-2.5 w-full py-2.5 rounded-[14px] bg-[#0A84FF] active:scale-[0.98] transition text-[14px] font-semibold text-white">
+            Зберегти цілі
+          </button>
+        </div>
+
+        <!-- 4. Gemini AI Key -->
+        <div>
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">ШІ-парсер страв</h2>
+          <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-2">
+            <label for="apiKeyInput" class="text-[14px] font-medium text-white block">Gemini API-ключ (необов'язково)</label>
+            <div class="flex gap-2">
+              <input id="apiKeyInput" type="password" placeholder="AIzaSy..."
+                     class="flex-1 bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3 py-2 border border-white/[0.06] focus:outline-none focus:border-[#0A84FF]" />
+              <button type="button" onclick="toggleApiKeyVisibility()" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[13px] text-[#8E8E93] hover:text-white">
+                👁️
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Local Backup & Reset -->
+        <div>
+          <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Дані</h2>
+          <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] divide-y divide-white/[0.07]">
+            <button onclick="exportDataJson()" class="w-full px-4 py-3.5 flex items-center justify-between text-left active:bg-[#2C2C2E] transition rounded-t-[20px]">
+              <span class="text-[15px] font-medium text-[#0A84FF]">Експорт у JSON</span>
+              <span class="text-base">📤</span>
+            </button>
+            <button onclick="clearAllData()" class="w-full px-4 py-3.5 flex items-center justify-between text-left active:bg-[#2C2C2E] transition rounded-b-[20px]">
+              <span class="text-[15px] font-medium text-[#FF453A]">Видалити всі дані</span>
+              <span class="text-base">↺</span>
+            </button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ==================== 4-TAB BOTTOM BAR ==================== -->
+    <nav class="shrink-0 bg-[#141416]/95 backdrop-blur-xl border-t border-white/[0.08] px-2 pt-2 pb-2 grid grid-cols-4 z-20 select-none">
+      <button onclick="switchTab('diary')" id="tabDiary" class="flex flex-col items-center gap-0.5 text-[#30D158] transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 14H7v-2h10v2zm0-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        <span class="text-[10px] font-semibold">Щоденник</span>
+      </button>
+
+      <button onclick="switchTab('stats')" id="tabStats" class="flex flex-col items-center gap-0.5 text-[#8E8E93] hover:text-white transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/>
+        </svg>
+        <span class="text-[10px] font-semibold">Статистика</span>
+      </button>
+
+      <button onclick="switchTab('reminders')" id="tabReminders" class="flex flex-col items-center gap-0.5 text-[#8E8E93] hover:text-white transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span class="text-[10px] font-semibold">Нагадування</span>
+      </button>
+
+      <button onclick="switchTab('settings')" id="tabSettings" class="flex flex-col items-center gap-0.5 text-[#8E8E93] hover:text-white transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/>
+        </svg>
+        <span class="text-[10px] font-semibold">Налаштування</span>
+      </button>
+    </nav>
+
+    <!-- iOS Home Indicator -->
+    <div class="desktop-only-status shrink-0 bg-[#141416] pb-2 pt-1 flex justify-center">
+      <div class="w-32 h-1 rounded-full bg-white/30"></div>
+    </div>
+
+    <!-- ==================== MODAL 1: CALENDAR SHEET ==================== -->
+    <div id="calendarBackdrop" onclick="closeCalendarSheet()" class="sheet-backdrop absolute inset-0 bg-black/75 z-40"></div>
+    <div id="calendarSheet" class="bottom-sheet absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[28px] border-t border-white/15 p-5 z-50 shadow-2xl">
+      <div class="w-10 h-1.5 rounded-full bg-white/20 mx-auto mb-4"></div>
+
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <button onclick="shiftCalendarMonth(-1)" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-white flex items-center justify-center">‹</button>
+          <h3 id="calendarMonthTitle" class="text-[17px] font-bold text-white min-w-[135px] text-center">Листопад 2026</h3>
+          <button onclick="shiftCalendarMonth(1)" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-white flex items-center justify-center">›</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="jumpToToday()" class="px-3 py-1.5 rounded-full bg-[#0A84FF]/20 text-[#0A84FF] text-[12px] font-semibold">
+            Сьогодні
+          </button>
+          <button onclick="closeCalendarSheet()" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-7 gap-1 text-center mb-1.5">
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Пн</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Вт</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Ср</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Чт</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Пт</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Сб</span>
+        <span class="text-[11px] font-semibold text-[#8E8E93]">Нд</span>
+      </div>
+
+      <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1.5"></div>
+    </div>
+
+    <!-- ==================== MODAL 2: EDIT ITEM SHEET (WITH PLATE TARE) ==================== -->
+    <div id="editBackdrop" onclick="closeEditSheet()" class="sheet-backdrop absolute inset-0 bg-black/75 z-40"></div>
+    <div id="editSheet" class="bottom-sheet absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[28px] border-t border-white/15 p-5 z-50 shadow-2xl max-h-[88%] overflow-y-auto no-scrollbar">
+      <div class="w-10 h-1.5 rounded-full bg-white/20 mx-auto mb-3.5"></div>
+
+      <div class="flex items-center justify-between mb-3.5">
+        <h3 class="text-[18px] font-bold text-white">Редагувати запис</h3>
+        <button onclick="closeEditSheet()" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div>
+          <label class="text-[12px] text-[#8E8E93] font-medium block mb-1">Назва страви</label>
+          <input id="editItemName" type="text" class="w-full bg-[#2C2C2E] text-white text-[15px] font-medium rounded-[12px] px-3.5 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#0A84FF]" />
+        </div>
+
+        <!-- Weight + Plate Auto-Tare Block -->
+        <div class="bg-[#2C2C2E] rounded-[16px] p-3.5 border border-white/[0.08] space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] font-medium text-white">🍽 Тарілка (тара)</span>
+            <select id="editItemPlateSelect" onchange="handleEditPlateChange()"
+                    class="bg-[#1C1C1E] text-white text-[13px] font-medium rounded-[10px] px-2.5 py-1.5 border border-white/[0.1] focus:outline-none">
+            </select>
+          </div>
+
+          <div id="editGrossRow" class="hidden flex items-center justify-between pt-2 border-t border-white/[0.07]">
+            <span class="text-[13px] text-[#8E8E93]">Вага на вагах (брутто)</span>
+            <div class="flex items-center gap-1">
+              <input id="editItemGrossGrams" type="number" min="10" max="3000" oninput="handleEditGrossInput()"
+                     class="w-20 text-right bg-[#1C1C1E] text-white font-semibold text-[15px] rounded-[8px] px-2 py-1 focus:outline-none" />
+              <span class="text-[12px] text-[#8E8E93]">г</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-white/[0.07]">
+            <span class="text-[13px] font-medium text-white">Чиста вага їжі (нетто)</span>
+            <div class="flex items-center gap-1">
+              <input id="editItemGrams" type="number" min="5" max="2000" class="w-20 text-right bg-[#1C1C1E] text-[#30D158] font-bold text-[16px] rounded-[8px] px-2 py-1 focus:outline-none" />
+              <span class="text-[13px] text-[#8E8E93]">г</span>
+            </div>
+          </div>
+
+          <p id="editTareFormulaHint" class="hidden text-[11px] text-[#30D158]"></p>
+
+          <input id="editItemSlider" type="range" min="10" max="800" step="5" class="w-full" />
+
+          <div class="grid grid-cols-4 gap-2 pt-2.5 border-t border-white/[0.08] text-center">
+            <div>
+              <span class="text-[10px] text-[#8E8E93] block">Калорії</span>
+              <span id="previewKcal" class="text-[14px] font-bold text-[#30D158]">0</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-[#8E8E93] block">Білки</span>
+              <span id="previewProtein" class="text-[14px] font-bold text-[#0A84FF]">0 г</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-[#8E8E93] block">Жири</span>
+              <span id="previewFat" class="text-[14px] font-bold text-[#FF9F0A]">0 г</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-[#8E8E93] block">Вуглев.</span>
+              <span id="previewCarb" class="text-[14px] font-bold text-[#BF5AF2]">0 г</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meal Category Selector -->
+        <div>
+          <label class="text-[12px] text-[#8E8E93] font-medium block mb-1.5">Прийом їжі</label>
+          <div class="grid grid-cols-4 gap-1.5 bg-[#2C2C2E] p-1 rounded-[12px]" id="editMealSelector">
+            <button type="button" data-meal="breakfast" onclick="selectEditMeal('breakfast')" class="py-1.5 rounded-[9px] text-[12px] font-medium text-white transition">Сніданок</button>
+            <button type="button" data-meal="lunch" onclick="selectEditMeal('lunch')" class="py-1.5 rounded-[9px] text-[12px] font-medium text-[#8E8E93] transition">Обід</button>
+            <button type="button" data-meal="dinner" onclick="selectEditMeal('dinner')" class="py-1.5 rounded-[9px] text-[12px] font-medium text-[#8E8E93] transition">Вечеря</button>
+            <button type="button" data-meal="snack" onclick="selectEditMeal('snack')" class="py-1.5 rounded-[9px] text-[12px] font-medium text-[#8E8E93] transition">Перекус</button>
+          </div>
+        </div>
+
+        <div class="flex gap-2.5 pt-1">
+          <button type="button" onclick="deleteEditingItem()" class="px-4 py-3 rounded-[14px] bg-[#FF453A]/15 text-[#FF453A] font-semibold text-[14px] active:scale-95 transition">
+            Видалити
+          </button>
+          <button type="button" onclick="saveEditingItem()" class="flex-1 py-3 rounded-[14px] bg-[#0A84FF] text-white font-semibold text-[15px] active:scale-95 transition shadow-lg">
+            Зберегти зміни
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ==================== CONSTANTS & HISTORICAL DATA ====================
+  let TODAY_KEY = toDateKey(new Date());
+
+  const MEAL_META = [
+    { id: 'breakfast', title: 'Сніданок', icon: '🌅' },
+    { id: 'lunch', title: 'Обід', icon: '☀️' },
+    { id: 'dinner', title: 'Вечеря', icon: '🌙' },
+    { id: 'snack', title: 'Перекуси / Чай', icon: '☕' }
+  ];
+
+  const UK_MONTHS_GEN = [
+    'січ.', 'лют.', 'бер.', 'квіт.', 'трав.', 'черв.',
+    'лип.', 'серп.', 'вер.', 'жовт.', 'лист.', 'груд.'
+  ];
+
+  const UK_MONTHS_NOM = [
+    'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+    'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
+  ];
+
+  const UK_WEEKDAYS = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота'];
+  const WEEK_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+
+
+  const DEFAULT_DATA = {
+    targets: { kcal: 1800, protein: 115, fat: 65, carb: 170 },
+    calorieDisplayMode: 'remaining',
+    apiKey: '',
+    gdrive: { clientId: '', connected: false, autoSync: true, lastSync: '', needsAuth: false },
+    tombstones: {},
+    settingsMod: 0,
+    plates: [
+      { id: 'p1', name: 'Біла глибока', weight: 420 },
+      { id: 'p2', name: 'Плоска велика', weight: 510 },
+      { id: 'p3', name: 'Піала для сніданку', weight: 240 }
+    ],
+    selectedPlateId: null,
+    reminders: {
+      enabled: false,
+      days: [0, 1, 2, 3, 4], // Mon-Fri (0 = Mon ... 6 = Sun)
+      startTime: '10:00',
+      endTime: '19:00',
+      intervalMins: 60,
+      message: 'Час встати, розім’ятися та випити води 🚶‍♂️'
+    },
+    logs: {}
+  };
+
+  let appState = loadState();
+  let selectedDateKey = TODAY_KEY;
+  let calendarViewDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let statPeriod = '7d';
+  let statMacro = 'kcal';
+  let editingItemState = null;
+
+  const VOICE_SAMPLES = [
+    'На вечерю гречка із вареним філе 840 г',
+    'На обід борщ 350 г і два шматочки хліба',
+    'Сніданок сир кисломолочний 200 г з медом 15 г'
+  ];
+  let voiceSampleCursor = 0;
+
+  // ==================== STORAGE & HELPERS ====================
+  function loadState() {
+    try {
+      const saved = localStorage.getItem('foodnoms_ua_v5');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...JSON.parse(JSON.stringify(DEFAULT_DATA)),
+          ...parsed,
+          reminders: { ...DEFAULT_DATA.reminders, ...(parsed.reminders || {}) },
+          gdrive: { ...DEFAULT_DATA.gdrive, ...(parsed.gdrive || {}) }
+        };
+      }
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+
+  let _settingsHash = null;
+  const settingsHash = () => JSON.stringify([appState.targets, appState.plates, appState.reminders, appState.calorieDisplayMode]);
+  function persistState(skipSync) {
+    const h = settingsHash();
+    if (h !== _settingsHash) { if (_settingsHash !== null) appState.settingsMod = Date.now(); _settingsHash = h; }
+    try {
+      localStorage.setItem('foodnoms_ua_v5', JSON.stringify(appState));
+    } catch (e) {}
+    if (!skipSync) scheduleSync();
+  }
+
+  function toDateKey(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function shiftKey(key, days) {
+    const d = parseDateKey(key); d.setDate(d.getDate() + days); return toDateKey(d);
+  }
+
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function parseDateKey(key) {
+    const [y, m, d] = key.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function formatSpacedInt(num) {
+    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  function formatOneDecimal(num) {
+    return (Math.round(num * 10) / 10).toFixed(1).replace(/\.0$/, '');
+  }
+
+  function getCurrentTimeStr() {
+    const now = new Date();
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  }
+
+  function showToast(text, icon = '✅') {
+    const toast = document.getElementById('iosToast');
+    document.getElementById('toastText').textContent = text;
+    document.getElementById('toastIcon').textContent = icon;
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // ==================== CLOSE ALL POPOVERS & SHEETS ====================
+  function closeAllOverlays() {
+    document.getElementById('plateDropdownMenu').classList.add('hidden');
+    document.getElementById('periodDropdownMenu').classList.add('hidden');
+    closeEditSheet();
+    closeCalendarSheet();
+  }
+
+  document.addEventListener('click', (e) => {
+    const plateWrap = document.getElementById('plateSelectorWrapper');
+    if (plateWrap && !plateWrap.contains(e.target)) {
+      document.getElementById('plateDropdownMenu').classList.add('hidden');
+    }
+    const periodWrap = document.getElementById('periodDropdownWrapper');
+    if (periodWrap && !periodWrap.contains(e.target)) {
+      document.getElementById('periodDropdownMenu').classList.add('hidden');
+    }
+  });
+
+  // ==================== CALORIE DISPLAY MODE ====================
+  function setCalorieDisplayMode(mode) {
+    appState.calorieDisplayMode = mode;
+    persistState();
+    renderDiary();
+  }
+
+  function toggleCalorieDisplayMode() {
+    setCalorieDisplayMode(appState.calorieDisplayMode === 'remaining' ? 'consumed' : 'remaining');
+  }
+
+  // ==================== RENDER DIARY ====================
+  function renderDiary() {
+    const dObj = parseDateKey(selectedDateKey);
+    const dayNum = dObj.getDate();
+    const monthStr = UK_MONTHS_GEN[dObj.getMonth()];
+    const weekdayStr = UK_WEEKDAYS[dObj.getDay()];
+
+    let titlePrefix = `${dayNum} ${monthStr}`;
+    if (selectedDateKey === TODAY_KEY) titlePrefix = `Сьогодні, ${dayNum} ${monthStr}`;
+    else if (selectedDateKey === shiftKey(TODAY_KEY, -1)) titlePrefix = `Вчора, ${dayNum} ${monthStr}`;
+
+    document.getElementById('currentDateTitle').textContent = titlePrefix;
+    document.getElementById('currentDateSubtitle').textContent = `${weekdayStr} · Ціль ${formatSpacedInt(appState.targets.kcal)} ккал`;
+
+    const items = appState.logs[selectedDateKey] || [];
+    const targets = appState.targets;
+
+    const totals = items.reduce(
+      (acc, i) => ({
+        kcal: acc.kcal + i.kcal,
+        protein: acc.protein + i.protein,
+        fat: acc.fat + i.fat,
+        carb: acc.carb + i.carb
+      }),
+      { kcal: 0, protein: 0, fat: 0, carb: 0 }
+    );
+
+    const isRemainingMode = appState.calorieDisplayMode === 'remaining';
+    const remBtn = document.getElementById('modeRemainingBtn');
+    const conBtn = document.getElementById('modeConsumedBtn');
+
+    if (isRemainingMode) {
+      remBtn.className = 'px-2.5 py-1 rounded-[8px] text-[11px] font-semibold bg-[#3A3A3C] text-white shadow transition';
+      conBtn.className = 'px-2.5 py-1 rounded-[8px] text-[11px] font-semibold text-[#8E8E93] transition';
+    } else {
+      conBtn.className = 'px-2.5 py-1 rounded-[8px] text-[11px] font-semibold bg-[#3A3A3C] text-white shadow transition';
+      remBtn.className = 'px-2.5 py-1 rounded-[8px] text-[11px] font-semibold text-[#8E8E93] transition';
+    }
+
+    const heroLabel = document.getElementById('heroCardLabel');
+    const heroVal = document.getElementById('heroKcalValue');
+    const heroSub = document.getElementById('heroSubtext');
+    const remaining = targets.kcal - totals.kcal;
+
+    if (isRemainingMode) {
+      if (remaining >= 0) {
+        heroLabel.textContent = selectedDateKey === TODAY_KEY ? 'Залишилось на сьогодні' : 'Залишок за день';
+        heroVal.textContent = formatSpacedInt(remaining);
+        heroVal.className = 'text-[32px] font-bold tracking-tight text-white leading-none';
+      } else {
+        heroLabel.textContent = 'Перевищення норми';
+        heroVal.textContent = `+${formatSpacedInt(Math.abs(remaining))}`;
+        heroVal.className = 'text-[32px] font-bold tracking-tight text-[#FF9F0A] leading-none';
+      }
+      heroSub.innerHTML = `З'їдено <span class="text-white font-medium">${formatSpacedInt(totals.kcal)}</span> з <span class="text-white font-medium">${formatSpacedInt(targets.kcal)}</span> ккал`;
+    } else {
+      heroLabel.textContent = selectedDateKey === TODAY_KEY ? 'Спожито за сьогодні' : 'Спожито за день';
+      heroVal.textContent = formatSpacedInt(totals.kcal);
+      heroVal.className = 'text-[32px] font-bold tracking-tight text-white leading-none';
+      heroSub.innerHTML = remaining >= 0
+        ? `Залишилось <span class="text-white font-medium">${formatSpacedInt(remaining)}</span> з <span class="text-white font-medium">${formatSpacedInt(targets.kcal)}</span> ккал`
+        : `Перевищення на <span class="text-[#FF9F0A] font-medium">+${formatSpacedInt(Math.abs(remaining))}</span> ккал`;
+    }
+
+    // Ring
+    const pct = Math.min(100, Math.round((totals.kcal / targets.kcal) * 100));
+    const circumference = 201.06;
+    const ring = document.getElementById('calorieRing');
+    ring.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+    ring.style.stroke = totals.kcal > targets.kcal ? '#FF9F0A' : '#30D158';
+    document.getElementById('caloriePercent').textContent = `${pct}%`;
+
+    // Macros
+    document.getElementById('proteinCurrent').textContent = formatOneDecimal(totals.protein);
+    document.getElementById('proteinTargetText').textContent = targets.protein;
+    const remP = Math.max(0, targets.protein - totals.protein);
+    document.getElementById('proteinRemText').textContent = remP > 0 ? `залиш. ${formatOneDecimal(remP)} г` : 'ціль виконана';
+    document.getElementById('proteinBar').style.width = `${Math.min(100, (totals.protein / targets.protein) * 100)}%`;
+    document.getElementById('proteinBadge').classList.toggle('hidden', totals.protein < targets.protein * 0.9);
+
+    document.getElementById('fatCurrent').textContent = formatOneDecimal(totals.fat);
+    document.getElementById('fatTargetText').textContent = targets.fat;
+    const remF = Math.max(0, targets.fat - totals.fat);
+    document.getElementById('fatRemText').textContent = remF > 0 ? `залиш. ${formatOneDecimal(remF)} г` : 'ліміт досягнуто';
+    document.getElementById('fatBar').style.width = `${Math.min(100, (totals.fat / targets.fat) * 100)}%`;
+
+    document.getElementById('carbCurrent').textContent = formatOneDecimal(totals.carb);
+    document.getElementById('carbTargetText').textContent = targets.carb;
+    const remC = Math.max(0, targets.carb - totals.carb);
+    document.getElementById('carbRemText').textContent = remC > 0 ? `залиш. ${formatOneDecimal(remC)} г` : 'ліміт досягнуто';
+    document.getElementById('carbBar').style.width = `${Math.min(100, (totals.carb / targets.carb) * 100)}%`;
+
+    // Meals
+    const container = document.getElementById('mealsContainer');
+    container.innerHTML = '';
+
+    MEAL_META.forEach(mealMeta => {
+      const mealItems = items.filter(i => i.meal === mealMeta.id);
+      const mealKcal = mealItems.reduce((s, i) => s + i.kcal, 0);
+
+      const card = document.createElement('section');
+      card.className = 'bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] overflow-hidden';
+
+      const headerHtml = `
+        <div class="px-4 py-3 flex items-center justify-between ${mealItems.length > 0 ? 'border-b border-white/[0.07]' : ''}">
+          <div class="flex items-center gap-2">
+            <span class="text-[16px]">${mealMeta.icon}</span>
+            <h2 class="text-[15px] font-semibold text-white">${mealMeta.title}</h2>
+            ${mealKcal > 0 ? `<span class="text-[13px] font-medium text-[#8E8E93]">· ${Math.round(mealKcal)} ккал</span>` : ''}
+          </div>
+          <button onclick="prefillMealHint('${mealMeta.id}')" class="w-7 h-7 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-90 transition flex items-center justify-center text-[#0A84FF] text-base font-semibold">
+            +
+          </button>
+        </div>
+      `;
+
+      let bodyHtml = '';
+      if (mealItems.length === 0) {
+        bodyHtml = `<div class="px-4 py-2.5"><span class="text-[12px] text-[#8E8E93]/70">Поки порожньо</span></div>`;
+      } else {
+        bodyHtml = `<div class="divide-y divide-white/[0.06]">` + mealItems.map(item => `
+          <button onclick="openEditSheet('${item.id}')" class="w-full text-left px-4 py-3 hover:bg-white/[0.03] active:bg-white/[0.06] transition flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <div class="text-[14px] font-medium text-white truncate">${esc(item.name)}</div>
+              <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                <span class="text-[11px] text-[#8E8E93]">${item.time} · ${item.grams} г</span>
+                ${item.plateNote ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-[#2C2C2E] text-[#8E8E93]">🍽 ${item.plateNote}</span>` : ''}
+                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#0A84FF]/15 text-[#0A84FF]">Б ${formatOneDecimal(item.protein)}</span>
+                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#FF9F0A]/15 text-[#FF9F0A]">Ж ${formatOneDecimal(item.fat)}</span>
+                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#BF5AF2]/15 text-[#BF5AF2]">В ${formatOneDecimal(item.carb)}</span>
+              </div>
+            </div>
+            <div class="shrink-0 text-right">
+              <span class="text-[15px] font-semibold text-white">${Math.round(item.kcal)}</span>
+              <span class="text-[11px] text-[#8E8E93]"> ккал</span>
+            </div>
+          </button>
+        `).join('') + `</div>`;
+      }
+
+      card.innerHTML = headerHtml + bodyHtml;
+      container.appendChild(card);
+    });
+
+    renderPlateSelectorUI();
+  }
+
+  // ==================== DATE STEPPERS & CALENDAR ====================
+  document.getElementById('prevDayBtn').addEventListener('click', () => {
+    const d = parseDateKey(selectedDateKey);
+    d.setDate(d.getDate() - 1);
+    selectedDateKey = toDateKey(d);
+    renderDiary();
+  });
+
+  document.getElementById('nextDayBtn').addEventListener('click', () => {
+    const d = parseDateKey(selectedDateKey);
+    d.setDate(d.getDate() + 1);
+    selectedDateKey = toDateKey(d);
+    renderDiary();
+  });
+
+  function openCalendarSheet() {
+    closeAllOverlays();
+    const d = parseDateKey(selectedDateKey);
+    calendarViewDate = new Date(d.getFullYear(), d.getMonth(), 1);
+    renderCalendarGrid();
+
+    const bd = document.getElementById('calendarBackdrop');
+    const sh = document.getElementById('calendarSheet');
+    bd.classList.add('visible');
+    sh.classList.add('visible');
+    requestAnimationFrame(() => {
+      bd.classList.add('open');
+      sh.classList.add('open');
+    });
+  }
+
+  function closeCalendarSheet() {
+    const bd = document.getElementById('calendarBackdrop');
+    const sh = document.getElementById('calendarSheet');
+    bd.classList.remove('open');
+    sh.classList.remove('open');
+    setTimeout(() => {
+      if (!sh.classList.contains('open')) {
+        bd.classList.remove('visible');
+        sh.classList.remove('visible');
+      }
+    }, 340);
+  }
+
+  function shiftCalendarMonth(delta) {
+    calendarViewDate.setMonth(calendarViewDate.getMonth() + delta);
+    renderCalendarGrid();
+  }
+
+  function jumpToToday() {
+    selectedDateKey = TODAY_KEY;
+    closeCalendarSheet();
+    renderDiary();
+  }
+
+  function renderCalendarGrid() {
+    const year = calendarViewDate.getFullYear();
+    const month = calendarViewDate.getMonth();
+    document.getElementById('calendarMonthTitle').textContent = `${UK_MONTHS_NOM[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1);
+    let startWeekday = firstDay.getDay() - 1;
+    if (startWeekday < 0) startWeekday = 6;
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const grid = document.getElementById('calendarDaysGrid');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < startWeekday; i++) {
+      grid.appendChild(document.createElement('div'));
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateObj = new Date(year, month, day);
+      const key = toDateKey(dateObj);
+      const dayLogs = appState.logs[key] || [];
+      const dayKcal = dayLogs.reduce((s, x) => s + x.kcal, 0);
+      const isSelected = key === selectedDateKey;
+      const isToday = key === TODAY_KEY;
+
+      let dotColor = '';
+      if (dayKcal > 0) {
+        dotColor = dayKcal <= appState.targets.kcal + 80 ? 'bg-[#30D158]' : 'bg-[#FF9F0A]';
+      }
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.onclick = () => {
+        selectedDateKey = key;
+        closeCalendarSheet();
+        renderDiary();
+      };
+      btn.className = `h-10 rounded-[12px] flex flex-col items-center justify-center relative transition ${
+        isSelected
+          ? 'bg-[#0A84FF] text-white font-bold shadow'
+          : isToday
+            ? 'bg-[#2C2C2E] text-[#30D158] font-bold border border-[#30D158]/40'
+            : 'hover:bg-[#2C2C2E] text-white/90 font-medium'
+      }`;
+      btn.innerHTML = `
+        <span class="text-[13px]">${day}</span>
+        <span class="w-1.5 h-1.5 rounded-full mt-0.5 ${isSelected && dotColor ? 'bg-white' : dotColor || 'bg-transparent'}"></span>
+      `;
+      grid.appendChild(btn);
+    }
+  }
+
+  // ==================== PLATES (AUTO-TARE) ====================
+  function getSelectedPlate() {
+    return appState.plates.find(p => p.id === appState.selectedPlateId) || null;
+  }
+
+  function renderPlateSelectorUI() {
+    const selected = getSelectedPlate();
+    const label = document.getElementById('selectedPlateLabel');
+    const btn = document.getElementById('plateSelectorBtn');
+
+    if (selected) {
+      label.textContent = `${selected.name} -${selected.weight}г`;
+      btn.classList.add('border-[#30D158]/50', 'text-[#30D158]');
+    } else {
+      label.textContent = 'Без тарілки';
+      btn.classList.remove('border-[#30D158]/50', 'text-[#30D158]');
+    }
+
+    const opts = document.getElementById('plateDropdownOptions');
+    opts.innerHTML = `
+      <button type="button" onclick="selectPlate(null, event)"
+              class="w-full px-3.5 py-2.5 text-left text-[13px] bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-between ${!selected ? 'text-white font-semibold' : 'text-white/80'}">
+        <span>Без тарілки (чиста вага)</span>
+        ${!selected ? '<span class="text-[#30D158] font-bold">✓</span>' : ''}
+      </button>
+    ` + appState.plates.map(p => `
+      <button type="button" onclick="selectPlate('${p.id}', event)"
+              class="w-full px-3.5 py-2.5 text-left text-[13px] bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-between ${selected && selected.id === p.id ? 'text-white font-semibold' : 'text-white/85'}">
+        <div>
+          <span class="block">${esc(p.name)}</span>
+          <span class="text-[11px] text-[#8E8E93]">Тара: −${p.weight} г</span>
+        </div>
+        ${selected && selected.id === p.id ? '<span class="text-[#30D158] font-bold">✓</span>' : ''}
+      </button>
+    `).join('');
+  }
+
+  function togglePlateDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('plateDropdownMenu').classList.toggle('hidden');
+  }
+
+  function selectPlate(plateId, e) {
+    if (e) e.stopPropagation();
+    appState.selectedPlateId = plateId;
+    document.getElementById('plateDropdownMenu').classList.add('hidden');
+    persistState();
+    renderPlateSelectorUI();
+    const p = getSelectedPlate();
+    if (p) showToast(`Обрано: ${p.name} (−${p.weight} г)`, '🍽');
+  }
+
+  function goToPlatesSettings(e) {
+    if (e) e.stopPropagation();
+    closeAllOverlays();
+    switchTab('settings');
+    setTimeout(() => {
+      const section = document.getElementById('platesSettingsSection');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        section.classList.add('ring-2', 'ring-[#30D158]/60');
+        setTimeout(() => section.classList.remove('ring-2', 'ring-[#30D158]/60'), 1400);
+      }
+      const nameInp = document.getElementById('newPlateName');
+      if (nameInp) nameInp.focus();
+    }, 80);
+  }
+
+  function renderPlatesSettingsList() {
+    const list = document.getElementById('platesSettingsList');
+    if (appState.plates.length === 0) {
+      list.innerHTML = `<div class="px-4 py-3 text-[13px] text-[#8E8E93]">Поки немає збережених тарілок</div>`;
+      return;
+    }
+    list.innerHTML = appState.plates.map(p => `
+      <div class="px-4 py-3 flex items-center justify-between">
+        <div>
+          <span class="text-[15px] font-medium text-white block">${esc(p.name)}</span>
+          <span class="text-[12px] text-[#8E8E93]">Вага посуду: ${p.weight} г</span>
+        </div>
+        <button type="button" onclick="deletePlate('${p.id}')" class="px-2.5 py-1 rounded-[8px] bg-[#FF453A]/15 text-[#FF453A] text-[12px] font-semibold">
+          Видалити
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function addNewPlate(e) {
+    e.preventDefault();
+    const nameInp = document.getElementById('newPlateName');
+    const weightInp = document.getElementById('newPlateWeight');
+    const name = nameInp.value.trim();
+    const weight = parseInt(weightInp.value, 10);
+
+    if (!name || !weight || weight <= 0) {
+      showToast('Вкажи назву та вагу тарілки', '⚠️');
+      return;
+    }
+
+    appState.plates.push({ id: 'plate_' + Date.now(), name, weight });
+    nameInp.value = '';
+    weightInp.value = '';
+    persistState();
+    renderPlatesSettingsList();
+    renderPlateSelectorUI();
+    showToast(`Тарілку «${name}» додано`, '🍽');
+  }
+
+  function deletePlate(plateId) {
+    appState.plates = appState.plates.filter(p => p.id !== plateId);
+    if (appState.selectedPlateId === plateId) appState.selectedPlateId = null;
+    persistState();
+    renderPlatesSettingsList();
+    renderPlateSelectorUI();
+    showToast('Тарілку видалено', '🗑️');
+  }
+
+  // ==================== QUICK ADD & VOICE ====================
+  function quickAddItem(name, grams, kcal, protein, fat, carb, meal) {
+    if (!appState.logs[selectedDateKey]) appState.logs[selectedDateKey] = [];
+    appState.logs[selectedDateKey].push({
+      id: 'item_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+      mod: Date.now(),
+      meal,
+      time: getCurrentTimeStr(),
+      name,
+      grams,
+      kcal,
+      protein,
+      fat,
+      carb
+    });
+    persistState();
+    renderDiary();
+    showToast(`Додано: ${name} (+${kcal} ккал)`);
+  }
+
+  function prefillMealHint(mealId) {
+    const map = { breakfast: 'На сніданок ', lunch: 'На обід ', dinner: 'На вечерю ', snack: 'Перекус ' };
+    const input = document.getElementById('foodPromptInput');
+    input.value = map[mealId] || '';
+    input.focus();
+  }
+
+  let _rec = null;
+  document.getElementById('micBtn').addEventListener('click', () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const banner = document.getElementById('voiceBanner');
+    const input = document.getElementById('foodPromptInput');
+    if (!SR) { showToast('Голос недоступний. Скористайся 🎤 на клавіатурі', '🎙'); input.focus(); return; }
+    if (_rec) { _rec.stop(); return; }
+    const rec = new SR(); _rec = rec;
+    rec.lang = 'uk-UA'; rec.interimResults = true; rec.continuous = false;
+    const base = input.value ? input.value.trim() + ' ' : '';
+    rec.onstart = () => banner.classList.remove('hidden');
+    rec.onresult = e => { input.value = base + Array.from(e.results).map(r => r[0].transcript).join(' '); };
+    rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') showToast('Немає доступу до мікрофона', '⚠️'); };
+    rec.onend = () => { _rec = null; banner.classList.add('hidden'); input.focus(); };
+    try { rec.start(); } catch (e) { _rec = null; }
+  });
+
+  // ==================== MULTI-ITEM UKRAINIAN PARSER ====================
+  const FOOD_DB = [
+    { keys: ['борщ'], name: 'Борщ український', defaultG: 350, share: 1.0, per100: { kcal: 58, p: 3.2, f: 2.8, c: 5.2 } },
+    { keys: ['хліб', 'тост'], name: 'Хліб / тости', defaultG: 50, share: 0.25, per100: { kcal: 255, p: 8.0, f: 2.5, c: 49.0 } },
+    { keys: ['гречк'], name: 'Гречка відварна', defaultG: 200, share: 0.55, per100: { kcal: 110, p: 4.2, f: 1.1, c: 21.3 } },
+    { keys: ['булгур'], name: 'Булгур відварний', defaultG: 200, share: 0.55, per100: { kcal: 115, p: 3.8, f: 0.8, c: 23.5 } },
+    { keys: ['рис'], name: 'Рис відварний', defaultG: 200, share: 0.55, per100: { kcal: 130, p: 2.7, f: 0.3, c: 28.0 } },
+    { keys: ['вівсян'], name: 'Вівсянка на воді', defaultG: 250, share: 0.8, per100: { kcal: 88, p: 3.0, f: 1.7, c: 15.0 } },
+    { keys: ['філе', 'курк', 'куряч'], name: 'Куряче філе варене', defaultG: 180, share: 0.45, per100: { kcal: 165, p: 23.0, f: 3.6, c: 0.0 } },
+    { keys: ['котлет'], name: 'Курячі котлети', defaultG: 160, share: 0.45, per100: { kcal: 195, p: 17.5, f: 10.5, c: 7.0 } },
+    { keys: ['сосиск'], name: 'Сосиски відварні', defaultG: 120, share: 0.35, per100: { kcal: 260, p: 11.0, f: 23.0, c: 2.0 } },
+    { keys: ['яйц', 'яєчн'], name: 'Яйця курячі', defaultG: 120, share: 0.5, per100: { kcal: 155, p: 12.6, f: 10.6, c: 0.7 } },
+    { keys: ['сир', 'творог'], name: 'Сир кисломолочний 5%', defaultG: 200, share: 0.85, per100: { kcal: 121, p: 16.0, f: 5.0, c: 3.0 } },
+    { keys: ['банан'], name: 'Банан', defaultG: 130, share: 0.5, per100: { kcal: 89, p: 1.1, f: 0.3, c: 22.8 } },
+    { keys: ['яблук'], name: 'Яблуко', defaultG: 200, share: 1.0, per100: { kcal: 52, p: 0.4, f: 0.2, c: 12.6 } },
+    { keys: ['чай'], name: 'Чай з цукром', defaultG: 250, share: 1.0, per100: { kcal: 12, p: 0.0, f: 0.0, c: 3.0 } },
+    { keys: ['кав', 'лате', 'капуч'], name: 'Кава з молоком', defaultG: 220, share: 1.0, per100: { kcal: 32, p: 1.5, f: 1.5, c: 3.0 } },
+    { keys: ['мед'], name: 'Мед натуральний', defaultG: 15, share: 0.15, per100: { kcal: 304, p: 0.3, f: 0.0, c: 82.4 } },
+    { keys: ['салат', 'огір', 'помідор'], name: 'Салат зі свіжих овочів', defaultG: 150, share: 0.35, per100: { kcal: 45, p: 1.1, f: 2.5, c: 4.5 } },
+    { keys: ['картопл', 'пюре'], name: 'Картопля відварна', defaultG: 200, share: 0.55, per100: { kcal: 95, p: 2.0, f: 2.2, c: 17.0 } }
+  ];
+
+  function detectMealCategory(text) {
+    const lower = text.toLowerCase();
+    if (lower.includes('снідан')) return 'breakfast';
+    if (lower.includes('обід')) return 'lunch';
+    if (lower.includes('вечер')) return 'dinner';
+    if (lower.includes('перекус') || lower.includes('чай') || lower.includes('кав')) return 'snack';
+    const hr = new Date().getHours();
+    if (hr < 11) return 'breakfast';
+    if (hr < 16) return 'lunch';
+    if (hr < 21) return 'dinner';
+    return 'snack';
+  }
+
+  function offlineSmartParse(promptText) {
+    const lower = promptText.toLowerCase();
+    const meal = detectMealCategory(lower);
+    const activePlate = getSelectedPlate();
+
+    const chunks = lower.split(/(?:,|\s+із\s+|\s+зі\s+|\s+з\s+|\s+і\s+|\s+та\s+|\s+плюс\s+)/);
+    const foundItems = [];
+
+    chunks.forEach(chunk => {
+      const matched = FOOD_DB.find(entry => entry.keys.some(k => chunk.includes(k)));
+      if (matched) {
+        const gramMatch = chunk.match(/(\d{2,4})\s*(?:г|гр|мл)/);
+        const pieceMatch = chunk.match(/(?:^|\s)(\d)\s*(?:шт|шмат|яйц|котлет)/);
+        let explicitGrams = null;
+        if (gramMatch) explicitGrams = parseInt(gramMatch[1], 10);
+        else if (pieceMatch) {
+          const cnt = parseInt(pieceMatch[1], 10);
+          explicitGrams = matched.keys.includes('хліб') ? cnt * 28 : cnt * 60;
+        }
+        foundItems.push({ matched, explicitGrams });
+      }
+    });
+
+    if (foundItems.length === 0) {
+      const cleanName = promptText.replace(/^(на\s+(сніданок|обід|вечерю)|перекус)\s*/i, '').trim();
+      const gramMatch = promptText.match(/(\d{2,4})\s*(?:г|гр|мл)/);
+      const rawGrams = gramMatch ? parseInt(gramMatch[1], 10) : 200;
+      let netGrams = rawGrams;
+      let plateNote = null;
+
+      if (activePlate && rawGrams > activePlate.weight + 20) {
+        netGrams = rawGrams - activePlate.weight;
+        plateNote = `${rawGrams}г − ${activePlate.weight}г`;
+      }
+
+      return [{
+        meal,
+        name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+        grams: netGrams,
+        plateId: plateNote ? activePlate.id : null,
+        grossGrams: plateNote ? rawGrams : null,
+        plateNote,
+        kcal: Math.round(netGrams * 1.45),
+        protein: Math.round(netGrams * 0.08 * 10) / 10,
+        fat: Math.round(netGrams * 0.05 * 10) / 10,
+        carb: Math.round(netGrams * 0.16 * 10) / 10
+      }];
+    }
+
+    const totalWeightMatch = lower.match(/(\d{2,4})\s*(?:г|гр|мл)/);
+    const itemsWithNoExplicit = foundItems.filter(x => x.explicitGrams === null);
+    const itemsWithExplicit = foundItems.filter(x => x.explicitGrams !== null);
+
+    if (foundItems.length > 1 && itemsWithExplicit.length === 1 && itemsWithNoExplicit.length >= 1 && totalWeightMatch) {
+      let totalGross = itemsWithExplicit[0].explicitGrams;
+      let netPool = totalGross;
+      let appliedPlate = null;
+
+      if (activePlate && totalGross > activePlate.weight + 30) {
+        netPool = totalGross - activePlate.weight;
+        appliedPlate = activePlate;
+      }
+
+      const shareSum = foundItems.reduce((s, x) => s + x.matched.share, 0);
+      return foundItems.map((entry, idx) => {
+        const portionGrams = Math.max(15, Math.round(netPool * (entry.matched.share / shareSum)));
+        const factor = portionGrams / 100;
+        return {
+          meal,
+          name: entry.matched.name,
+          grams: portionGrams,
+          plateId: idx === 0 && appliedPlate ? appliedPlate.id : null,
+          grossGrams: idx === 0 && appliedPlate ? totalGross : null,
+          plateNote: idx === 0 && appliedPlate ? `тарілка −${appliedPlate.weight}г` : null,
+          kcal: Math.round(entry.matched.per100.kcal * factor),
+          protein: Math.round(entry.matched.per100.p * factor * 10) / 10,
+          fat: Math.round(entry.matched.per100.f * factor * 10) / 10,
+          carb: Math.round(entry.matched.per100.c * factor * 10) / 10
+        };
+      });
+    }
+
+    return foundItems.map((entry, idx) => {
+      let rawG = entry.explicitGrams || entry.matched.defaultG;
+      let netG = rawG;
+      let plateNote = null;
+      let appliedPlate = null;
+
+      if (idx === 0 && activePlate && entry.explicitGrams && rawG > activePlate.weight + 20) {
+        netG = rawG - activePlate.weight;
+        plateNote = `${rawG}г − ${activePlate.weight}г`;
+        appliedPlate = activePlate;
+      }
+
+      const factor = netG / 100;
+      return {
+        meal,
+        name: entry.matched.name,
+        grams: netG,
+        plateId: appliedPlate ? appliedPlate.id : null,
+        grossGrams: appliedPlate ? rawG : null,
+        plateNote,
+        kcal: Math.round(entry.matched.per100.kcal * factor),
+        protein: Math.round(entry.matched.per100.p * factor * 10) / 10,
+        fat: Math.round(entry.matched.per100.f * factor * 10) / 10,
+        carb: Math.round(entry.matched.per100.c * factor * 10) / 10
+      };
+    });
+  }
+
+  async function parseWithGeminiIfAvailable(promptText) {
+    const key = (appState.apiKey || '').trim();
+    if (!key) {
+      await new Promise(r => setTimeout(r, 420));
+      return offlineSmartParse(promptText);
+    }
+
+    const activePlate = getSelectedPlate();
+    const plateInstruction = activePlate
+      ? `Користувач зважував їжу на тарілці "${activePlate.name}" вагою ${activePlate.weight} г. Відніми ${activePlate.weight} г від загальної ваги страви перед розрахунком КБЖВ.`
+      : '';
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Ти нутриціолог. Розбий запит українською мовою на окремі страви та порахуй КБЖВ. ${plateInstruction} Поверни JSON-масив об'єктів з полями: name, meal ("breakfast"|"lunch"|"dinner"|"snack"), grams, kcal, protein, fat, carb. Запит: "${promptText}"`
+              }]
+            }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        }
+      );
+
+      if (!response.ok) throw new Error('API Error');
+      const data = await response.json();
+      const parsed = JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      return offlineSmartParse(promptText);
+    } catch (err) {
+      return offlineSmartParse(promptText);
+    }
+  }
+
+  document.getElementById('foodInputForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('foodPromptInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const aiBanner = document.getElementById('aiParsingBanner');
+    aiBanner.classList.remove('hidden');
+    input.disabled = true;
+
+    const parsedItems = await parseWithGeminiIfAvailable(text);
+
+    aiBanner.classList.add('hidden');
+    input.disabled = false;
+    input.value = '';
+
+    if (!appState.logs[selectedDateKey]) appState.logs[selectedDateKey] = [];
+    const nowTime = getCurrentTimeStr();
+    let totalAdded = 0;
+
+    parsedItems.forEach(item => {
+      totalAdded += item.kcal;
+      appState.logs[selectedDateKey].push({
+        id: 'ai_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        mod: Date.now(),
+        meal: item.meal || 'lunch',
+        time: nowTime,
+        name: item.name,
+        grams: item.grams,
+        plateId: item.plateId || null,
+        grossGrams: item.grossGrams || null,
+        plateNote: item.plateNote || null,
+        kcal: item.kcal,
+        protein: item.protein,
+        fat: item.fat,
+        carb: item.carb
+      });
+    });
+
+    persistState();
+    renderDiary();
+    showToast(`Додано ${parsedItems.length} поз. (+${Math.round(totalAdded)} ккал)`, '✨');
+  });
+
+  // ==================== EDIT ITEM SHEET (WITH PLATE TARE) ====================
+  function openEditSheet(itemId) {
+    closeAllOverlays();
+    const item = (appState.logs[selectedDateKey] || []).find(i => i.id === itemId);
+    if (!item) return;
+
+    const safeGrams = item.grams > 0 ? item.grams : 100;
+    const plateSelect = document.getElementById('editItemPlateSelect');
+    plateSelect.innerHTML = `<option value="">Без тарілки</option>` +
+      appState.plates.map(p => `<option value="${p.id}">${esc(p.name)} (−${p.weight} г)</option>`).join('');
+
+    const initialPlateId = item.plateId || '';
+    plateSelect.value = initialPlateId;
+
+    editingItemState = {
+      id: item.id,
+      meal: item.meal,
+      plateId: initialPlateId,
+      perGram: {
+        kcal: item.kcal / safeGrams,
+        protein: item.protein / safeGrams,
+        fat: item.fat / safeGrams,
+        carb: item.carb / safeGrams
+      }
+    };
+
+    document.getElementById('editItemName').value = item.name;
+    document.getElementById('editItemGrams').value = item.grams;
+    document.getElementById('editItemSlider').value = Math.min(800, item.grams);
+
+    const activePlate = appState.plates.find(p => p.id === initialPlateId);
+    if (activePlate) {
+      document.getElementById('editItemGrossGrams').value = item.grossGrams || (item.grams + activePlate.weight);
+    }
+
+    syncEditPlateUI(item.grams);
+    selectEditMeal(item.meal);
+    updateEditPreview(item.grams);
+
+    const bd = document.getElementById('editBackdrop');
+    const sh = document.getElementById('editSheet');
+    bd.classList.add('visible');
+    sh.classList.add('visible');
+    requestAnimationFrame(() => {
+      bd.classList.add('open');
+      sh.classList.add('open');
+    });
+  }
+
+  function syncEditPlateUI(currentNetGrams) {
+    if (!editingItemState) return;
+    const plateId = document.getElementById('editItemPlateSelect').value;
+    editingItemState.plateId = plateId;
+    const plate = appState.plates.find(p => p.id === plateId);
+
+    const grossRow = document.getElementById('editGrossRow');
+    const hintEl = document.getElementById('editTareFormulaHint');
+
+    if (plate) {
+      grossRow.classList.remove('hidden');
+      const grossInp = document.getElementById('editItemGrossGrams');
+      const grossVal = parseInt(grossInp.value, 10) || (currentNetGrams + plate.weight);
+      grossInp.value = grossVal;
+      const netVal = Math.max(5, grossVal - plate.weight);
+      document.getElementById('editItemGrams').value = netVal;
+      document.getElementById('editItemSlider').value = Math.min(800, netVal);
+      hintEl.textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+      hintEl.classList.remove('hidden');
+      updateEditPreview(netVal);
+    } else {
+      grossRow.classList.add('hidden');
+      hintEl.classList.add('hidden');
+      updateEditPreview(currentNetGrams);
+    }
+  }
+
+  function handleEditPlateChange() {
+    if (!editingItemState) return;
+    const netNow = parseInt(document.getElementById('editItemGrams').value, 10) || 100;
+    const plateId = document.getElementById('editItemPlateSelect').value;
+    const plate = appState.plates.find(p => p.id === plateId);
+    if (plate) {
+      document.getElementById('editItemGrossGrams').value = netNow + plate.weight;
+    }
+    syncEditPlateUI(netNow);
+  }
+
+  function handleEditGrossInput() {
+    if (!editingItemState) return;
+    const plate = appState.plates.find(p => p.id === editingItemState.plateId);
+    if (!plate) return;
+    const grossVal = Math.max(0, parseInt(document.getElementById('editItemGrossGrams').value, 10) || 0);
+    const netVal = Math.max(5, grossVal - plate.weight);
+    document.getElementById('editItemGrams').value = netVal;
+    document.getElementById('editItemSlider').value = Math.min(800, netVal);
+    document.getElementById('editTareFormulaHint').textContent =
+      `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+    updateEditPreview(netVal);
+  }
+
+  function closeEditSheet() {
+    const bd = document.getElementById('editBackdrop');
+    const sh = document.getElementById('editSheet');
+    bd.classList.remove('open');
+    sh.classList.remove('open');
+    setTimeout(() => {
+      if (!sh.classList.contains('open')) {
+        bd.classList.remove('visible');
+        sh.classList.remove('visible');
+        editingItemState = null;
+      }
+    }, 340);
+  }
+
+  function updateEditPreview(grams) {
+    if (!editingItemState) return;
+    const g = Math.max(1, Number(grams) || 0);
+    const { perGram } = editingItemState;
+    document.getElementById('previewKcal').textContent = `${Math.round(perGram.kcal * g)} ккал`;
+    document.getElementById('previewProtein').textContent = `${formatOneDecimal(perGram.protein * g)} г`;
+    document.getElementById('previewFat').textContent = `${formatOneDecimal(perGram.fat * g)} г`;
+    document.getElementById('previewCarb').textContent = `${formatOneDecimal(perGram.carb * g)} г`;
+  }
+
+  document.getElementById('editItemSlider').addEventListener('input', (e) => {
+    const netVal = parseInt(e.target.value, 10);
+    document.getElementById('editItemGrams').value = netVal;
+    const plate = appState.plates.find(p => p.id === editingItemState?.plateId);
+    if (plate) {
+      const grossVal = netVal + plate.weight;
+      document.getElementById('editItemGrossGrams').value = grossVal;
+      document.getElementById('editTareFormulaHint').textContent =
+        `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+    }
+    updateEditPreview(netVal);
+  });
+
+  document.getElementById('editItemGrams').addEventListener('input', (e) => {
+    const netVal = Math.max(1, parseInt(e.target.value, 10) || 1);
+    document.getElementById('editItemSlider').value = Math.min(800, netVal);
+    const plate = appState.plates.find(p => p.id === editingItemState?.plateId);
+    if (plate) {
+      const grossVal = netVal + plate.weight;
+      document.getElementById('editItemGrossGrams').value = grossVal;
+      document.getElementById('editTareFormulaHint').textContent =
+        `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+    }
+    updateEditPreview(netVal);
+  });
+
+  function selectEditMeal(mealId) {
+    if (editingItemState) editingItemState.meal = mealId;
+    document.querySelectorAll('#editMealSelector button').forEach(btn => {
+      btn.className = btn.dataset.meal === mealId
+        ? 'py-1.5 rounded-[9px] text-[12px] font-semibold bg-[#1C1C1E] text-white shadow transition'
+        : 'py-1.5 rounded-[9px] text-[12px] font-medium text-[#8E8E93] transition';
+    });
+  }
+
+  function saveEditingItem() {
+    if (!editingItemState) return;
+    const items = appState.logs[selectedDateKey] || [];
+    const idx = items.findIndex(i => i.id === editingItemState.id);
+    if (idx === -1) return;
+
+    const newGrams = Math.max(1, parseInt(document.getElementById('editItemGrams').value, 10) || 100);
+    const newName = document.getElementById('editItemName').value.trim() || items[idx].name;
+    const { perGram, meal, plateId } = editingItemState;
+    const plate = appState.plates.find(p => p.id === plateId);
+    const grossVal = plate ? (parseInt(document.getElementById('editItemGrossGrams').value, 10) || newGrams + plate.weight) : null;
+
+    items[idx] = {
+      ...items[idx],
+      mod: Date.now(),
+      name: newName,
+      meal,
+      grams: newGrams,
+      plateId: plate ? plate.id : null,
+      grossGrams: grossVal,
+      plateNote: plate ? `${grossVal}г − ${plate.weight}г` : null,
+      kcal: Math.round(perGram.kcal * newGrams),
+      protein: Math.round(perGram.protein * newGrams * 10) / 10,
+      fat: Math.round(perGram.fat * newGrams * 10) / 10,
+      carb: Math.round(perGram.carb * newGrams * 10) / 10
+    };
+
+    persistState();
+    closeEditSheet();
+    renderDiary();
+    showToast('Запис оновлено');
+  }
+
+  function deleteEditingItem() {
+    if (!editingItemState) return;
+    appState.tombstones[editingItemState.id] = Date.now();
+    appState.logs[selectedDateKey] = (appState.logs[selectedDateKey] || []).filter(i => i.id !== editingItemState.id);
+    persistState();
+    closeEditSheet();
+    renderDiary();
+    showToast('Запис видалено', '🗑️');
+  }
+
+  // ==================== 4-TAB NAVIGATION ====================
+  function switchTab(tab) {
+    closeAllOverlays();
+    const views = {
+      diary: document.getElementById('viewDiary'),
+      stats: document.getElementById('viewStats'),
+      reminders: document.getElementById('viewReminders'),
+      settings: document.getElementById('viewSettings')
+    };
+    const tabs = {
+      diary: document.getElementById('tabDiary'),
+      stats: document.getElementById('tabStats'),
+      reminders: document.getElementById('tabReminders'),
+      settings: document.getElementById('tabSettings')
+    };
+
+    Object.keys(views).forEach(k => {
+      const active = k === tab;
+      views[k].classList.toggle('hidden', !active);
+      tabs[k].classList.toggle('text-[#30D158]', active);
+      tabs[k].classList.toggle('text-[#8E8E93]', !active);
+    });
+
+    if (tab === 'stats') renderStats();
+    if (tab === 'reminders') renderRemindersTab();
+    if (tab === 'settings') populateSettingsInputs();
+  }
+
+  // ==================== STATISTICS ====================
+  function togglePeriodDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('periodDropdownMenu').classList.toggle('hidden');
+  }
+
+  function selectStatPeriod(period, labelText) {
+    statPeriod = period;
+    document.getElementById('periodDropdownLabel').textContent = labelText;
+    document.getElementById('periodDropdownMenu').classList.add('hidden');
+
+    document.querySelectorAll('[data-period-check]').forEach(el => {
+      el.classList.toggle('hidden', el.dataset.periodCheck !== period);
+    });
+
+    const customBar = document.getElementById('customRangeBar');
+    if (period === 'custom') {
+      customBar.classList.remove('hidden');
+      const startInp = document.getElementById('customStartInput');
+      const endInp = document.getElementById('customEndInput');
+      if (!startInp.value) startInp.value = shiftKey(TODAY_KEY, -13);
+      if (!endInp.value) endInp.value = TODAY_KEY;
+    } else {
+      customBar.classList.add('hidden');
+    }
+
+    renderStats();
+  }
+
+  function setStatMacro(macro) {
+    statMacro = macro;
+    ['kcal', 'protein', 'fat', 'carb'].forEach(m => {
+      const btn = document.getElementById(`macroBtn_${m}`);
+      btn.className = m === macro
+        ? 'rounded-[9px] text-[12px] font-semibold bg-[#2C2C2E] text-white shadow transition'
+        : 'rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition';
+    });
+    renderStats();
+  }
+
+  function getDaySums(dateKey) {
+    const list = appState.logs[dateKey] || [];
+    return list.reduce(
+      (acc, i) => ({
+        kcal: acc.kcal + i.kcal,
+        protein: acc.protein + i.protein,
+        fat: acc.fat + i.fat,
+        carb: acc.carb + i.carb
+      }),
+      { kcal: 0, protein: 0, fat: 0, carb: 0 }
+    );
+  }
+
+  function buildSeriesForPeriod() {
+    const today = parseDateKey(TODAY_KEY);
+
+    if (statPeriod === '7d') {
+      document.getElementById('statHeaderSubtitle').textContent = 'Останні 7 днів';
+      const arr = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = toDateKey(d);
+        arr.push({
+          label: `${d.getDate()}.${String(d.getMonth() + 1).padStart(2, '0')}`,
+          fullTitle: `${d.getDate()} ${UK_MONTHS_GEN[d.getMonth()]}`,
+          isToday: key === TODAY_KEY,
+          ...getDaySums(key)
+        });
+      }
+      return arr;
+    }
+
+    if (statPeriod === '30d') {
+      document.getElementById('statHeaderSubtitle').textContent = 'Останні 30 днів';
+      const arr = [];
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = toDateKey(d);
+        arr.push({
+          label: `${d.getDate()}`,
+          fullTitle: `${d.getDate()} ${UK_MONTHS_GEN[d.getMonth()]}`,
+          isToday: key === TODAY_KEY,
+          ...getDaySums(key)
+        });
+      }
+      return arr;
+    }
+
+    if (statPeriod === '1y') {
+      document.getElementById('statHeaderSubtitle').textContent = 'Останні 12 місяців (середнє/день)';
+      const arr = [];
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const pref = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-`;
+        const days = Object.keys(appState.logs).filter(k => k.startsWith(pref)).map(k => getDaySums(k)).filter(x => x.kcal > 0);
+        const n = days.length || 1;
+        const avg = f => days.reduce((a, x) => a + x[f], 0) / n;
+        arr.push({
+          label: UK_MONTHS_NOM[d.getMonth()].slice(0, 3),
+          fullTitle: `${UK_MONTHS_NOM[d.getMonth()]} ${d.getFullYear()}`,
+          isToday: i === 0,
+          kcal: avg('kcal'), protein: avg('protein'), fat: avg('fat'), carb: avg('carb')
+        });
+      }
+      return arr;
+    }
+
+    const startStr = document.getElementById('customStartInput').value || shiftKey(TODAY_KEY, -13);
+    const endStr = document.getElementById('customEndInput').value || TODAY_KEY;
+    let sDate = parseDateKey(startStr);
+    let eDate = parseDateKey(endStr);
+    if (sDate > eDate) [sDate, eDate] = [eDate, sDate];
+
+    document.getElementById('statHeaderSubtitle').textContent = `${startStr.slice(5)} — ${endStr.slice(5)}`;
+    const arr = [];
+    const cursor = new Date(sDate);
+    let guard = 0;
+    while (cursor <= eDate && guard < 45) {
+      const key = toDateKey(cursor);
+      arr.push({
+        label: `${cursor.getDate()}`,
+        fullTitle: `${cursor.getDate()} ${UK_MONTHS_GEN[cursor.getMonth()]}`,
+        isToday: key === TODAY_KEY,
+        ...getDaySums(key)
+      });
+      cursor.setDate(cursor.getDate() + 1);
+      guard++;
+    }
+    return arr;
+  }
+
+  function renderStats() {
+    const series = buildSeriesForPeriod();
+    const macroConfig = {
+      kcal: { unit: 'ккал', color: '#30D158', target: appState.targets.kcal },
+      protein: { unit: 'г білка', color: '#0A84FF', target: appState.targets.protein },
+      fat: { unit: 'г жирів', color: '#FF9F0A', target: appState.targets.fat },
+      carb: { unit: 'г вуглев.', color: '#BF5AF2', target: appState.targets.carb }
+    };
+
+    const cfg = macroConfig[statMacro];
+    const validDays = series.filter(d => d.kcal > 0 && (!d.isToday || d.kcal >= 600));
+    const divisor = validDays.length || 1;
+
+    const avgMetric = Math.round(validDays.reduce((s, d) => s + d[statMacro], 0) / divisor);
+    document.getElementById('chartAvgValue').textContent = formatSpacedInt(avgMetric);
+    const unitEl = document.getElementById('chartAvgUnit');
+    unitEl.textContent = cfg.unit;
+    unitEl.style.color = cfg.color;
+    document.getElementById('chartTargetValue').textContent = `${formatSpacedInt(cfg.target)} ${statMacro === 'kcal' ? 'ккал' : 'г'}`;
+
+    const avgKcal = Math.round(validDays.reduce((s, d) => s + d.kcal, 0) / divisor);
+    const avgProt = Math.round(validDays.reduce((s, d) => s + d.protein, 0) / divisor);
+    const avgFat = Math.round(validDays.reduce((s, d) => s + d.fat, 0) / divisor);
+    const avgCarb = Math.round(validDays.reduce((s, d) => s + d.carb, 0) / divisor);
+
+    document.getElementById('avgGridKcal').textContent = `${formatSpacedInt(avgKcal)} ккал`;
+    const diff = avgKcal - appState.targets.kcal;
+    document.getElementById('avgGridDeficit').textContent = validDays.length ? `${diff > 0 ? '+' : ''}${formatSpacedInt(diff)} ккал/д до цілі` : 'Немає даних';
+    document.getElementById('avgGridProtein').textContent = `${avgProt} г`;
+    document.getElementById('avgGridFat').textContent = `${avgFat} г`;
+    document.getElementById('avgGridCarb').textContent = `${avgCarb} г`;
+
+    const maxDataVal = Math.max(...series.map(d => d[statMacro]), cfg.target * 1.15, 10);
+    const plotHeightPx = 132;
+    const targetPx = Math.min(plotHeightPx - 6, Math.round((cfg.target / maxDataVal) * plotHeightPx));
+    document.getElementById('chartTargetLine').style.bottom = `${targetPx}px`;
+
+    const plotArea = document.getElementById('chartPlotArea');
+    const xAxis = document.getElementById('chartXAxis');
+    plotArea.querySelectorAll('.bar-slot').forEach(el => el.remove());
+    xAxis.innerHTML = '';
+
+    const count = series.length;
+    const gapClass = count > 20 ? 'gap-[2px]' : count > 10 ? 'gap-1' : 'gap-2.5';
+    plotArea.className = `relative h-[140px] flex items-end justify-between border-b border-white/[0.08] ${gapClass}`;
+    xAxis.className = `flex items-center justify-between pt-2 ${gapClass}`;
+
+    series.forEach((point, idx) => {
+      const val = Math.round(point[statMacro]);
+      const barPx = val > 0 ? Math.max(6, Math.round((val / maxDataVal) * plotHeightPx)) : 3;
+
+      const slot = document.createElement('button');
+      slot.type = 'button';
+      slot.className = 'bar-slot flex-1 h-full flex items-end justify-center group focus:outline-none z-20';
+      slot.onclick = () => {
+        document.getElementById('barDetailLabel').textContent = point.fullTitle;
+        document.getElementById('barDetailVal').textContent = `${formatSpacedInt(val)} ${statMacro === 'kcal' ? 'ккал' : 'г'}`;
+        document.getElementById('barDetailVal').style.color = cfg.color;
+      };
+
+      const bar = document.createElement('div');
+      bar.style.height = `${barPx}px`;
+      bar.style.backgroundColor = val === 0 ? '#2C2C2E' : cfg.color;
+      bar.className = `w-full max-w-[26px] ${count > 20 ? 'rounded-t-[3px]' : 'rounded-t-[7px]'} transition-all duration-300 group-hover:opacity-80`;
+      slot.appendChild(bar);
+      plotArea.appendChild(slot);
+
+      const tick = document.createElement('span');
+      const showTick = count <= 12 || idx === 0 || idx === count - 1 || idx % 5 === 0;
+      tick.className = `flex-1 text-center text-[10px] font-medium ${point.isToday ? 'text-white font-bold' : 'text-[#8E8E93]'}`;
+      tick.textContent = showTick ? point.label : '';
+      xAxis.appendChild(tick);
+    });
+  }
+
+  // ==================== TAB 3: REMINDERS LOGIC ====================
+  function renderRemindersTab() {
+    const rem = appState.reminders;
+    const toggleBtn = document.getElementById('reminderMasterToggle');
+    const knob = toggleBtn.querySelector('span');
+    const sub = document.getElementById('reminderStatusSubtitle');
+
+    if (rem.enabled) {
+      toggleBtn.className = 'w-[51px] h-[31px] rounded-full bg-[#30D158] p-[2px] transition-colors flex items-center justify-end';
+      const intLabel = rem.intervalMins === 30 ? 'кожні 30 хв' :
+                       rem.intervalMins === 60 ? 'кожну годину' :
+                       rem.intervalMins === 90 ? 'кожні 1.5 год' : 'кожні 2 год';
+      sub.textContent = `Увімкнено · ${intLabel}`;
+      sub.className = 'text-[12px] text-[#30D158] font-medium';
+    } else {
+      toggleBtn.className = 'w-[51px] h-[31px] rounded-full bg-[#2C2C2E] p-[2px] transition-colors flex items-center justify-start';
+      sub.textContent = 'Вимкнено';
+      sub.className = 'text-[12px] text-[#8E8E93] font-medium';
+    }
+    if (knob) knob.className = 'w-[27px] h-[27px] rounded-full bg-white shadow-md block';
+
+    // Weekdays buttons
+    const daysGrid = document.getElementById('weekDaysGrid');
+    daysGrid.innerHTML = WEEK_SHORT.map((label, idx) => {
+      const isSelected = rem.days.includes(idx);
+      return `
+        <button type="button" onclick="toggleReminderDay(${idx})"
+                class="h-10 rounded-full text-[13px] font-semibold transition active:scale-90 ${
+                  isSelected
+                    ? 'bg-[#0A84FF] text-white shadow'
+                    : 'bg-[#2C2C2E] text-[#8E8E93]'
+                }">
+          ${label}
+        </button>
+      `;
+    }).join('');
+
+    // Selected days summary label
+    const sorted = [...rem.days].sort((a, b) => a - b);
+    let daysText = 'Не обрано';
+    if (sorted.length === 7) daysText = 'Щодня';
+    else if (sorted.join(',') === '0,1,2,3,4') daysText = 'Будні (Пн–Пт)';
+    else if (sorted.join(',') === '5,6') daysText = 'Вихідні (Сб–Нд)';
+    else if (sorted.length > 0) daysText = sorted.map(i => WEEK_SHORT[i]).join(', ');
+    document.getElementById('selectedDaysSummary').textContent = daysText;
+
+    // Inputs
+    document.getElementById('reminderStartTime').value = rem.startTime;
+    document.getElementById('reminderEndTime').value = rem.endTime;
+    document.getElementById('reminderCustomText').value = rem.message;
+
+    // Interval buttons
+    document.querySelectorAll('#intervalSelector button').forEach(btn => {
+      const mins = parseInt(btn.dataset.mins, 10);
+      btn.className = mins === rem.intervalMins
+        ? 'py-1.5 rounded-[9px] text-[12px] font-semibold bg-[#3A3A3C] text-white shadow transition'
+        : 'py-1.5 rounded-[9px] text-[12px] font-semibold text-[#8E8E93] transition';
+    });
+
+    // Generate schedule preview times
+    const slots = computeReminderTimes();
+    const previewEl = document.getElementById('reminderSchedulePreview');
+    if (!rem.enabled || slots.length === 0) {
+      previewEl.textContent = 'Розклад призупинено';
+    } else if (slots.length <= 5) {
+      previewEl.textContent = `Розклад: ${slots.join(' · ')}`;
+    } else {
+      previewEl.textContent = `Розклад (${slots.length} разів): ${slots[0]} · ${slots[1]} ... ${slots[slots.length - 1]}`;
+    }
+  }
+
+  function computeReminderTimes() {
+    const { startTime, endTime, intervalMins } = appState.reminders;
+    const [sh, sm] = startTime.split(':').map(Number);
+    const [eh, em] = endTime.split(':').map(Number);
+    const startTotal = sh * 60 + sm;
+    const endTotal = eh * 60 + em;
+    if (isNaN(startTotal) || isNaN(endTotal) || endTotal < startTotal) return [];
+
+    const list = [];
+    for (let t = startTotal; t <= endTotal && list.length < 24; t += intervalMins) {
+      const h = String(Math.floor(t / 60)).padStart(2, '0');
+      const m = String(t % 60).padStart(2, '0');
+      list.push(`${h}:${m}`);
+    }
+    return list;
+  }
+
+  async function toggleReminderMaster() {
+    appState.reminders.enabled = !appState.reminders.enabled;
+    persistState();
+    renderRemindersTab();
+
+    if (appState.reminders.enabled && 'Notification' in window && Notification.permission === 'default') {
+      try {
+        await Notification.requestPermission();
+      } catch (e) {}
+    }
+    showToast(appState.reminders.enabled ? 'Нагадування увімкнено' : 'Нагадування вимкнено', '🔔');
+  }
+
+  function toggleReminderDay(dayIdx) {
+    const days = appState.reminders.days;
+    const pos = days.indexOf(dayIdx);
+    if (pos === -1) days.push(dayIdx);
+    else days.splice(pos, 1);
+    persistState();
+    renderRemindersTab();
+  }
+
+  function selectReminderInterval(mins) {
+    appState.reminders.intervalMins = mins;
+    persistState();
+    renderRemindersTab();
+  }
+
+  function updateReminderSettings() {
+    appState.reminders.startTime = document.getElementById('reminderStartTime').value || '10:00';
+    appState.reminders.endTime = document.getElementById('reminderEndTime').value || '19:00';
+    appState.reminders.message = document.getElementById('reminderCustomText').value;
+    persistState();
+    renderRemindersTab();
+  }
+
+  function triggerTestReminder() {
+    const msg = appState.reminders.message.trim() || 'Час встати та порухатися 🚶‍♂️';
+    document.getElementById('pushBannerBody').textContent = msg;
+    const banner = document.getElementById('iosPushBanner');
+    banner.classList.add('show');
+
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        sendNotification(msg);
+      } catch (e) {}
+    }
+
+    clearTimeout(window._pushBannerTimer);
+    window._pushBannerTimer = setTimeout(() => banner.classList.remove('show'), 4200);
+  }
+
+  async function sendNotification(msg) {
+    try {
+      const reg = 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : null;
+      if (reg) return reg.showNotification('КБЖВ Трекер', { body: msg, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'move' });
+      new Notification('КБЖВ Трекер', { body: msg });
+    } catch (e) {}
+  }
+
+  let _lastRemKey = '';
+  function checkReminders() {
+    const r = appState.reminders;
+    if (!r.enabled) return;
+    if (!r.days.includes((new Date().getDay() + 6) % 7)) return;
+    const hm = getCurrentTimeStr();
+    if (_lastRemKey === TODAY_KEY + hm || !computeReminderTimes().includes(hm)) return;
+    _lastRemKey = TODAY_KEY + hm;
+    if ('Notification' in window && Notification.permission === 'granted') sendNotification(r.message.trim() || 'Час встати та порухатися 🚶‍♂️');
+    else triggerTestReminder();
+  }
+
+  function hidePushBanner() {
+    document.getElementById('iosPushBanner').classList.remove('show');
+  }
+
+  function downloadReminderCalendarICS() {
+    const slots = computeReminderTimes();
+    const msg = (appState.reminders.message.trim() || 'Час встати та порухатися 🚶‍♂️').replace(/,/g, '\\,');
+    const icsDayCodes = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+    const byDay = appState.reminders.days.sort().map(d => icsDayCodes[d]).join(',') || 'MO,TU,WE,TH,FR';
+
+    let events = '';
+    slots.forEach((timeStr, idx) => {
+      const [hh, mm] = timeStr.split(':');
+      events += [
+        'BEGIN:VEVENT',
+        `UID:kbzhv-move-${idx}-${Date.now()}@foodnoms-ua`,
+        `DTSTAMP:${new Date().toISOString().replace(/[-:]|\.\d{3}/g, '')}`,
+        `DTSTART:${TODAY_KEY.replace(/-/g, '')}T${hh}${mm}00`,
+        `DURATION:PT5M`,
+        `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`,
+        `SUMMARY:${msg}`,
+        'BEGIN:VALARM',
+        'TRIGGER:PT0M',
+        'ACTION:DISPLAY',
+        `DESCRIPTION:${msg}`,
+        'END:VALARM',
+        'END:VEVENT'
+      ].join('\r\n') + '\r\n';
+    });
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//FoodNoms UA//Movement Reminders//UK',
+      events.trim(),
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rozmynka-iphone.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Файл для Календаря iPhone завантажено', '📅');
+  }
+
+  // ==================== GOOGLE DRIVE SYNC (appDataFolder) ====================
+  const GD_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
+  const GD_FILE = 'kbzhv-data.json';
+  let _gdToken = null, _gdExp = 0, _syncTimer = null, _syncing = false;
+
+  function gdLoadLib() {
+    return new Promise((res, rej) => {
+      if (window.google && google.accounts && google.accounts.oauth2) return res();
+      const el = document.createElement('script');
+      el.src = 'https://accounts.google.com/gsi/client';
+      el.onload = () => res();
+      el.onerror = () => rej(new Error('lib'));
+      document.head.appendChild(el);
+    });
+  }
+
+  async function gdToken(prompt) {
+    if (_gdToken && Date.now() < _gdExp - 60000) return _gdToken;
+    await gdLoadLib();
+    return new Promise((resolve, reject) => {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: appState.gdrive.clientId,
+        scope: GD_SCOPE,
+        callback: r => {
+          if (r.error || !r.access_token) return reject(new Error(r.error || 'auth'));
+          _gdToken = r.access_token; _gdExp = Date.now() + (r.expires_in || 3600) * 1000;
+          resolve(_gdToken);
+        },
+        error_callback: e => reject(new Error((e && e.type) || 'auth'))
+      });
+      client.requestAccessToken({ prompt: prompt || '' });
+    });
+  }
+
+  async function gdApi(url, opt = {}, prompt = '') {
+    const t = await gdToken(prompt);
+    const r = await fetch(url, { ...opt, headers: { ...(opt.headers || {}), Authorization: 'Bearer ' + t } });
+    if (r.status === 401) { _gdToken = null; throw new Error('auth'); }
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r;
+  }
+
+  function syncPayload() {
+    const { targets, plates, reminders, calorieDisplayMode, logs, tombstones, settingsMod } = appState;
+    return { v: 1, targets, plates, reminders, calorieDisplayMode, logs, tombstones, settingsMod };
+  }
+
+  function mergeRemote(rm) {
+    const ts = { ...(rm.tombstones || {}) };
+    for (const k in appState.tombstones) ts[k] = Math.max(ts[k] || 0, appState.tombstones[k]);
+    const cutoff = Date.now() - 90 * 864e5;
+    for (const k in ts) if (ts[k] < cutoff) delete ts[k];
+
+    const dates = new Set([...Object.keys(appState.logs), ...Object.keys(rm.logs || {})]);
+    const out = {};
+    dates.forEach(d => {
+      const m = new Map();
+      [...((rm.logs || {})[d] || []), ...(appState.logs[d] || [])].forEach(it => {
+        const o = m.get(it.id);
+        if (!o || (it.mod || 0) >= (o.mod || 0)) m.set(it.id, it);
+      });
+      const arr = [...m.values()].filter(it => !(ts[it.id] > (it.mod || 0)));
+      arr.sort((a, b) => String(a.time).localeCompare(String(b.time)));
+      if (arr.length) out[d] = arr;
+    });
+    appState.logs = out;
+    appState.tombstones = ts;
+
+    if ((rm.settingsMod || 0) > (appState.settingsMod || 0)) {
+      if (rm.targets) appState.targets = rm.targets;
+      if (rm.plates) appState.plates = rm.plates;
+      if (rm.reminders) appState.reminders = { ...DEFAULT_DATA.reminders, ...rm.reminders };
+      if (rm.calorieDisplayMode) appState.calorieDisplayMode = rm.calorieDisplayMode;
+      appState.settingsMod = rm.settingsMod;
+      if (!appState.plates.some(p => p.id === appState.selectedPlateId)) appState.selectedPlateId = null;
+      _settingsHash = settingsHash();
+    }
+  }
+
+  async function syncGdrive(prompt = '', silent = true) {
+    const g = appState.gdrive;
+    if (!g.connected || _syncing) return;
+    if (!navigator.onLine) { if (!silent) showToast('Немає інтернету', '⚠️'); return; }
+    _syncing = true; setGdStatus('Синхронізація…');
+    try {
+      const q = encodeURIComponent(`name='${GD_FILE}'`);
+      const list = await (await gdApi(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id)`, {}, prompt)).json();
+      const id = list.files && list.files[0] && list.files[0].id;
+      if (id) mergeRemote(await (await gdApi(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`)).json());
+      const body = JSON.stringify(syncPayload());
+      if (id) {
+        await gdApi(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body });
+      } else {
+        const b = 'kbzhv' + Date.now();
+        const mp = `--${b}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify({ name: GD_FILE, parents: ['appDataFolder'] })}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--`;
+        await gdApi('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', { method: 'POST', headers: { 'Content-Type': `multipart/related; boundary=${b}` }, body: mp });
+      }
+      g.lastSync = new Date().toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      g.needsAuth = false;
+      persistState(true); renderDiary();
+      if (!silent) showToast('Синхронізовано з Google Диском', '☁️');
+    } catch (e) {
+      g.needsAuth = true; persistState(true);
+      if (!silent) showToast('Не вдалося синхронізувати. Перевір вхід', '⚠️');
+    } finally {
+      _syncing = false; updateGdriveUI();
+    }
+  }
+
+  function scheduleSync() {
+    const g = appState.gdrive;
+    if (!g.connected || !g.autoSync) return;
+    clearTimeout(_syncTimer);
+    _syncTimer = setTimeout(() => syncGdrive('', true), 4000);
+  }
+
+  async function connectGdrive() {
+    const id = document.getElementById('gdriveClientId').value.trim();
+    if (!/\.apps\.googleusercontent\.com$/.test(id)) { showToast('Вкажи коректний Client ID', '⚠️'); return; }
+    const g = appState.gdrive;
+    g.clientId = id; g.connected = true; g.needsAuth = false;
+    _gdToken = null;
+    persistState(true); updateGdriveUI();
+    await syncGdrive('consent', false);
+    if (g.needsAuth) { g.connected = false; persistState(true); updateGdriveUI(); }
+  }
+
+  function disconnectGdrive() {
+    try { if (_gdToken && window.google) google.accounts.oauth2.revoke(_gdToken, () => {}); } catch (e) {}
+    _gdToken = null;
+    appState.gdrive.connected = false;
+    persistState(true); updateGdriveUI();
+    showToast('Google Диск відключено', '☁️');
+  }
+
+  function toggleGdriveAutoSync() {
+    appState.gdrive.autoSync = !appState.gdrive.autoSync;
+    persistState(true); updateGdriveUI();
+  }
+
+  function setGdStatus(t) { const e = document.getElementById('gdriveStatus'); if (e) e.textContent = t; }
+
+  function updateGdriveUI() {
+    const g = appState.gdrive;
+    const setup = document.getElementById('gdriveSetupView');
+    if (!setup) return;
+    setup.classList.toggle('hidden', g.connected);
+    document.getElementById('gdriveConnectedView').classList.toggle('hidden', !g.connected);
+    setGdStatus(!g.connected ? 'Не підключено'
+      : g.needsAuth ? 'Потрібен повторний вхід — натисни «Синхронізувати зараз»'
+      : `Підключено · остання синхронізація: ${g.lastSync || '—'}`);
+    const b = document.getElementById('gdriveAutoToggle');
+    if (b) b.className = g.autoSync ? 'w-[46px] h-[28px] rounded-full bg-[#30D158] p-[2px] transition-colors flex items-center justify-end' : 'w-[46px] h-[28px] rounded-full bg-[#2C2C2E] p-[2px] transition-colors flex items-center justify-start';
+  }
+
+  // ==================== SETTINGS ====================
+  function populateSettingsInputs() {
+    document.getElementById('settingKcal').value = appState.targets.kcal;
+    document.getElementById('settingProtein').value = appState.targets.protein;
+    document.getElementById('settingFat').value = appState.targets.fat;
+    document.getElementById('settingCarb').value = appState.targets.carb;
+    document.getElementById('apiKeyInput').value = appState.apiKey || '';
+    renderPlatesSettingsList();
+    document.getElementById('gdriveClientId').value = appState.gdrive.clientId || '';
+    updateGdriveUI();
+    if (appState.gdrive.connected) gdLoadLib().catch(() => {});
+  }
+
+  function saveSettings() {
+    appState.targets.kcal = Math.max(1000, parseInt(document.getElementById('settingKcal').value, 10) || 1800);
+    appState.targets.protein = Math.max(40, parseInt(document.getElementById('settingProtein').value, 10) || 115);
+    appState.targets.fat = Math.max(20, parseInt(document.getElementById('settingFat').value, 10) || 65);
+    appState.targets.carb = Math.max(30, parseInt(document.getElementById('settingCarb').value, 10) || 170);
+    appState.apiKey = document.getElementById('apiKeyInput').value.trim();
+
+    persistState();
+    renderDiary();
+    showToast('Цілі збережено');
+  }
+
+  function toggleApiKeyVisibility() {
+    const inp = document.getElementById('apiKeyInput');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function exportDataJson() {
+    const blob = new Blob([JSON.stringify({ ...appState, apiKey: '', gdrive: undefined }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `kbzhv-backup-${TODAY_KEY}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('JSON-копію завантажено', '📤');
+  }
+
+  function clearAllData() {
+    if (!confirm('Видалити всі записи та налаштування? Дію не можна скасувати.')) return;
+    const tomb = { ...appState.tombstones }, g = appState.gdrive;
+    Object.values(appState.logs).flat().forEach(i => { tomb[i.id] = Date.now(); });
+    appState = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    appState.tombstones = tomb; appState.gdrive = g;
+    selectedDateKey = TODAY_KEY;
+    persistState();
+    populateSettingsInputs();
+    renderDiary();
+    showToast('Дані видалено', '🗑️');
+  }
+
+  function importDataJson(ev) {
+    const f = ev.target.files[0];
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const p = JSON.parse(rd.result);
+        if (!p || typeof p.logs !== 'object' || !p.targets) throw new Error('bad');
+        if (!confirm('Замінити поточні дані даними з файлу?')) return;
+        appState = { ...JSON.parse(JSON.stringify(DEFAULT_DATA)), ...p, apiKey: appState.apiKey, gdrive: appState.gdrive,
+          reminders: { ...DEFAULT_DATA.reminders, ...(p.reminders || {}) } };
+        persistState(); populateSettingsInputs(); renderDiary();
+        showToast('Дані відновлено', '📥');
+      } catch (e) { showToast('Невірний файл копії', '⚠️'); }
+    };
+    rd.readAsText(f);
+    ev.target.value = '';
+  }
+
+  async function shareBackup() {
+    const file = new File([JSON.stringify({ ...appState, apiKey: '', gdrive: undefined }, null, 2)], `kbzhv-backup-${TODAY_KEY}.json`, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'КБЖВ — резервна копія' }); } catch (e) {}
+    } else exportDataJson();
+  }
+
+  // ==================== BOOTSTRAP ====================
+  window.addEventListener('DOMContentLoaded', () => {
+    renderDiary();
+    renderRemindersTab();
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+    setInterval(checkReminders, 20000);
+    if (appState.gdrive.connected) syncGdrive('', true);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    const nk = toDateKey(new Date());
+    if (nk !== TODAY_KEY) {
+      if (selectedDateKey === TODAY_KEY) selectedDateKey = nk;
+      TODAY_KEY = nk;
+      renderDiary();
+    }
+    checkReminders();
+    if (appState.gdrive.connected && appState.gdrive.autoSync) syncGdrive('', true);
+  });
+  window.addEventListener('online', () => scheduleSync());
+</script>
+</body>
+</html>

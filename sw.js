@@ -1,4 +1,4 @@
-const CACHE = 'kbzhv-v9';
+const CACHE = 'kbzhv-v15';
 const SHELL = ['./', 'index.html', 'tailwind.css', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
 
@@ -25,8 +25,3 @@ self.addEventListener('fetch', e => {
   }));
 });
 
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  e.waitUntil(self.clients.matchAll({ type: 'window' }).then(list =>
-    list.length ? list[0].focus() : self.clients.openWindow('./index.html')));
-});

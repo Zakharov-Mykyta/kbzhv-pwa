@@ -38,7 +38,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
-      background-color: #070709;
+      background-color: #000000;
       color: var(--text-primary);
       margin: 0;
       padding: 0;
@@ -494,25 +494,96 @@
     .settings-tab-icon { stroke-width:1.8 !important; }
     @media (max-width:380px) { .assistant-action-card,.assistant-summary-card { margin-left:0; max-width:100%; } .assistant-bubble { max-width:91%; } }
   
-    /* v16.1: keep edit actions above the persistent bottom navigation */
-    #editSheet {
-      bottom: calc(64px + env(safe-area-inset-bottom));
-      max-height: calc(88% - 64px);
-      padding-bottom: max(20px, env(safe-area-inset-bottom));
-      overscroll-behavior: contain;
-    }
 
-    /* v16.1: transparent assistant composer and dock */
+    /* v17.0 — unified native iOS visual system */
+    :root {
+      --bg-canvas:#000000;
+      --bg-surface-1:#1C1C1E;
+      --bg-surface-2:#2C2C2E;
+      --accent:#D8B98A;
+    }
+    body,.desktop-stage { background:#000000 !important; }
+    .iphone-shell { background:#000000 !important; }
+    #appShell > nav.shrink-0 {
+      background:rgba(28,28,30,.96) !important;
+      border-top:1px solid rgba(255,255,255,.09) !important;
+      -webkit-backdrop-filter:blur(24px);
+      backdrop-filter:blur(24px);
+      transition:transform .24s ease,opacity .2s ease;
+    }
+    /* Sheets own the full bottom edge; hide tab bar while any sheet is open. */
+    #appShell:has(.bottom-sheet.open) > nav.shrink-0,
+    #appShell:has(.sheet-backdrop.visible) > nav.shrink-0 {
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
+      transform:translateY(12px);
+    }
+    .bottom-sheet { bottom:0 !important; max-height:90% !important; }
+    #editSheet { bottom:0 !important; max-height:90% !important; }
+    /* Accent color for native controls, calendar selection, and focus states. */
+    input,select,textarea,button { accent-color:var(--accent); }
+    input[type="checkbox"],input[type="radio"],input[type="range"] { accent-color:var(--accent) !important; }
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
+      outline:2px solid rgba(216,185,138,.72);
+      outline-offset:2px;
+    }
+    button[class*="text-[#8E8E93]"]:active,
+    button[class*="text-gray"]:active { color:var(--accent) !important; }
+    .tab-icon { color:inherit; }
+    #appShell > nav button[aria-current="page"] { color:var(--accent) !important; }
+    #appShell > nav button[aria-current="false"] { color:#8E8E93 !important; }
+    #calendarDaysGrid button.bg-\\[\\#D8B98A\\],
+    #calendarDaysGrid button[class*="D8B98A"] { background:var(--accent) !important; color:#241D13 !important; }
+    .composer-attach.is-open { color:var(--accent) !important; }
+    .composer-send,.assistant-action-primary { background:var(--accent) !important; }
+    .composer-field,.composer-field:focus-within {
+      background:rgba(44,44,46,.94) !important;
+      border:1px solid rgba(255,255,255,.10) !important;
+      box-shadow:0 5px 22px rgba(0,0,0,.24) !important;
+      -webkit-backdrop-filter:blur(20px) !important;
+      backdrop-filter:blur(20px) !important;
+    }
     .assistant-composer-dock {
-      background: transparent !important;
+      background:transparent !important;
+      box-shadow:none !important;
+      -webkit-backdrop-filter:none !important;
+      backdrop-filter:none !important;
     }
-    .composer-field,
-    .composer-field:focus-within {
-      background: transparent !important;
-      box-shadow: none !important;
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
+    .assistant-action-card { background:#1C1C1E !important; }
+    .assistant-action-card .grid.grid-cols-2 {
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:8px !important;
     }
+    .assistant-action-card .grid.grid-cols-2 > div { min-width:0 !important; }
+    .assistant-action-card input[type="date"],
+    .assistant-action-card input[type="time"] {
+      width:100% !important; min-width:0 !important; max-width:100% !important;
+      padding:8px 4px !important; font-size:10px !important;
+      letter-spacing:-.03em; overflow:hidden;
+    }
+    @media (max-width:360px) {
+      .assistant-action-card .grid.grid-cols-2 { grid-template-columns:minmax(0,1fr) !important; }
+      .assistant-action-card .grid.grid-cols-2 > div { grid-column:1 / -1 !important; }
+    }
+    /* Compact iOS settings rows instead of oversized white action tiles. */
+    .backup-action-btn {
+      min-height:46px !important; padding:7px 10px !important;
+      border-radius:12px !important; background:#1C1C1E !important;
+      border:1px solid rgba(255,255,255,.07) !important;
+      color:#F2F2F7 !important; font-size:13px !important;
+    }
+    .backup-action-primary { background:#1C1C1E !important; color:#F2F2F7 !important; }
+    .backup-action-secondary { background:#1C1C1E !important; color:var(--accent) !important; }
+    .backup-action-icon { width:30px !important; height:30px !important; flex-basis:30px !important; background:rgba(216,185,138,.12) !important; color:var(--accent) !important; }
+    /* Quiet, compact empty meal rows. */
+    .meal-entry-card { background:#1C1C1E !important; border-color:rgba(255,255,255,.07) !important; }
+    .meal-entry-card .text-\\[11px\\].font-medium.text-\\[\\#A1A1AA\\] { color:#A1A1AA !important; }
+    /* Monochrome macro metadata, consistent across meal cards. */
+    .meal-entry-card .flex.items-center.gap-1\\.5.mt-1\\.5.flex-wrap { gap:8px !important; }
+    .meal-entry-card .flex.items-center.gap-1\\.5.mt-1\\.5.flex-wrap span { background:transparent !important; color:#A1A1AA !important; padding:0 !important; border-radius:0 !important; }
+    ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }
+
 </style>
 </head>
 <body>
@@ -715,7 +786,7 @@
 
           <!-- Interactive Bar Tooltip -->
           <div id="barDetailPill" class="mb-2 px-3 py-1.5 rounded-[10px] bg-[#2C2C2E] text-[12px] text-white flex items-center justify-between">
-            <span id="barDetailLabel" class="text-[#8E8E93]">Натисни на стовпчик для деталей</span>
+            <span id="barDetailLabel" class="text-[#8E8E93]"></span>
             <span id="barDetailVal" class="font-semibold text-white"></span>
           </div>
 
@@ -760,14 +831,14 @@
     <div id="viewAssistant" class="flex-1 flex flex-col overflow-hidden">
       <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08] flex items-center justify-between gap-3">
         <div class="min-w-0">
-          <h1 class="text-[22px] font-bold tracking-tight text-white">Помічник</h1>
-          <p id="assistantHeaderStatus" class="text-[12px] text-[#8E8E93] mt-0.5 truncate">Gemini · щоденник, КБЖВ та поради</p>
+          <h1 class="text-[22px] font-bold tracking-tight text-white">Шеф</h1><span id="assistantHeaderStatus" class="hidden" aria-hidden="true"></span>
+          
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <button type="button" onclick="switchTab('settings')" aria-label="Налаштування Gemini" title="Налаштування Gemini" class="w-9 h-9 rounded-full bg-[#1C1C1E] border border-white/[0.07] text-[#A1A1AA] flex items-center justify-center active:scale-95 transition">
+          <button type="button" onclick="switchTab('settings')" aria-label="Налаштування Gemini" class="w-9 h-9 rounded-full bg-[#1C1C1E] border border-white/[0.07] text-[#A1A1AA] flex items-center justify-center active:scale-95 transition">
             <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"/><path d="m19.4 13.5 1.1.85-1.5 2.6-1.35-.5a7.7 7.7 0 0 1-1.8 1.05l-.22 1.45h-3l-.22-1.45a7.7 7.7 0 0 1-1.8-1.05l-1.35.5-1.5-2.6 1.1-.85a7.4 7.4 0 0 1 0-3l-1.1-.85 1.5-2.6 1.35.5a7.7 7.7 0 0 1 1.8-1.05l.22-1.45h3l.22 1.45a7.7 7.7 0 0 1 1.8 1.05l1.35-.5 1.5 2.6-1.1.85a7.4 7.4 0 0 1 0 3Z"/></svg>
           </button>
-          <button type="button" onclick="clearAssistantChat()" aria-label="Очистити чат" title="Очистити чат" class="w-9 h-9 rounded-full bg-[#1C1C1E] border border-white/[0.07] text-[#A1A1AA] flex items-center justify-center active:scale-95 transition">
+          <button type="button" onclick="clearAssistantChat()" aria-label="Очистити чат" class="w-9 h-9 rounded-full bg-[#1C1C1E] border border-white/[0.07] text-[#A1A1AA] flex items-center justify-center active:scale-95 transition">
             <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4.8h6V7M7 7l.8 13h8.4L17 7M10 10.5v6M14 10.5v6"/></svg>
           </button>
         </div>
@@ -779,9 +850,9 @@
             <span class="assistant-avatar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 13.5 9l6.2 1.5-6.2 1.5-1.5 6.2-1.5-6.2L4.3 10.5 10.5 9 12 2.8Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg></span>
             <span class="text-[12px] font-semibold text-[#D8B98A]">ШЕФ</span>
           </div>
-          <h2 class="text-[17px] font-semibold text-white">Привіт! Чим допомогти?</h2>
-          <p class="text-[12px] text-[#A1A1AA] leading-relaxed mt-1">Можу додавати їжу до щоденника, підсумовувати харчування, аналізувати тенденції та відповідати на запитання про КБЖВ.</p>
-          <div class="assistant-quick-prompts mt-3">
+          
+          
+          <div class="assistant-quick-prompts mt-1">
             <button type="button" onclick="sendAssistantQuickPrompt('Підсумуй моє харчування за сьогодні та покажи прогрес КБЖВ.')">Підсумок за сьогодні</button>
             <button type="button" onclick="sendAssistantQuickPrompt('Що я вже з’їв сьогодні?')">Що я вже з’їв?</button>
             <button type="button" onclick="sendAssistantQuickPrompt('Порівняй моє харчування за останні 7 днів.')">Аналіз за тиждень</button>
@@ -834,19 +905,19 @@
         <!-- Messenger-style composer: attachments, message, voice/send -->
         <form id="foodInputForm" class="composer-row">
           <div id="attachmentMenu" class="attachment-menu hidden" role="menu" aria-label="Додати вкладення">
-            <button type="button" id="cameraPickBtn" class="attachment-action" role="menuitem" title="Зробити фото страви">
+            <button type="button" id="cameraPickBtn" class="attachment-action" role="menuitem">
               <span class="attachment-action-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h3l1.3-2h8.4l1.3 2h2A1.5 1.5 0 0121.5 9v9a1.5 1.5 0 01-1.5 1.5H4A1.5 1.5 0 012.5 18V9A1.5 1.5 0 014 7.5z"/><circle cx="12" cy="13" r="3.5"/></svg>
               </span>
               <span>Сфотографувати</span>
             </button>
-            <button type="button" id="galleryPickBtn" class="attachment-action" role="menuitem" title="Обрати фото з галереї">
+            <button type="button" id="galleryPickBtn" class="attachment-action" role="menuitem">
               <span class="attachment-action-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="m4.5 17 5-5 3.2 3 2.2-2 4.6 4"/></svg>
               </span>
               <span>Обрати з галереї</span>
             </button>
-            <button type="button" id="barcodeOpenBtn" class="attachment-action" role="menuitem" title="Сканувати штрихкод">
+            <button type="button" id="barcodeOpenBtn" class="attachment-action" role="menuitem">
               <span class="attachment-action-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5v14M6 5v14M9 5v14M12 5v14M15 5v14M18 5v14M21 5v14"/></svg>
               </span>
@@ -855,16 +926,16 @@
           </div>
 
           <div class="composer-field">
-            <button type="button" id="attachmentMenuBtn" class="composer-attach" aria-label="Додати фото або сканувати штрихкод" aria-expanded="false" aria-controls="attachmentMenu" title="Вкладення">
+            <button type="button" id="attachmentMenuBtn" class="composer-attach" aria-label="Додати фото або сканувати штрихкод" aria-expanded="false" aria-controls="attachmentMenu">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             </button>
             <input id="foodPromptInput" type="text" autocomplete="off" enterkeyhint="send" placeholder="Повідомлення…" class="composer-input" />
             <input id="foodCameraInput" type="file" accept="image/*" capture="environment" class="hidden" aria-label="Зробити фото страви" />
             <input id="foodGalleryInput" type="file" accept="image/*" class="hidden" aria-label="Обрати фото з галереї" />
-            <button type="button" id="micBtn" title="Голосове диктування" aria-label="Голосове введення" aria-pressed="false" class="composer-mic">
+            <button type="button" id="micBtn" aria-label="Голосове введення" aria-pressed="false" class="composer-mic">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg>
             </button>
-            <button type="submit" id="foodSubmitBtn" aria-label="Надіслати повідомлення" title="Надіслати" class="composer-send" hidden>
+            <button type="submit" id="foodSubmitBtn" aria-label="Надіслати повідомлення" class="composer-send" hidden>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
@@ -965,8 +1036,8 @@
         <!-- 4. Gemini AI -->
         <section class="rounded-[22px]">
           <div class="px-1 mb-2">
-            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">ШІ-помічник · Gemini</h2>
-            <p class="text-[11px] text-[#8E8E93] mt-1">Розпізнає опис їжі та оцінює КБЖВ. Без ключа працює простий локальний парсер.</p>
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">ШІ-шеф · Gemini</h2>
+            
           </div>
           <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
             <div class="space-y-1.5">
@@ -974,7 +1045,7 @@
               <div class="flex gap-2">
                 <input id="apiKeyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Встав API-ключ Google AI Studio"
                        class="flex-1 min-w-0 bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]" />
-                <button type="button" onclick="toggleApiKeyVisibility()" aria-label="Показати або приховати ключ" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[#8E8E93] hover:text-white" title="Показати або приховати ключ"><svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></button>
+                <button type="button" onclick="toggleApiKeyVisibility()" aria-label="Показати або приховати ключ" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[#8E8E93] hover:text-white"><svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></button>
               </div>
               <p class="text-[11px] text-[#8E8E93] leading-relaxed">Ключ зберігається лише в локальному сховищі цього браузера й не додається до резервної копії або Google Диска. Не публікуй його у відкритому коді.</p>
             </div>
@@ -1018,9 +1089,9 @@
 
     <!-- ==================== 4-TAB BOTTOM BAR ==================== -->
     <nav class="shrink-0 bg-[#141416]/95 backdrop-blur-xl border-t border-white/[0.08] px-2 pt-2 pb-2 grid grid-cols-4 z-20 select-none">
-      <button onclick="switchTab('assistant')" id="tabAssistant" class="flex flex-col items-center gap-0.5 text-[#D8B98A] hover:text-white transition" aria-label="Помічник" aria-current="page">
+      <button onclick="switchTab('assistant')" id="tabAssistant" class="flex flex-col items-center gap-0.5 text-[#D8B98A] hover:text-white transition" aria-label="Шеф" aria-current="page">
         <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 13.9 9l5.9 1.9-5.9 1.9-1.9 5.9-1.9-5.9-5.9-1.9L10.1 9 12 3.2Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg>
-        <span class="text-[10px] font-semibold">Помічник</span>
+        <span class="text-[10px] font-semibold">Шеф</span>
       </button>
       <button onclick="switchTab('diary')" id="tabDiary" class="flex flex-col items-center gap-0.5 text-[#8E8E93] hover:text-white transition" aria-label="Щоденник" aria-current="false">
         <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4.5"/></svg>
@@ -1300,7 +1371,7 @@
   // ==================== CONSTANTS & HISTORICAL DATA ====================
   let TODAY_KEY = toDateKey(new Date());
 
-  const DEFAULT_GEMINI_PROMPT = `Ти — уважний помічник для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
+  const DEFAULT_GEMINI_PROMPT = `Ти — уважний шеф для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
 
 Правила:
 1. Розбий повідомлення на окремі продукти/інгредієнти. Усі продукти, перелічені в одному запиті, вважай складниками ОДНІЄЇ страви на ОДНІЙ тарілці, якщо користувач явно не описав кілька окремих прийомів їжі.
@@ -1528,7 +1599,7 @@
     else if (selectedDateKey === shiftKey(TODAY_KEY, -1)) titlePrefix = `Вчора, ${dayNum} ${monthStr}`;
 
     document.getElementById('currentDateTitle').textContent = titlePrefix;
-    document.getElementById('currentDateSubtitle').textContent = `${weekdayStr} · Ціль ${formatSpacedInt(appState.targets.kcal)} ккал`;
+    document.getElementById('currentDateSubtitle').textContent = weekdayStr;
 
     const items = appState.logs[selectedDateKey] || [];
     const targets = appState.targets;
@@ -1587,7 +1658,7 @@
 
       let bodyHtml = '';
       if (groups.length === 0) {
-        bodyHtml = `<div class="px-4 py-2.5"><span class="text-[12px] text-[#8E8E93]/70">Поки порожньо</span></div>`;
+        bodyHtml = `<div class="px-4 py-2"><span class="text-[11px] text-[#8E8E93]/70">Поки порожньо</span></div>`;
       } else {
         bodyHtml = `<div class="divide-y divide-white/[0.06]">` + groups.map(group => {
           const groupItems = group.items;
@@ -1607,9 +1678,9 @@
                 <div class="text-[14px] font-medium text-white ${isDish ? 'whitespace-normal leading-snug' : 'truncate'}">${esc(title)}</div>
                 <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
                   <span class="text-[11px] text-[#8E8E93]">${meta}</span>
-                  <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#0A84FF]/15 text-[#0A84FF]">Б ${formatOneDecimal(protein)}</span>
-                  <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#FF9F0A]/15 text-[#FF9F0A]">Ж ${formatOneDecimal(fat)}</span>
-                  <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#BF5AF2]/15 text-[#BF5AF2]">В ${formatOneDecimal(carb)}</span>
+                  <span class="text-[11px] font-medium text-[#A1A1AA]">Б ${formatOneDecimal(protein)} г</span>
+                  <span class="text-[11px] font-medium text-[#A1A1AA]">Ж ${formatOneDecimal(fat)} г</span>
+                  <span class="text-[11px] font-medium text-[#A1A1AA]">В ${formatOneDecimal(carb)} г</span>
                 </div>
               </div>
               <div class="shrink-0 text-right">
@@ -2589,7 +2660,7 @@
     const foodGuidance = (appState.geminiPrompt || DEFAULT_GEMINI_PROMPT)
       .replace(/9\. Відповідай виключно[\s\S]*$/i, '')
       .trim();
-    return `Ти — Шеф, персональний помічник Крихти з харчування та щоденника КБЖВ. Завжди відповідай українською, природно, доброзичливо та по суті.
+    return `Ти — Шеф, персональний шеф Крихти з харчування та щоденника КБЖВ. Завжди відповідай українською, природно, доброзичливо та по суті.
 
 ТВОЇ ЗАВДАННЯ:
 - Відповідай на запитання про калорійність, КБЖВ, продукти, приготування та загальні принципи харчування.
@@ -2722,7 +2793,7 @@ ${foodGuidance}
     const tareLine = action.appliedPlateId && action.tareWeight
       ? `${Math.round(action.grossGrams)} г брутто − ${Math.round(action.tareWeight)} г тари = ${Math.round(total.grams)} г їжі`
       : 'Якщо вибереш посуд, його вагу буде віднято від загальної ваги.';
-    return `<section class="assistant-action-card"><div class="flex items-start justify-between gap-2 mb-2"><div><div class="text-[12px] font-bold text-white">Додати до щоденника?</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">Перевір інгредієнти та вагу перед збереженням</div></div><span class="text-[10px] text-[#D8B98A] font-semibold">${action.items.length} поз.</span></div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Чиста вага їжі</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed">${tareLine}</p><div class="grid grid-cols-2 gap-2 mt-2"><div><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(action.time || getCurrentTimeStr())}" /></div><div class="col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="flex gap-2 mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
+    return `<section class="assistant-action-card"><div class="flex items-start justify-between gap-2 mb-2"><div><div class="text-[12px] font-bold text-white">Додати до щоденника?</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">Перевір інгредієнти та вагу перед збереженням</div></div><span class="text-[10px] text-[#D8B98A] font-semibold">${action.items.length} поз.</span></div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Чиста вага їжі</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed">${tareLine}</p><div class="grid grid-cols-2 gap-2 mt-2"><div><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="flex gap-2 mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
   }
 
   function renderAssistantChat() {
@@ -4182,7 +4253,7 @@ ${foodGuidance}
       return;
     }
     select.innerHTML = geminiAvailableModels.map(model =>
-      `<option value="${esc(model.id)}" title="${esc(model.description || '')}">${esc(model.label)} · ${esc(model.id)}</option>`
+      `<option value="${esc(model.id)}">${esc(model.label)} · ${esc(model.id)}</option>`
     ).join('');
     if (current && geminiAvailableModels.some(model => model.id === current)) select.value = current;
     else select.value = geminiAvailableModels[0].id;

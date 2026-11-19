@@ -620,21 +620,13 @@
       overflow:hidden;
     }
     html.pwa-standalone #appShell > nav.shrink-0 {
-      /* Pin the tab bar to the actual iOS viewport, not the flex shell.
-         This avoids the empty strip below it in Home Screen mode. */
-      position:fixed !important;
-      left:0;
-      right:0;
-      bottom:0 !important;
-      width:100%;
-      box-sizing:border-box;
-      flex:none;
-      padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
-      margin:0 !important;
-      z-index:100;
-    }
-    html.pwa-standalone #appShell > main {
-      padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px));
+      position:relative;
+      bottom:auto;
+      flex:0 0 auto;
+      flex-shrink:0;
+      padding-bottom:max(8px, env(safe-area-inset-bottom, 0px)) !important;
+      margin-bottom:0 !important;
+      z-index:60;
     }
     html.pwa-standalone #appShell > main {
       min-height:0;

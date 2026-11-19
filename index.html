@@ -217,7 +217,7 @@
     nav.shrink-0 { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
     html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
     #appShell { overscroll-behavior:none; touch-action:pan-y; }
-    #appShell > nav.shrink-0 { position:sticky; bottom:0; flex:0 0 auto; z-index:60; touch-action:pan-x; overscroll-behavior:contain; user-select:none; -webkit-user-select:none; }
+    #appShell > nav.shrink-0 { position:sticky; bottom:0; flex:0 0 auto; flex-shrink:0; z-index:60; touch-action:pan-x; overscroll-behavior:contain; user-select:none; -webkit-user-select:none; box-sizing:border-box; }
 
 
 
@@ -598,14 +598,39 @@
     .backup-action-primary { background:rgba(216,185,138,.12) !important; color:var(--accent) !important; }
     .composer-send,.assistant-action-primary { background:var(--accent) !important; color:#241D13 !important; }
 
-    /* iOS Home Screen PWA: compensate for WebKit's shortened standalone viewport. */
-    html.pwa-standalone .desktop-stage, html.pwa-standalone .iphone-shell {
-      height:calc(100dvh + env(safe-area-inset-bottom, 0px)) !important;
-      min-height:calc(100dvh + env(safe-area-inset-bottom, 0px)) !important;
+    /* iOS Home Screen PWA: keep the app inside the real viewport.
+       The safe-area belongs to the navigation bar, not to the shell height. */
+    html.pwa-standalone,
+    html.pwa-standalone body {
+      height:100%;
+      min-height:0;
+      overflow:hidden;
+    }
+    html.pwa-standalone .desktop-stage {
+      height:100dvh !important;
+      min-height:0 !important;
+      width:100vw;
+      overflow:hidden;
+    }
+    html.pwa-standalone .iphone-shell {
+      height:100% !important;
+      min-height:0 !important;
+      max-height:none !important;
+      box-sizing:border-box;
+      overflow:hidden;
     }
     html.pwa-standalone #appShell > nav.shrink-0 {
-      padding-bottom:max(6px, calc(env(safe-area-inset-bottom, 0px) - 10px)) !important;
+      position:relative;
+      bottom:auto;
+      flex:0 0 auto;
+      flex-shrink:0;
+      padding-bottom:max(8px, env(safe-area-inset-bottom, 0px)) !important;
       margin-bottom:0 !important;
+      z-index:60;
+    }
+    html.pwa-standalone #appShell > main {
+      min-height:0;
+      overscroll-behavior:contain;
     }
     ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }
 

@@ -1,27 +1,28 @@
-const CACHE = 'krykhta-v17';
-const SHELL = ['./', 'index.html', 'tailwind.css', 'manifest.webmanifest',
-  'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-icon.png'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+const CACHE = 'krykhta-v18';
+const SHELL = ['./', './index.html', './tailwind.css', './manifest.webmanifest',
+  './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
-
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-    .then(() => self.clients.claim()));
+self.addEventListener('activate', event => {
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
-
-// Same-origin: cache first, refresh in background. Cross-origin (Gemini API) is never touched.
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
-  e.respondWith(caches.match(req, { ignoreSearch: true }).then(hit => {
-    const net = fetch(req).then(res => {
-      if (res.ok) caches.open(CACHE).then(c => c.put(req, res.clone()));
-      return res;
-    }).catch(() => hit || caches.match('index.html'));
-    return hit || net;
-  }));
+self.addEventListener('message', event => { if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting(); });
+// HTML is network-first so new GitHub Pages deployments are visible immediately.
+// Static assets remain cache-first; third-party/API traffic is never intercepted.
+self.addEventListener('fetch', event => {
+  const request = event.request, url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  const isDocument = request.mode === 'navigate' || url.pathname.endsWith('/index.html') || url.pathname === '/';
+  if (isDocument) {
+    event.respondWith(fetch(new Request(request, { cache: 'no-store' })).then(response => {
+      if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
+      return response;
+    }).catch(() => caches.match(request).then(hit => hit || caches.match('./index.html'))));
+    return;
+  }
+  event.respondWith(caches.match(request).then(hit => hit || fetch(request).then(response => {
+    if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
+    return response;
+  })));
 });
-

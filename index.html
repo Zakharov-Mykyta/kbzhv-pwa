@@ -453,8 +453,9 @@
     .assistant-message { display:flex; gap:8px; align-items:flex-end; animation:softCardIn .22s ease both; }
     .assistant-message-user { justify-content:flex-end; }
     .assistant-message-bot { justify-content:flex-start; }
-    .assistant-bubble { max-width:min(88%, 520px); padding:10px 12px; border-radius:17px; font-size:13px; line-height:1.48; overflow-wrap:anywhere; white-space:normal; }
-    .assistant-bubble-user { color:#F7F7FA; background:#174D36; border:1px solid rgba(216,185,138,.14); border-bottom-right-radius:6px; }
+    .assistant-bubble { display:block; width:fit-content; max-width:100%; padding:10px 12px; border-radius:17px; font-size:13px; line-height:1.48; overflow-wrap:break-word; word-break:normal; hyphens:none; white-space:pre-wrap; }
+    .assistant-message-user > .min-w-0 { flex:0 1 auto; width:fit-content; max-width:min(88%, 520px); }
+    .assistant-bubble-user { color:#241D13; background:var(--accent, #D8B98A); border:1px solid rgba(216,185,138,.42); border-bottom-right-radius:6px; }
     .assistant-bubble-bot { color:#F2F2F7; background:#1C1C1E; border:1px solid rgba(255,255,255,.07); border-bottom-left-radius:6px; }
     .assistant-message.hidden { display:none !important; }
     .assistant-message-meta { color:#77777F; font-size:9px; margin:0 4px 3px; }
@@ -462,11 +463,19 @@
     .assistant-action-card { margin:9px 0 2px 35px; padding:12px; border-radius:16px; border:1px solid rgba(216,185,138,.22); background:linear-gradient(145deg,rgba(216,185,138,.08),rgba(28,28,30,.98) 48%); max-width:calc(100% - 35px); }
     .assistant-action-card label { display:block; color:#A1A1AA; font-size:10px; font-weight:600; margin-bottom:4px; }
     .assistant-action-card input,.assistant-action-card select { display:block; width:100%; min-width:0; max-width:100%; box-sizing:border-box; background:#2C2C2E; border:1px solid rgba(255,255,255,.07); border-radius:9px; padding:8px 7px; color:#F7F7FA; font-size:12px; line-height:1.25; outline:none; }
-    .assistant-action-card .grid.grid-cols-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .assistant-action-card .grid.grid-cols-2 > div { min-width:0; overflow:hidden; }
-    .assistant-action-card input[type="date"],.assistant-action-card input[type="time"] { font-size:11px; padding-inline:6px; }
-    .assistant-action-card label { min-width:0; white-space:nowrap; }
+    .assistant-action-card .assistant-action-fields { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:9px; }
+    .assistant-action-card .assistant-action-field { min-width:0; overflow:hidden; }
+    .assistant-action-card label { display:block; min-width:0; white-space:normal; line-height:1.25; margin-bottom:5px; }
+    .assistant-action-card input,.assistant-action-card select { min-height:40px; }
+    .assistant-action-card input[type="date"],.assistant-action-card input[type="time"] {
+      height:40px; min-height:40px; padding:0 8px; font-size:12px; letter-spacing:0;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; -webkit-appearance:none; appearance:none;
+    }
+    .assistant-action-card input[type="date"]::-webkit-date-and-time-value,
+    .assistant-action-card input[type="time"]::-webkit-date-and-time-value { text-align:left; margin:0; }
     .assistant-action-card input:focus,.assistant-action-card select:focus { border-color:#D8B98A; }
+    .assistant-action-card .assistant-action-buttons { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(94px,.8fr); gap:8px; align-items:stretch; }
+    .assistant-action-card .assistant-action-buttons button { width:100%; min-width:0; min-height:44px; display:flex; align-items:center; justify-content:center; text-align:center; white-space:normal; line-height:1.2; padding:9px 8px; }
     .assistant-food-line { display:grid; grid-template-columns:minmax(0,1fr) 76px; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid rgba(255,255,255,.06); }
     .assistant-food-line:last-child { border-bottom:0; }
     .assistant-action-primary { flex:1 1 auto; min-width:0; width:auto; border-radius:11px; padding:10px 12px; background:#D8B98A; color:#241D13; font-size:12px; font-weight:750; transition:transform .15s ease,background .15s ease; }
@@ -492,7 +501,7 @@
     .backup-action-secondary { background:#2C2C2E; color:#D8B98A; }
     .backup-action-secondary .backup-action-icon { background:rgba(216,185,138,.12); }
     .settings-tab-icon { stroke-width:1.8 !important; }
-    @media (max-width:380px) { .assistant-action-card,.assistant-summary-card { margin-left:0; max-width:100%; } .assistant-bubble { max-width:91%; } }
+    @media (max-width:380px) { .assistant-action-card,.assistant-summary-card { margin-left:0; max-width:100%; } .assistant-bubble { max-width:100%; } .assistant-message-user > .min-w-0 { max-width:91%; } .assistant-action-card .assistant-action-buttons { grid-template-columns:minmax(0,1fr) minmax(88px,.72fr); } }
   
 
     /* v17.0 — unified native iOS visual system */
@@ -555,20 +564,16 @@
     .composer-field:focus-within { border-color:rgba(255,255,255,.10) !important; background:rgba(44,44,46,.94) !important; box-shadow:0 5px 22px rgba(0,0,0,.24) !important; }
     .composer-input:focus,.composer-input:focus-visible { outline:none !important; box-shadow:none !important; border:0 !important; }
     .assistant-action-card { background:#1C1C1E !important; }
-    .assistant-action-card .grid.grid-cols-2 {
-      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-      gap:8px !important;
-    }
-    .assistant-action-card .grid.grid-cols-2 > div { min-width:0 !important; }
+    .assistant-action-card .assistant-action-fields { grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:8px !important; }
+    .assistant-action-card .assistant-action-field { min-width:0 !important; overflow:hidden !important; }
     .assistant-action-card input[type="date"],
     .assistant-action-card input[type="time"] {
-      width:100% !important; min-width:0 !important; max-width:100% !important;
-      padding:8px 4px !important; font-size:10px !important;
-      letter-spacing:-.03em; overflow:hidden;
+      display:block !important; width:100% !important; min-width:0 !important; max-width:100% !important;
+      height:40px !important; min-height:40px !important; padding:0 7px !important; font-size:12px !important;
+      letter-spacing:0 !important; overflow:hidden !important;
     }
-    @media (max-width:360px) {
-      .assistant-action-card .grid.grid-cols-2 { grid-template-columns:minmax(0,1fr) !important; }
-      .assistant-action-card .grid.grid-cols-2 > div { grid-column:1 / -1 !important; }
+    @media (max-width:340px) {
+      .assistant-action-card .assistant-action-fields { grid-template-columns:minmax(0,1fr) !important; }
     }
     /* Compact iOS settings rows instead of oversized white action tiles. */
     .backup-action-btn {
@@ -607,10 +612,13 @@
       overflow:hidden;
     }
     html.pwa-standalone .desktop-stage {
+      position:fixed !important;
+      inset:0 !important;
       height:100dvh !important;
-      min-height:0 !important;
-      width:100vw;
-      overflow:hidden;
+      min-height:100dvh !important;
+      width:100vw !important;
+      overflow:hidden !important;
+      background:#000000 !important;
     }
     html.pwa-standalone .iphone-shell {
       height:100% !important;
@@ -620,18 +628,66 @@
       overflow:hidden;
     }
     html.pwa-standalone #appShell > nav.shrink-0 {
-      position:relative;
-      bottom:auto;
-      flex:0 0 auto;
-      flex-shrink:0;
-      padding-bottom:max(8px, env(safe-area-inset-bottom, 0px)) !important;
-      margin-bottom:0 !important;
+      position:relative !important;
+      inset:auto !important;
+      bottom:auto !important;
+      flex:0 0 auto !important;
+      flex-shrink:0 !important;
+      min-height:76px;
+      padding-top:9px !important;
+      padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+      margin:0 !important;
       z-index:60;
+      background:#1C1C1E !important;
+      -webkit-backdrop-filter:none !important;
+      backdrop-filter:none !important;
     }
     html.pwa-standalone #appShell > main {
       min-height:0;
       overscroll-behavior:contain;
     }
+    /* iOS tab bar: opaque surface continues through the Home Indicator safe area. */
+    html.pwa-standalone,
+    html.pwa-standalone body { width:100%; min-height:100%; }
+    html.pwa-standalone .iphone-shell { width:100%; height:100% !important; padding-bottom:0 !important; }
+    html.pwa-standalone #appShell > nav.shrink-0::after { content:none; }
+    html.barcode-scanner-open #appShell > nav.shrink-0 { display:none !important; }
+    @media not all and (min-width:480px) and (hover:hover) and (pointer:fine) {
+      .desktop-stage { position:fixed !important; inset:0 !important; height:100dvh !important; min-height:100dvh !important; }
+      #appShell > nav.shrink-0 {
+        background:#1C1C1E !important;
+        padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+      }
+    }
+
+    /* Keep assistant messages legible: normal word boundaries, no mid-word splitting. */
+    .assistant-bubble-user { background:#D8B98A !important; color:#241D13 !important; }
+    .assistant-message-user .assistant-bubble { overflow-wrap:break-word !important; word-break:normal !important; }
+
+    /* The manual barcode lookup control uses the same full-height button language as the app. */
+    #barcodeSheet .barcode-lookup-row { display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px; align-items:stretch; margin-bottom:1rem; }
+    #barcodeLookupBtn { justify-self:stretch; }
+    .assistant-action-card .assistant-action-field.col-span-2 { grid-column:1 / -1; }
+    #barcodeLookupBtn {
+      display:flex; align-items:center; justify-content:center; align-self:stretch;
+      min-width:92px; min-height:44px; padding:0 14px !important;
+      border:1px solid rgba(216,185,138,.72); border-radius:12px;
+      background:#D8B98A !important; color:#241D13 !important;
+      font-size:14px !important; font-weight:750 !important; line-height:1.1;
+      box-shadow:0 2px 8px rgba(0,0,0,.18);
+    }
+    #barcodeLookupBtn:active { transform:scale(.97); }
+
+    /* Explicit dimensions prevent iOS Safari from collapsing the update SVG. */
+    #updatePwaBtn .pwa-update-icon { display:block; width:20px; height:20px; flex:0 0 20px; overflow:visible; }
+    #updatePwaBtn:disabled { opacity:.65; }
+
+    @media (max-width:380px) {
+      .assistant-action-card { padding:10px; }
+      .assistant-action-card .assistant-action-buttons { grid-template-columns:minmax(0,1fr) minmax(88px,.72fr); }
+      .assistant-action-card .assistant-action-buttons button { font-size:11px; padding-inline:6px; }
+    }
+
     ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }
 
 </style>
@@ -1005,9 +1061,9 @@
         <section class="rounded-[18px] bg-[#1C1C1E] border border-white/[0.08] overflow-hidden">
           <button id="updatePwaBtn" type="button" onclick="updatePwaApp()" class="w-full flex items-center gap-3 px-4 py-3 text-left transition active:opacity-75">
             <span class="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style="background:rgba(216,185,138,.13);color:#D8B98A">
-              <svg class="w-[19px] h-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2"/></svg>
+              <svg class="pwa-update-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2"/></svg>
             </span>
-            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span></span>
+            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span><span id="appVersionLabel" class="block text-[10px] text-[#77777F] mt-0.5">Версія 18.1.0</span></span>
             <svg class="w-4 h-4 text-[#8E8E93] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         </section>
@@ -1397,9 +1453,9 @@
     </div>
     <div id="barcodeReader" class="mb-3"></div>
     <p id="barcodeStatus" class="barcode-status mb-3" role="status" aria-live="polite">Готую камеру… Дозволь доступ до камери.</p>
-    <div class="grid grid-cols-[1fr_auto] gap-2 mb-4">
+    <div class="barcode-lookup-row">
       <input id="barcodeManualInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Або введи штрихкод вручну" class="barcode-field" />
-      <button type="button" id="barcodeLookupBtn" onclick="lookupBarcodeManually()" class="px-4 rounded-[12px] bg-[#D8B98A] text-white text-[13px] font-semibold">Знайти</button>
+      <button type="button" id="barcodeLookupBtn" onclick="lookupBarcodeManually()" class="rounded-[12px] bg-[#D8B98A] text-[#241D13] text-[14px] font-bold">Знайти</button>
     </div>
     <div id="barcodeProductPanel" class="hidden border border-white/[0.08] rounded-[16px] p-3.5 bg-[#2C2C2E]">
       <div class="flex gap-3 items-start mb-3">
@@ -1426,6 +1482,7 @@
 
 <script>
   // ==================== CONSTANTS & HISTORICAL DATA ====================
+  const APP_VERSION = '18.1.0';
   let TODAY_KEY = toDateKey(new Date());
 
   const DEFAULT_GEMINI_PROMPT = `Ти — уважний шеф для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
@@ -1492,6 +1549,8 @@
   let pendingFoodImage = null;
   let barcodeScannerInstance = null;
   let barcodeScannerStarting = false;
+  let barcodeStartPromise = null;
+  let barcodeSessionId = 0;
   let scannedProduct = null;
   let barcodeLibraryPromise = null;
   let geminiAvailableModels = [];
@@ -2041,20 +2100,70 @@
   updateComposerActions();
 
   let _rec = null;
+  let _recCleanupTimer = null;
+  function resetVoiceRecognition(rec) {
+    if (_rec !== rec) return;
+    _rec = null;
+    if (_recCleanupTimer) { clearTimeout(_recCleanupTimer); _recCleanupTimer = null; }
+    const banner = document.getElementById('voiceBanner');
+    const mic = document.getElementById('micBtn');
+    banner?.classList.add('hidden');
+    mic?.classList.remove('is-recording');
+    mic?.setAttribute('aria-pressed', 'false');
+    updateComposerActions();
+  }
   document.getElementById('micBtn').addEventListener('click', () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     const banner = document.getElementById('voiceBanner');
     const input = document.getElementById('foodPromptInput');
+    const mic = document.getElementById('micBtn');
     if (!SR) { showToast('Голос недоступний. Скористайся 🎤 на клавіатурі', '🎙'); input.focus(); return; }
-    if (_rec) { _rec.stop(); return; }
-    const rec = new SR(); _rec = rec;
-    rec.lang = 'uk-UA'; rec.interimResults = true; rec.continuous = false;
-    const base = input.value ? input.value.trim() + ' ' : '';
-    rec.onstart = () => { banner.classList.remove('hidden'); document.getElementById('micBtn').classList.add('is-recording'); document.getElementById('micBtn').setAttribute('aria-pressed', 'true'); };
-    rec.onresult = e => { input.value = base + Array.from(e.results).map(r => r[0].transcript).join(' '); updateComposerActions(); };
-    rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') showToast('Немає доступу до мікрофона', '⚠️'); };
-    rec.onend = () => { _rec = null; banner.classList.add('hidden'); document.getElementById('micBtn').classList.remove('is-recording'); document.getElementById('micBtn').setAttribute('aria-pressed', 'false'); updateComposerActions(); input.focus(); };
-    try { rec.start(); } catch (e) { _rec = null; }
+    if (_rec) {
+      try { _rec.stop(); } catch (error) { resetVoiceRecognition(_rec); }
+      return;
+    }
+    let rec;
+    try {
+      rec = new SR();
+      _rec = rec;
+      rec.lang = 'uk-UA';
+      rec.interimResults = true;
+      rec.continuous = false;
+      const base = input.value ? input.value.trim() + ' ' : '';
+      rec.onstart = () => {
+        if (_rec !== rec) return;
+        banner.classList.remove('hidden');
+        mic.classList.add('is-recording');
+        mic.setAttribute('aria-pressed', 'true');
+      };
+      rec.onresult = event => {
+        if (_rec !== rec) return;
+        input.value = base + Array.from(event.results).map(result => result[0].transcript).join(' ');
+        updateComposerActions();
+      };
+      rec.onerror = event => {
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          showToast('Немає доступу до мікрофона. Перевір дозвіл для сайту в налаштуваннях iPhone.', '⚠️');
+        } else if (event.error !== 'aborted' && event.error !== 'no-speech') {
+          showToast('Голосове введення перервано. Спробуй ще раз.', '⚠️');
+        }
+        try { rec.abort(); } catch (error) {}
+        if (_recCleanupTimer) clearTimeout(_recCleanupTimer);
+        _recCleanupTimer = setTimeout(() => resetVoiceRecognition(rec), 1200);
+      };
+      rec.onend = () => resetVoiceRecognition(rec);
+      rec.start();
+    } catch (error) {
+      if (rec) {
+        try { rec.abort(); } catch (ignored) {}
+        resetVoiceRecognition(rec);
+      } else {
+        banner.classList.add('hidden');
+        mic.classList.remove('is-recording');
+        mic.setAttribute('aria-pressed', 'false');
+      }
+      showToast('Не вдалося запустити голосове введення. Спробуй ще раз.', '⚠️');
+    }
   });
 
   // ==================== MULTI-ITEM UKRAINIAN PARSER ====================
@@ -2594,7 +2703,10 @@
   }
 
   function handleFoodImageSelection(event) {
-    const file = event.target.files && event.target.files[0];
+    const input = event.target;
+    const file = input.files && input.files[0];
+    // Clear immediately so choosing or capturing the same file again still fires "change" on iOS.
+    input.value = '';
     if (!file) return;
     (async () => {
       try {
@@ -2612,11 +2724,15 @@
 
   document.getElementById('cameraPickBtn').addEventListener('click', () => {
     closeAttachmentMenu();
-    document.getElementById('foodCameraInput').click();
+    const cameraInput = document.getElementById('foodCameraInput');
+    cameraInput.value = '';
+    cameraInput.click();
   });
   document.getElementById('galleryPickBtn').addEventListener('click', () => {
     closeAttachmentMenu();
-    document.getElementById('foodGalleryInput').click();
+    const galleryInput = document.getElementById('foodGalleryInput');
+    galleryInput.value = '';
+    galleryInput.click();
   });
   document.getElementById('foodCameraInput').addEventListener('change', handleFoodImageSelection);
   document.getElementById('foodGalleryInput').addEventListener('change', handleFoodImageSelection);
@@ -2850,7 +2966,7 @@ ${foodGuidance}
     const tareLine = action.appliedPlateId && action.tareWeight
       ? `${Math.round(action.grossGrams)} г брутто − ${Math.round(action.tareWeight)} г тари = ${Math.round(total.grams)} г їжі`
       : 'Якщо вибереш посуд, його вагу буде віднято від загальної ваги.';
-    return `<section class="assistant-action-card"><div class="flex items-start justify-between gap-2 mb-2"><div><div class="text-[12px] font-bold text-white">Додати до щоденника?</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">Перевір інгредієнти та вагу перед збереженням</div></div><span class="text-[10px] text-[#D8B98A] font-semibold">${action.items.length} поз.</span></div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Чиста вага їжі</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed">${tareLine}</p><div class="grid grid-cols-2 gap-2 mt-2"><div><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="flex gap-2 mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
+    return `<section class="assistant-action-card"><div class="flex items-start justify-between gap-2 mb-2"><div><div class="text-[12px] font-bold text-white">Додати до щоденника?</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">Перевір інгредієнти та вагу перед збереженням</div></div><span class="text-[10px] text-[#D8B98A] font-semibold">${action.items.length} поз.</span></div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Чиста вага їжі</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed">${tareLine}</p><div class="assistant-action-fields mt-2"><div class="assistant-action-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div class="assistant-action-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="assistant-action-field col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="assistant-action-field col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="assistant-action-buttons mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
   }
 
   function renderAssistantChat() {
@@ -3092,75 +3208,122 @@ ${foodGuidance}
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
       script.async = true;
-      script.onload = () => window.Html5Qrcode ? resolve(window.Html5Qrcode) : reject(new Error('Бібліотека сканера не завантажилася.'));
-      script.onerror = () => reject(new Error('Не вдалося завантажити сканер. Перевір підключення до інтернету.'));
+      script.onload = () => {
+        if (window.Html5Qrcode) resolve(window.Html5Qrcode);
+        else { barcodeLibraryPromise = null; reject(new Error('Бібліотека сканера не завантажилася.')); }
+      };
+      script.onerror = () => {
+        barcodeLibraryPromise = null;
+        script.remove();
+        reject(new Error('Не вдалося завантажити сканер. Перевір підключення до інтернету.'));
+      };
       document.head.appendChild(script);
     });
     return barcodeLibraryPromise;
   }
 
+  function releaseBarcodeVideoTracks() {
+    const reader = document.getElementById('barcodeReader');
+    if (!reader) return;
+    reader.querySelectorAll('video').forEach(video => {
+      try { video.pause(); } catch (ignored) {}
+      const stream = video.srcObject;
+      if (stream && typeof stream.getTracks === 'function') {
+        stream.getTracks().forEach(track => {
+          try { track.stop(); } catch (ignored) {}
+        });
+      }
+      try { video.srcObject = null; } catch (ignored) {}
+    });
+  }
+
   async function openBarcodeSheet() {
+    if (document.getElementById('barcodeSheet').classList.contains('open') && (barcodeScannerStarting || barcodeScannerInstance)) return;
+    const session = ++barcodeSessionId;
     scannedProduct = null;
     document.getElementById('barcodeProductPanel').classList.add('hidden');
     document.getElementById('barcodeManualInput').value = '';
     document.getElementById('barcodeServingGrams').value = 100;
     document.getElementById('barcodeTime').value = getCurrentTimeStr();
+    document.documentElement.classList.add('barcode-scanner-open');
     setBarcodeStatus('Підключаю камеру… Дозволь доступ до камери, коли браузер запитає.');
     document.getElementById('barcodeBackdrop').classList.add('visible');
     document.getElementById('barcodeSheet').classList.add('visible');
     requestAnimationFrame(() => {
+      if (session !== barcodeSessionId) return;
       document.getElementById('barcodeBackdrop').classList.add('open');
       document.getElementById('barcodeSheet').classList.add('open');
     });
+
+    // Finish a previous start/stop cycle before requesting the camera again.
+    await stopBarcodeScanner();
+    if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
+
+    let scanner = null;
     try {
       const Scanner = await loadBarcodeLibrary();
-      if (!document.getElementById('barcodeSheet').classList.contains('open')) return;
+      if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
       const formats = window.Html5QrcodeSupportedFormats;
       const supported = formats ? [formats.EAN_13, formats.EAN_8, formats.UPC_A, formats.UPC_E, formats.CODE_128, formats.ITF].filter(v => v !== undefined) : undefined;
-      barcodeScannerInstance = new Scanner('barcodeReader', { formatsToSupport: supported, verbose: false });
+
+      scanner = new Scanner('barcodeReader', { formatsToSupport: supported, verbose: false });
+      barcodeScannerInstance = scanner;
       barcodeScannerStarting = true;
-      const scanner = barcodeScannerInstance;
-      await scanner.start(
+      const startPromise = scanner.start(
         { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 270, height: 140 }, aspectRatio: 1.7, rememberLastUsedCamera: true },
+        { fps: 10, qrbox: { width: 270, height: 140 }, aspectRatio: 1.7, rememberLastUsedCamera: false },
         code => handleBarcodeDetected(code),
         () => {}
       );
+      barcodeStartPromise = startPromise;
+      await startPromise;
+
+      if (barcodeStartPromise === startPromise) barcodeStartPromise = null;
+      if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
       barcodeScannerStarting = false;
-      if (!document.getElementById('barcodeSheet').classList.contains('open')) {
-        try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
-        try { scanner.clear(); } catch (e) {}
-        if (barcodeScannerInstance === scanner) barcodeScannerInstance = null;
-        return;
-      }
       setBarcodeStatus('Камера активна. Наведи штрихкод у рамку.');
     } catch (error) {
+      if (session !== barcodeSessionId) return;
       barcodeScannerStarting = false;
+      barcodeStartPromise = null;
+      if (scanner) {
+        try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
+        try { scanner.clear(); } catch (ignored) {}
+        releaseBarcodeVideoTracks();
+        if (barcodeScannerInstance === scanner) barcodeScannerInstance = null;
+      }
       setBarcodeStatus(`${error.message || 'Не вдалося запустити камеру.'} Можеш ввести код вручну. Переконайся, що сайт відкритий через HTTPS.`, 'error');
     }
   }
 
   async function stopBarcodeScanner() {
+    const pendingStart = barcodeStartPromise;
+    if (pendingStart) {
+      try { await pendingStart; } catch (ignored) {}
+    }
     const scanner = barcodeScannerInstance;
     barcodeScannerInstance = null;
     if (scanner) {
-      try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
-      try { scanner.clear(); } catch (e) {}
+      try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
+      try { scanner.clear(); } catch (ignored) {}
     }
+    releaseBarcodeVideoTracks();
     barcodeScannerStarting = false;
+    barcodeStartPromise = null;
     const reader = document.getElementById('barcodeReader');
     if (reader) reader.innerHTML = '';
   }
 
   async function closeBarcodeSheet() {
+    const closingSession = ++barcodeSessionId;
     document.getElementById('barcodeBackdrop').classList.remove('open');
     document.getElementById('barcodeSheet').classList.remove('open');
     await stopBarcodeScanner();
     setTimeout(() => {
-      if (!document.getElementById('barcodeSheet').classList.contains('open')) {
-        document.getElementById('barcodeBackdrop').classList.remove('visible');
-        document.getElementById('barcodeSheet').classList.remove('visible');
-      }
+      if (closingSession !== barcodeSessionId || document.getElementById('barcodeSheet').classList.contains('open')) return;
+      document.getElementById('barcodeBackdrop').classList.remove('visible');
+      document.getElementById('barcodeSheet').classList.remove('visible');
+      document.documentElement.classList.remove('barcode-scanner-open');
     }, 340);
   }
 
@@ -3170,8 +3333,10 @@ ${foodGuidance}
     if (!/^\d{8,14}$/.test(normalized)) return;
     const scanner = barcodeScannerInstance;
     barcodeScannerInstance = null;
-    try { if (scanner.isScanning) await scanner.stop(); } catch (e) {}
-    try { scanner.clear(); } catch (e) {}
+    barcodeStartPromise = null;
+    try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
+    try { scanner.clear(); } catch (ignored) {}
+    releaseBarcodeVideoTracks();
     const reader = document.getElementById('barcodeReader');
     if (reader) reader.innerHTML = '';
     await lookupOpenFoodFacts(normalized);
@@ -4517,30 +4682,51 @@ ${foodGuidance}
   async function updatePwaApp() {
     const button = document.getElementById('updatePwaBtn');
     const status = document.getElementById('pwaUpdateStatus');
-    if (!('serviceWorker' in navigator)) { showToast('Оновлення недоступне в цьому браузері', '⚠️'); return; }
+    const version = document.getElementById('appVersionLabel');
+    if (version) version.textContent = `Версія ${APP_VERSION}`;
+    if (!('serviceWorker' in navigator)) {
+      if (status) status.textContent = `Оновлення недоступне · ${APP_VERSION}`;
+      showToast('Оновлення недоступне в цьому браузері', '⚠️');
+      return;
+    }
     if (button) button.disabled = true;
-    if (status) status.textContent = 'Перевіряю…';
+    if (status) status.textContent = 'Перевіряю оновлення…';
     try {
-      pwaRegistration = pwaRegistration || await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' });
+      pwaRegistration = pwaRegistration || await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
       await pwaRegistration.update();
-      const worker = pwaRegistration.installing || pwaRegistration.waiting;
-      if (worker) {
-        if (status) status.textContent = 'Застосовую оновлення…';
-        const activated = new Promise(resolve => {
-          if (worker.state === 'activated') return resolve();
-          worker.addEventListener('statechange', () => { if (worker.state === 'activated' || worker.state === 'redundant') resolve(); });
+
+      let worker = pwaRegistration.waiting;
+      if (!worker && pwaRegistration.installing) {
+        const installing = pwaRegistration.installing;
+        worker = await new Promise(resolve => {
+          const finish = () => {
+            if (pwaRegistration.waiting) resolve(pwaRegistration.waiting);
+            else if (installing.state === 'installed') resolve(installing);
+            else if (installing.state === 'redundant') resolve(null);
+          };
+          installing.addEventListener('statechange', finish);
+          finish();
         });
-        if (pwaRegistration.waiting) pwaRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
-        await Promise.race([activated, new Promise(resolve => setTimeout(resolve, 8000))]);
-        location.reload(); return;
       }
-      if (status) status.textContent = 'Перевірено щойно';
-      showToast('Застосунок перевірено. Оновлюю сторінку', '↻');
-      setTimeout(() => location.reload(), 500);
+
+      if (worker && worker.state === 'installed') {
+        if (status) status.textContent = 'Застосовую оновлення…';
+        const controllerChanged = new Promise(resolve => {
+          navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+        });
+        worker.postMessage({ type: 'SKIP_WAITING' });
+        await Promise.race([controllerChanged, new Promise(resolve => setTimeout(resolve, 10000))]);
+        location.reload();
+        return;
+      }
+
+      if (status) status.textContent = `Версія ${APP_VERSION} · Застосунок актуальний`;
+      showToast('Оновлень немає — у тебе остання версія', '✓');
     } catch (error) {
       console.error('PWA update failed:', error);
-      if (status) status.textContent = 'Не вдалося перевірити оновлення';
+      if (status) status.textContent = `Не вдалося перевірити · ${APP_VERSION}`;
       showToast('Не вдалося оновити. Перевір інтернет', '⚠️');
+    } finally {
       if (button) button.disabled = false;
     }
   }
@@ -4561,6 +4747,8 @@ ${foodGuidance}
     });
     renderDiary();
     renderAssistantChat();
+    const versionLabel = document.getElementById('appVersionLabel');
+    if (versionLabel) versionLabel.textContent = `Версія ${APP_VERSION}`;
     updateAssistantHeaderStatus();
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     const standaloneMode = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;

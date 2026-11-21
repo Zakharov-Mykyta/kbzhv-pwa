@@ -508,75 +508,44 @@
     .assistant-action-backdrop { position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.76); opacity:0; pointer-events:none; transition:opacity .24s ease; }
     .assistant-action-backdrop.visible { display:block; opacity:0; pointer-events:auto; }
     .assistant-action-backdrop.open { opacity:1; }
-    .assistant-action-sheet { position:fixed; z-index:90; left:0; right:0; bottom:var(--assistant-action-bottom, 0px); width:100%; max-height:min(94dvh, var(--assistant-action-vh, 94dvh)); display:none; flex-direction:column; overflow:hidden; background:#1C1C1E; border:1px solid rgba(255,255,255,.12); border-bottom:0; border-radius:27px 27px 0 0; box-shadow:0 -18px 60px rgba(0,0,0,.42); transform:translateY(105%); transition:transform .32s cubic-bezier(.32,.72,0,1); padding-top:10px; padding-bottom:max(12px, env(safe-area-inset-bottom, 0px)); }
+    .assistant-action-sheet { position:fixed; z-index:90; left:0; right:0; bottom:var(--assistant-action-bottom, 0px); width:100%; max-height:min(94dvh, var(--assistant-action-vh, 94dvh)); display:none; flex-direction:column; overflow:hidden; background:#1C1C1E; border:1px solid rgba(255,255,255,.12); border-bottom:0; border-radius:27px 27px 0 0; box-shadow:0 -18px 60px rgba(0,0,0,.42); transform:translateY(105%); transition:transform .32s cubic-bezier(.32,.72,0,1); padding-top:10px; padding-bottom:0; }
     .assistant-action-sheet.visible { display:flex; }
     .assistant-action-sheet.open { transform:translateY(0); }
     .assistant-action-grabber { flex:0 0 auto; width:38px; height:5px; border-radius:99px; background:rgba(255,255,255,.24); margin:0 auto 12px; }
     .assistant-action-modal-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px 13px; border-bottom:1px solid rgba(255,255,255,.07); flex:0 0 auto; }
-    .assistant-action-modal-title { margin:0; color:#F5F5F7; font-size:21px; line-height:1.2; font-weight:750; letter-spacing:-.25px; }
+    .assistant-action-modal-title { margin:0; color:#F5F5F7; font-size:18px; line-height:1.25; font-weight:700; letter-spacing:0; }
     .assistant-action-modal-close { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:50%; background:#2C2C2E; color:#B8B8BE; font-size:19px; line-height:1; }
     .assistant-action-modal-body { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:15px 20px 18px; }
-    .assistant-action-dish-editor { padding:14px; border-radius:18px; background:#222225; border:1px solid rgba(255,255,255,.07); }
-    .assistant-action-dish-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-    .assistant-action-dish-head h3 { margin:0; color:#F5F5F7; font-size:16px; line-height:1.25; font-weight:750; }
-    .assistant-action-dish-count { color:#A1A1AA; font-size:12px; white-space:nowrap; }
-    .assistant-action-dish-visual { display:flex; flex-direction:column; align-items:center; gap:7px; padding:2px 0 12px; }
-    .assistant-action-dish-visual .dish-pie-svg { width:min(224px, 64vw); }
-    .assistant-action-dish-selected { text-align:center; min-height:38px; }
-    .assistant-action-dish-selected-title { color:#F5F5F7; font-size:16px; line-height:1.25; font-weight:700; }
-    .assistant-action-dish-selected-meta { margin-top:3px; color:#A1A1AA; font-size:13px; }
-    .assistant-action-share { padding:12px 13px 10px; border-radius:14px; background:#1C1C1E; border:1px solid rgba(255,255,255,.06); }
-    .assistant-action-share label { color:#A1A1AA; font-size:13px; }
-    .assistant-action-share strong { color:#F5F5F7; font-size:16px; font-variant-numeric:tabular-nums; }
-    .assistant-action-share input[type=range] { -webkit-appearance:none; appearance:none; width:100%; height:28px; margin:5px 0 0; padding:0; background:transparent; accent-color:#D8B98A; touch-action:pan-x; }
-    .assistant-action-share input[type=range]::-webkit-slider-runnable-track { height:7px; border-radius:999px; background:linear-gradient(90deg,#D8B98A 0%,#D8B98A var(--range-progress,50%),#343438 var(--range-progress,50%),#343438 100%); border:1px solid rgba(255,255,255,.05); }
-    .assistant-action-share input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:22px; height:22px; margin-top:-8px; border-radius:50%; background:#F5F5F7; border:3px solid #D8B98A; box-shadow:0 2px 8px rgba(0,0,0,.45),0 0 0 3px rgba(216,185,138,.14); }
-    .assistant-action-share input[type=range]::-moz-range-track { height:7px; border-radius:999px; background:#343438; border:1px solid rgba(255,255,255,.05); }
-    .assistant-action-share input[type=range]::-moz-range-progress { height:7px; border-radius:999px; background:#D8B98A; }
-    .assistant-action-share input[type=range]::-moz-range-thumb { width:16px; height:16px; border-radius:50%; background:#F5F5F7; border:3px solid #D8B98A; box-shadow:0 2px 8px rgba(0,0,0,.45); }
-    .assistant-action-share input:disabled { opacity:.38; cursor:not-allowed; }
-    .assistant-action-share-note { margin:2px 0 0; color:#77777F; font-size:11px; }
-    .assistant-action-ingredients { display:flex; flex-direction:column; gap:7px; margin-top:14px; }
-    .assistant-action-ingredients-title { display:flex; justify-content:space-between; align-items:center; gap:10px; color:#A1A1AA; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
-    .assistant-action-ingredient-row { display:flex; align-items:center; gap:7px; width:100%; padding:8px; border-radius:11px; background:#29292C; border:1px solid rgba(255,255,255,.035); transition:background .18s ease,border-color .18s ease; }
-    .assistant-action-ingredient-row.selected { background:#343438; border-color:rgba(255,255,255,.16); }
-    .assistant-action-ingredient-dot { width:10px; height:10px; flex:0 0 10px; border-radius:50%; }
-    .assistant-action-ingredient-name { min-width:0; flex:1 1 auto; width:0; color:#F4F4F7; background:transparent; border:0; outline:0; font-size:14px; font-weight:600; }
-    .assistant-action-ingredient-grams { width:68px; flex:0 0 68px; color:#fff; background:#1C1C1E; border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:7px 6px; text-align:right; font-size:14px; font-variant-numeric:tabular-nums; }
-    .assistant-action-ingredient-percent { width:44px; flex:0 0 44px; text-align:right; color:#A1A1AA; font-size:12px; font-variant-numeric:tabular-nums; }
-    .assistant-action-ingredient-remove { width:26px; height:28px; flex:0 0 26px; display:grid; place-items:center; color:#FF6259; border-radius:8px; font-size:19px; }
-    .assistant-action-ingredient-remove:disabled { opacity:.25; }
-    .assistant-action-weight-panel { margin-top:14px; padding:14px; border-radius:16px; background:#2C2C2E; border:1px solid rgba(255,255,255,.08); }
-    .assistant-action-weight-row { display:flex; align-items:center; justify-content:space-between; gap:12px; min-width:0; }
-    .assistant-action-weight-row + .assistant-action-weight-row { padding-top:11px; margin-top:11px; border-top:1px solid rgba(255,255,255,.07); }
-    .assistant-action-weight-row label,.assistant-action-weight-row > span { color:#D1D1D6; font-size:14px; font-weight:600; }
-    .assistant-action-weight-row select,.assistant-action-weight-row input { width:auto; max-width:58%; min-width:100px; height:42px; border:1px solid rgba(255,255,255,.1); border-radius:10px; background:#1C1C1E; color:#F7F7FA; padding:0 10px; font-size:15px; outline:none; }
-    .assistant-action-weight-row input { width:104px; min-width:88px; text-align:right; font-variant-numeric:tabular-nums; font-weight:650; }
-    .assistant-action-weight-row select:focus,.assistant-action-weight-row input:focus { border-color:#D8B98A; }
-    .assistant-action-net-value { color:#D8B98A !important; font-size:17px !important; font-weight:750 !important; font-variant-numeric:tabular-nums; }
-    .assistant-action-tare { display:block; margin:10px 1px 0; color:#D8B98A; font-size:12px; line-height:1.4; }
-    .assistant-action-nutrition { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; margin-top:13px; padding:12px 10px; border-radius:14px; background:#1C1C1E; border:1px solid rgba(255,255,255,.07); text-align:center; }
-    .assistant-action-nutrition-label { display:block; color:#A1A1AA; font-size:11px; line-height:1.2; }
-    .assistant-action-nutrition-value { display:block; margin-top:5px; color:#F2F2F7; font-size:16px; line-height:1.2; font-weight:750; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
-    .assistant-action-nutrition .kcal .assistant-action-nutrition-value { color:#D8B98A; }
-    .assistant-action-nutrition .protein .assistant-action-nutrition-value { color:#79B8F5; }
-    .assistant-action-nutrition .fat .assistant-action-nutrition-value { color:#E7B36F; }
-    .assistant-action-nutrition .carb .assistant-action-nutrition-value { color:#C4A0E8; }
-    .assistant-action-modal-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px 12px; margin-top:16px; }
-    .assistant-action-modal-field { display:flex; flex-direction:column; min-width:0; gap:6px; }
-    .assistant-action-modal-field label { color:#B7B7BE; font-size:13px; line-height:1.2; font-weight:650; }
-    .assistant-action-modal-field input { display:block; width:100%; min-width:0; height:48px; min-height:48px; border:1px solid rgba(255,255,255,.1); border-radius:12px; background:#2C2C2E; color:#F7F7FA; padding:0 11px; font-size:16px; line-height:1.2; outline:none; }
-    .assistant-action-modal-field input:focus { border-color:#D8B98A; }
-    .assistant-action-meal { margin-top:16px; }
-    .assistant-action-meal-label { display:block; margin-bottom:7px; color:#B7B7BE; font-size:13px; font-weight:650; }
-    .assistant-action-meal-options { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; padding:5px; border-radius:13px; background:#2C2C2E; }
-    .assistant-action-meal-options button { min-width:0; min-height:42px; padding:6px 3px; border-radius:9px; color:#A1A1AA; font-size:12px; font-weight:600; line-height:1.15; }
-    .assistant-action-meal-options button.active { background:#1C1C1E; color:#F5F5F7; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+    /* Assistant confirmation reuses the diary dish editor styles verbatim. */
+    .assistant-action-modal-date-time { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:0; min-width:0; }
+    .assistant-action-modal-date-time > div { display:flex; flex-direction:column; min-width:0; gap:5px; }
+    .assistant-action-modal-date-time label { color:#8E8E93; font-size:12px; line-height:1.2; font-weight:600; }
+    .assistant-action-modal-date-time input { display:block; width:100%; min-width:0; max-width:100%; height:44px; min-height:44px; box-sizing:border-box; border:1px solid rgba(255,255,255,.08); border-radius:12px; background:#2C2C2E; color:#F7F7FA; padding:0 6px; font-size:14px; line-height:1.2; text-align:center; outline:none; -webkit-appearance:none; appearance:none; }
+    .assistant-action-modal-date-time input:focus { border-color:#D8B98A; }
+    .assistant-action-modal-date-time input::-webkit-date-and-time-value { text-align:center; margin:0 auto; min-height:1.2em; }
+    .assistant-action-modal-date-time input::-webkit-calendar-picker-indicator { margin:0; }
+    .assistant-action-modal-footer { flex:0 0 auto; display:flex; align-items:stretch; padding:12px 20px max(14px, env(safe-area-inset-bottom, 0px)); border-top:1px solid rgba(255,255,255,.07); background:#1C1C1E; }
+    .assistant-action-modal-footer button { display:flex; align-items:center; justify-content:center; min-width:0; min-height:46px; border:0; text-align:center; white-space:normal; line-height:1.2; }
+    .assistant-action-modal-footer button:disabled { opacity:.55; }
     @media (max-width:360px) {
       .assistant-action-modal-header { padding-inline:16px; }
       .assistant-action-modal-body { padding-inline:14px; }
-      .assistant-action-modal-footer { padding-inline:14px; grid-template-columns:minmax(0,1.4fr) minmax(94px,.8fr); gap:7px; }
-      .assistant-action-modal-footer button { font-size:13px; }
+      .assistant-action-modal-footer { padding-inline:14px; }
+      .assistant-action-modal-footer button { font-size:14px; }
+      .assistant-action-modal-date-time { gap:10px; }
+      .assistant-action-modal-date-time input { font-size:14px; }
+    }
+    @media (min-width:640px) and (hover:hover) and (pointer:fine) {
+      .assistant-action-sheet { left:50%; right:auto; bottom:50%; width:min(600px, calc(100vw - 36px)); max-height:min(90vh, 900px); border:1px solid rgba(255,255,255,.13); border-radius:26px; padding-bottom:0; transform:translate(-50%, calc(50% + 22px)); }
+      .assistant-action-sheet.open { transform:translate(-50%, 50%); }
+      .assistant-action-modal-footer { border-radius:0 0 26px 26px; }
+    }
+    @media (prefers-reduced-motion:reduce) { .assistant-action-sheet,.assistant-action-backdrop { transition:none !important; } }
+    @media (max-width:360px) {
+      .assistant-action-modal-header { padding-inline:16px; }
+      .assistant-action-modal-body { padding-inline:14px; }
+      .assistant-action-modal-footer { padding-inline:14px; }
+      .assistant-action-modal-footer button { font-size:14px; }
       .assistant-action-ingredient-row { gap:5px; padding:7px 6px; }
       .assistant-action-ingredient-name { font-size:13px; }
       .assistant-action-ingredient-grams { width:60px; flex-basis:60px; font-size:13px; }
@@ -1194,7 +1163,7 @@
             <span class="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style="background:rgba(216,185,138,.13);color:#D8B98A">
               <svg class="pwa-update-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2"/></svg>
             </span>
-            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span><span id="appVersionLabel" class="block text-[10px] text-[#77777F] mt-0.5">Версія 18.2.4</span></span>
+            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span><span id="appVersionLabel" class="block text-[10px] text-[#77777F] mt-0.5">Версія 18.2.5</span></span>
             <svg class="w-4 h-4 text-[#8E8E93] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         </section>
@@ -1620,7 +1589,7 @@
 
 <script>
   // ==================== CONSTANTS & HISTORICAL DATA ====================
-  const APP_VERSION = '18.2.4';
+  const APP_VERSION = '18.2.5';
   let TODAY_KEY = toDateKey(new Date());
 
   const DEFAULT_GEMINI_PROMPT = `Ти — уважний шеф для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
@@ -1704,6 +1673,37 @@
   let assistantPendingCounter = 0;
   let assistantActionActiveMessageId = null;
   let assistantActionModalSession = 0;
+
+  // One shared diary-editor DOM contract is used by both the diary sheet and the
+  // assistant confirmation sheet. Only the IDs differ; classes and layout stay identical.
+  function dishEditorElement(id) {
+    const state = editingItemState;
+    if (state?.context !== 'assistant') return document.getElementById(id);
+    const messageId = state.messageId;
+    const ids = {
+      editDishEditor: `assistantAction_editDishEditor_${messageId}`,
+      dishPieSvg: `assistantAction_dishPieSvg_${messageId}`,
+      dishSelectedTitle: `assistantAction_dishSelectedTitle_${messageId}`,
+      dishSelectedMeta: `assistantAction_dishSelectedMeta_${messageId}`,
+      dishShareValue: `assistantAction_dishShareValue_${messageId}`,
+      dishShareSlider: `assistantAction_dishShareSlider_${messageId}`,
+      dishIngredientCount: `assistantAction_dishIngredientCount_${messageId}`,
+      dishIngredientsList: `assistantAction_dishIngredientsList_${messageId}`,
+      editItemPlateSelect: `assistantAction_editItemPlateSelect_${messageId}`,
+      editGrossRow: `assistantAction_editGrossRow_${messageId}`,
+      editItemGrossGrams: `assistantAction_editItemGrossGrams_${messageId}`,
+      editItemGrams: `assistantAction_editItemGrams_${messageId}`,
+      editItemSlider: `assistantAction_editItemSlider_${messageId}`,
+      editTareFormulaHint: `assistantAction_editTareFormulaHint_${messageId}`,
+      previewKcal: `assistantAction_previewKcal_${messageId}`,
+      previewProtein: `assistantAction_previewProtein_${messageId}`,
+      previewFat: `assistantAction_previewFat_${messageId}`,
+      previewCarb: `assistantAction_previewCarb_${messageId}`,
+      editMealSelector: `assistantAction_editMealSelector_${messageId}`,
+      editItemTime: `assistantAction_editItemTime_${messageId}`
+    };
+    return document.getElementById(ids[id] || id);
+  }
 
   function loadAssistantMessages() {
     try {
@@ -3141,95 +3141,163 @@ ${foodGuidance}
     }, { grams:0, kcal:0, protein:0, fat:0, carb:0 });
   }
 
-  function assistantActionModalContent(action, messageId) {
+  function createAssistantDishEditorState(messageId, action) {
     const draft = action.formDraft || {};
-    const meal = draft.meal || action.meal || 'snack';
-    const mealOptions = [{ id:'breakfast', name:'Сніданок' }, { id:'lunch', name:'Обід' }, { id:'dinner', name:'Вечеря' }, { id:'snack', name:'Перекус' }];
-    const selectedPlateId = draft.plateId !== undefined ? draft.plateId : (action.appliedPlateId || '');
-    const plateOptions = `<option value="">Без посуду</option>` + appState.plates.map(p => `<option value="${esc(p.id)}" ${p.id === selectedPlateId ? 'selected' : ''}>${esc(p.name)} · ${p.weight} г</option>`).join('');
-    const gramsValues = assistantActionDraftGrams(action);
-    const total = assistantActionTotals(action, gramsValues);
-    const selectedIndex = Math.max(0, Math.min(Number(action.selectedIngredientIndex) || 0, action.items.length - 1));
-    const selectedItem = action.items[selectedIndex];
-    const selectedShare = total.grams ? gramsValues[selectedIndex] / total.grams * 100 : 0;
-    const grossSource = action.grossItems || action.items;
-    const grossTotal = Math.max(1, Math.round(Number(draft.grossGrams || action.grossGrams) || grossSource.reduce((sum,item) => sum + Number(item.grams || 0), 0)));
-    const plate = appState.plates.find(p => p.id === selectedPlateId);
-    const tareLine = plate
-      ? (action.tareEligible === false ? 'Вага інгредієнтів задана окремо — тару не віднімаємо.' : `${grossTotal} г брутто − ${Math.round(Number(plate.weight) || 0)} г (${esc(plate.name)}) = ${Math.round(total.grams)} г нетто`)
-      : '';
-    const lines = action.items.map((item, index) => {
-      const grams = gramsValues[index];
-      const ratio = grams / Math.max(1, Number(item.grams) || 1);
-      const pct = total.grams ? grams / total.grams * 100 : 0;
-      return `<div class="assistant-action-ingredient-row ${index === selectedIndex ? 'selected' : ''}" id="assistantActionIngredientRow_${messageId}_${index}" onclick="assistantActionSelectIngredient('${messageId}',${index})">
-        <span class="assistant-action-ingredient-dot" style="background:${DISH_SLICE_COLORS[index % DISH_SLICE_COLORS.length]}"></span>
-        <input class="assistant-action-ingredient-name" type="text" id="assistantActionName_${messageId}_${index}" value="${esc(item.name)}" aria-label="Назва інгредієнта" onclick="event.stopPropagation()" onfocus="assistantActionSelectIngredient('${messageId}',${index})" oninput="assistantActionSetName('${messageId}',${index},this.value)" />
-        <input class="assistant-action-ingredient-grams" type="number" min="1" max="10000" step="1" inputmode="numeric" id="assistantActionGrams_${messageId}_${index}" value="${grams}" aria-label="Вага в грамах" onclick="event.stopPropagation()" onfocus="assistantActionSelectIngredient('${messageId}',${index})" oninput="updateAssistantActionTotal('${messageId}')" />
-        <span class="assistant-action-ingredient-percent" id="assistantActionPercent_${messageId}_${index}">${formatOneDecimal(pct)}%</span>
-        <button type="button" class="assistant-action-ingredient-remove" aria-label="Прибрати інгредієнт" ${action.items.length <= 1 ? 'disabled' : ''} onclick="event.stopPropagation();assistantActionRemoveIngredient('${messageId}',${index})">×</button>
-      </div>`;
-    }).join('');
-    const selectedDate = draft.date || action.date || selectedDateKey;
-    const selectedTime = draft.time || action.time || getCurrentTimeStr();
-    const mealButtons = mealOptions.map(option => `<button type="button" data-meal="${option.id}" class="${option.id === meal ? 'active' : ''}" onclick="selectAssistantActionMeal('${messageId}','${option.id}')">${option.name}</button>`).join('');
-    return `
-      <section class="assistant-action-dish-editor">
-        <div class="assistant-action-dish-head"><h3>Склад тарілки</h3><span id="assistantActionIngredientCount_${messageId}" class="assistant-action-dish-count">${action.items.length} ${action.items.length === 1 ? 'продукт' : action.items.length < 5 ? 'продукти' : 'продуктів'}</span></div>
-        <div class="assistant-action-dish-visual">
-          <svg id="assistantActionPieSvg_${messageId}" viewBox="0 0 240 240" class="dish-pie-svg" role="img" aria-label="Розподіл продуктів на тарілці"></svg>
-          <div class="assistant-action-dish-selected"><p id="assistantActionSelectedTitle_${messageId}" class="assistant-action-dish-selected-title">${esc(selectedItem?.name || 'Страва')}</p><p id="assistantActionSelectedMeta_${messageId}" class="assistant-action-dish-selected-meta">${Math.round(gramsValues[selectedIndex] || 0)} г · ${formatOneDecimal(selectedShare)}% від тарілки</p></div>
-        </div>
-        <div class="assistant-action-share">
-          <div class="flex items-center justify-between gap-2"><label for="assistantActionShare_${messageId}">Частка продукту</label><strong id="assistantActionShareValue_${messageId}">${Math.round(selectedShare)}%</strong></div>
-          <input id="assistantActionShare_${messageId}" type="range" min="1" max="99" step="1" value="${Math.max(1,Math.min(99,Math.round(selectedShare)))}" style="--range-progress:${Math.max(1,Math.min(99,selectedShare))}%" oninput="setAssistantActionIngredientShare('${messageId}',this.value)" ${action.items.length < 2 ? 'disabled' : ''} />
-          <p class="assistant-action-share-note">Решта ваги розподіляється між іншими складниками.</p>
-        </div>
-        <div class="assistant-action-ingredients"><div class="assistant-action-ingredients-title"><span>Інгредієнти</span><span>г · %</span></div><div id="assistantActionIngredients_${messageId}">${lines}</div></div>
-      </section>
-      <section class="assistant-action-weight-panel">
-        <div class="assistant-action-weight-row"><label for="assistantActionPlate_${messageId}">Посуд (тара)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div>
-        <div id="assistantActionGrossRow_${messageId}" class="assistant-action-weight-row ${plate ? '' : 'hidden'}"><label for="assistantActionGross_${messageId}">Вага на вагах</label><input id="assistantActionGross_${messageId}" type="number" min="1" max="30000" inputmode="numeric" value="${grossTotal}" oninput="assistantActionGrossChanged('${messageId}')" /><span class="text-[#A1A1AA] text-[13px]">г</span></div>
-        <div class="assistant-action-weight-row"><span>Вага їжі</span><strong id="assistantActionTotal_${messageId}" class="assistant-action-net-value">${Math.round(total.grams)} г</strong></div>
-        <p id="assistantActionTare_${messageId}" class="assistant-action-tare ${tareLine ? '' : 'hidden'}">${tareLine}</p>
-      </section>
-      <section class="assistant-action-nutrition">
-        <div class="kcal"><span class="assistant-action-nutrition-label">Калорії</span><strong id="assistantActionKcal_${messageId}" class="assistant-action-nutrition-value">${Math.round(total.kcal)}</strong></div>
-        <div class="protein"><span class="assistant-action-nutrition-label">Білки</span><strong id="assistantActionProtein_${messageId}" class="assistant-action-nutrition-value">${formatOneDecimal(total.protein)} г</strong></div>
-        <div class="fat"><span class="assistant-action-nutrition-label">Жири</span><strong id="assistantActionFat_${messageId}" class="assistant-action-nutrition-value">${formatOneDecimal(total.fat)} г</strong></div>
-        <div class="carb"><span class="assistant-action-nutrition-label">Вуглев.</span><strong id="assistantActionCarb_${messageId}" class="assistant-action-nutrition-value">${formatOneDecimal(total.carb)} г</strong></div>
-      </section>
-      <div class="assistant-action-modal-fields">
-        <div class="assistant-action-modal-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" onchange="saveAssistantActionDraft('${messageId}')" /></div>
-        <div class="assistant-action-modal-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(selectedTime)}" onchange="saveAssistantActionDraft('${messageId}')" /></div>
-      </div>
-      <div class="assistant-action-meal"><span class="assistant-action-meal-label">Прийом їжі</span><div class="assistant-action-meal-options" id="assistantActionMeal_${messageId}">${mealButtons}</div></div>`;
+    if (!Array.isArray(action.originalNames)) action.originalNames = action.items.map(item => String(item.name || ''));
+    const savedGrams = Array.isArray(draft.grams) ? draft.grams : [];
+    const items = action.items.map((item, index) => {
+      const baseGrams = Math.max(1, Number(item.grams) || 1);
+      const grams = Math.max(1, Math.round(Number(savedGrams[index]) || baseGrams));
+      return {
+        ...item,
+        id: item.id || `assistant_${messageId}_${index}`,
+        originalName: String(action.originalNames[index] ?? item.name ?? ''),
+        originalGrams: baseGrams,
+        grams,
+        perGram: {
+          kcal: Number(item.kcal || 0) / baseGrams,
+          protein: Number(item.protein || 0) / baseGrams,
+          fat: Number(item.fat || 0) / baseGrams,
+          carb: Number(item.carb || 0) / baseGrams
+        }
+      };
+    });
+    const totalGrams = items.reduce((sum, item) => sum + item.grams, 0);
+    const plateId = draft.plateId !== undefined ? draft.plateId : (action.appliedPlateId || '');
+    const selectedPlate = appState.plates.find(plate => plate.id === plateId);
+    return {
+      context: 'assistant', messageId, id: messageId, dishId: messageId,
+      isGroup: true, items, selectedIngredientIndex: Math.max(0, Math.min(Number(draft.selectedIngredientIndex ?? action.selectedIngredientIndex) || 0, items.length - 1)),
+      meal: draft.meal || action.meal || 'snack', plateId,
+      grossGrams: Number(draft.grossGrams || action.grossGrams) || (selectedPlate ? totalGrams + Number(selectedPlate.weight || 0) : null),
+      totalGrams, tareEligible: action.tareEligible !== false, isSaving: false
+    };
+  }
+
+  function assistantActionModalContent(action, messageId) {
+    // Clone the actual Diary edit card so both places use the same markup,
+    // spacing, controls and typography. The assistant only adds a date field.
+    const editSheet = document.getElementById('editSheet');
+    const diaryForm = Array.from(editSheet?.children || []).find(element => element.classList.contains('space-y-3.5'));
+    if (!diaryForm) return '<p class="text-[13px] text-[#FF9F0A]">Не вдалося відкрити редактор страви.</p>';
+
+    const clone = diaryForm.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.querySelector('#editSingleNameWrap')?.remove();
+    clone.querySelector('button[onclick="deleteEditingItem()"]')?.parentElement?.remove();
+    clone.querySelector('#editDishEditor')?.classList.remove('hidden');
+    clone.querySelector('#editItemSlider')?.classList.add('hidden');
+
+    const timeInput = clone.querySelector('#editItemTime');
+    if (timeInput) {
+      const timeWrap = timeInput.parentElement;
+      const label = timeWrap.querySelector('label');
+      if (label) label.textContent = 'Час';
+      timeWrap.classList.add('min-w-0');
+
+      const dateWrap = document.createElement('div');
+      dateWrap.className = 'min-w-0';
+      dateWrap.innerHTML = `
+        <label for="assistantActionDate_${messageId}" class="text-[12px] text-[#8E8E93] font-medium block mb-1">Дата</label>
+        <input id="assistantActionDate_${messageId}" type="date" class="assistant-action-date-time-input block w-full min-w-0 max-w-full box-border bg-[#2C2C2E] text-white text-[15px] font-medium rounded-[12px] px-3 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#D8B98A]" />`;
+      const dateTimeRow = document.createElement('div');
+      dateTimeRow.className = 'assistant-action-modal-date-time grid grid-cols-2 gap-3';
+      timeWrap.parentNode.replaceChild(dateTimeRow, timeWrap);
+      dateTimeRow.append(dateWrap, timeWrap);
+    }
+
+    // The Diary's own editor buttons are replaced by this modal's fixed footer.
+    const actionRow = Array.from(clone.querySelectorAll('button')).find(button => (button.getAttribute('onclick') || '').includes('saveEditingItem'))?.parentElement;
+    actionRow?.remove();
+
+    const idMap = {};
+    clone.querySelectorAll('[id]').forEach(element => {
+      const oldId = element.id;
+      if (oldId === `assistantActionDate_${messageId}`) return;
+      const newId = `assistantAction_${oldId}_${messageId}`;
+      idMap[oldId] = newId;
+      element.id = newId;
+    });
+    clone.querySelectorAll('[for]').forEach(element => {
+      const oldFor = element.getAttribute('for');
+      if (idMap[oldFor]) element.setAttribute('for', idMap[oldFor]);
+    });
+
+    const state = editingItemState;
+    const plateSelect = clone.querySelector(`#${idMap.editItemPlateSelect}`);
+    if (plateSelect) {
+      plateSelect.innerHTML = '<option value="">Без посуду</option>' + appState.plates.map(plate =>
+        `<option value="${esc(plate.id)}">${esc(plate.name)} (−${Math.round(Number(plate.weight) || 0)} г)</option>`
+      ).join('');
+      plateSelect.value = state?.plateId || '';
+    }
+    const totalInput = clone.querySelector(`#${idMap.editItemGrams}`);
+    if (totalInput) {
+      totalInput.value = String(state?.totalGrams || 1);
+      totalInput.setAttribute('oninput', 'assistantActionTotalGramsChanged()');
+    }
+    const grossInput = clone.querySelector(`#${idMap.editItemGrossGrams}`);
+    if (grossInput) grossInput.value = state?.grossGrams ? String(state.grossGrams) : '';
+    const dateInput = clone.querySelector(`#assistantActionDate_${messageId}`);
+    if (dateInput) {
+      dateInput.value = action.formDraft?.date || action.date || selectedDateKey;
+      dateInput.setAttribute('onchange', `saveAssistantActionDraft('${messageId}')`);
+    }
+    const clonedTimeInput = clone.querySelector(`#${idMap.editItemTime}`);
+    if (clonedTimeInput) {
+      clonedTimeInput.value = action.formDraft?.time || action.time || getCurrentTimeStr();
+      clonedTimeInput.setAttribute('onchange', `saveAssistantActionDraft('${messageId}')`);
+    }
+    return clone.outerHTML;
   }
 
   function saveAssistantActionDraft(messageId) {
     const message = assistantMessages.find(m => m.id === messageId);
     if (!message?.action || message.action.status !== 'pending') return;
     const action = message.action;
+    const state = editingItemState?.context === 'assistant' && editingItemState.messageId === messageId ? editingItemState : null;
     const date = document.getElementById(`assistantActionDate_${messageId}`);
-    const time = document.getElementById(`assistantActionTime_${messageId}`);
-    const mealButtons = document.querySelectorAll(`#assistantActionMeal_${messageId} button.active`);
-    const plate = document.getElementById(`assistantActionPlate_${messageId}`);
-    const gross = document.getElementById(`assistantActionGross_${messageId}`);
-    const grams = action.items.map((item, index) => Math.max(1, Number(document.getElementById(`assistantActionGrams_${messageId}_${index}`)?.value) || Number(item.grams) || 1));
-    const names = action.items.map((item, index) => document.getElementById(`assistantActionName_${messageId}_${index}`)?.value ?? item.name);
-    names.forEach((name, index) => {
-      action.items[index].name = name;
-    });
+    const time = state ? dishEditorElement('editItemTime') : document.getElementById(`assistantAction_editItemTime_${messageId}`);
+    const plate = state ? dishEditorElement('editItemPlateSelect') : document.getElementById(`assistantAction_editItemPlateSelect_${messageId}`);
+    const gross = state ? dishEditorElement('editItemGrossGrams') : document.getElementById(`assistantAction_editItemGrossGrams_${messageId}`);
+    const mealButtons = document.querySelectorAll(`#assistantAction_editMealSelector_${messageId} button.active`);
+    const grams = state
+      ? state.items.map(item => Math.max(1, Math.round(Number(item.grams) || 1)))
+      : action.items.map((item, index) => Math.max(1, Number(document.getElementById(`assistantActionGrams_${messageId}_${index}`)?.value) || Number(item.grams) || 1));
+    const names = state
+      ? state.items.map(item => String(item.name || ''))
+      : action.items.map((item, index) => document.getElementById(`assistantActionName_${messageId}_${index}`)?.value ?? item.name);
+    if (state) {
+      // Persist the current editor values as the new baseline so reopening the
+      // modal keeps exact grams/macros and does not compound percentage changes.
+      action.originalNames = state.items.map(item => String(item.originalName ?? item.name ?? ''));
+      action.items = state.items.map((item, index) => {
+        const g = grams[index];
+        return {
+          id: item.id, name: names[index], grams: g,
+          kcal: Math.round(item.perGram.kcal * g),
+          protein: Math.round(item.perGram.protein * g * 10) / 10,
+          fat: Math.round(item.perGram.fat * g * 10) / 10,
+          carb: Math.round(item.perGram.carb * g * 10) / 10
+        };
+      });
+      action.grossItems = action.items.map(item => ({...item}));
+      action.selectedIngredientIndex = state.selectedIngredientIndex;
+      action.appliedPlateId = state.plateId || null;
+      action.grossGrams = state.plateId ? (Math.max(1, Number(gross?.value) || Number(state.grossGrams) || grams.reduce((sum,value)=>sum+value,0))) : null;
+      state.grossGrams = action.grossGrams;
+    } else {
+      names.forEach((name, index) => { action.items[index].name = name; });
+    }
     action.formDraft = {
       ...(action.formDraft || {}),
       date: date?.value || action.date || selectedDateKey,
       time: time?.value || action.time || getCurrentTimeStr(),
-      meal: mealButtons[0]?.dataset.meal || action.formDraft?.meal || action.meal || 'snack',
+      meal: state?.meal || mealButtons[0]?.dataset.meal || action.formDraft?.meal || action.meal || 'snack',
       plateId: plate ? plate.value : (action.appliedPlateId || ''),
-      grossGrams: gross ? (Math.max(1, Number(gross.value) || 1)) : null,
-      grams,
-      names,
-      selectedIngredientIndex: Math.max(0, Math.min(Number(action.selectedIngredientIndex) || 0, action.items.length - 1))
+      grossGrams: gross && plate?.value ? (Math.max(1, Number(gross.value) || 1)) : null,
+      grams, names,
+      selectedIngredientIndex: state?.selectedIngredientIndex ?? Math.max(0, Math.min(Number(action.selectedIngredientIndex) || 0, action.items.length - 1))
     };
     persistAssistantMessages();
   }
@@ -3358,7 +3426,7 @@ ${foodGuidance}
     const sourceItems = (action.grossItems || action.items).map((item,index) => ({...item, name:currentNames[index] || item.name}));
     const safeGross = Math.max(1, Math.round(Number(grossTotal) || sourceItems.reduce((sum,item) => sum + Number(item.grams || 0),0)));
     const plate = appState.plates.find(p => p.id === plateId) || null;
-    const tare = plate && action.tareEligible !== false ? Math.max(0, Number(plate.weight) || 0) : 0;
+    const tare = plate && editingItemState?.tareEligible !== false ? Math.max(0, Number(plate.weight) || 0) : 0;
     const netTotal = safeGross - tare;
     if (plate && action.tareEligible !== false && netTotal < sourceItems.length) {
       showToast('Після віднімання тари має залишитися достатньо ваги для всіх інгредієнтів', '⚠️');
@@ -3490,13 +3558,19 @@ ${foodGuidance}
     if (!Array.isArray(message.action.originalNames)) message.action.originalNames = (message.action.grossItems || message.action.items).map(item => String(item.name || ''));
     closeAllOverlays();
     assistantActionActiveMessageId = messageId;
+    editingItemState = createAssistantDishEditorState(messageId, message.action);
     const backdrop = document.getElementById('assistantActionBackdrop');
     const sheet = document.getElementById('assistantActionSheet');
     const body = document.getElementById('assistantActionModalBody');
     const footer = document.getElementById('assistantActionModalFooter');
     body.innerHTML = assistantActionModalContent(message.action, messageId);
-    footer.innerHTML = `<button type="button" class="assistant-action-modal-confirm" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-modal-cancel" onclick="discardAssistantAction('${messageId}')">Скасувати</button>`;
-    refreshAssistantActionDish(messageId, true);
+    footer.innerHTML = `<div class="flex gap-2.5 w-full"><button type="button" onclick="confirmAssistantFood('${messageId}')" class="assistant-action-modal-confirm flex-1 min-w-0 py-3 rounded-[14px] bg-[#D8B98A] text-black font-semibold text-[14px] active:scale-95 transition shadow-lg">Додати до щоденника</button><button type="button" onclick="discardAssistantAction('${messageId}')" class="px-4 py-3 rounded-[14px] bg-[#2C2C2E] text-white font-semibold text-[14px] active:scale-95 transition">Скасувати</button></div>`;
+    const plateSelect = dishEditorElement('editItemPlateSelect');
+    if (plateSelect) plateSelect.value = editingItemState.plateId || '';
+    renderDishEditor();
+    syncEditPlateUI(editingItemState.totalGrams);
+    selectEditMeal(editingItemState.meal);
+    saveAssistantActionDraft(messageId);
     const session = ++assistantActionModalSession;
     backdrop.classList.add('visible');
     sheet.classList.add('visible');
@@ -3517,6 +3591,7 @@ ${foodGuidance}
     if (activeMessage?.action?.isConfirming) return;
     const messageId = assistantActionActiveMessageId;
     if (saveDraft) saveAssistantActionDraft(messageId);
+    if (editingItemState?.context === 'assistant' && editingItemState.messageId === messageId) editingItemState = null;
     assistantActionActiveMessageId = null;
     const session = ++assistantActionModalSession;
     const backdrop = document.getElementById('assistantActionBackdrop');
@@ -3675,19 +3750,20 @@ ${foodGuidance}
     if (!message?.action || message.action.status !== 'pending') return;
     const action = message.action;
     if (action.isConfirming) return;
-    const grams = action.items.map((item, i) => Number(document.getElementById(`assistantActionGrams_${messageId}_${i}`)?.value));
+    saveAssistantActionDraft(messageId);
+    const editorState = editingItemState?.context === 'assistant' && editingItemState.messageId === messageId ? editingItemState : null;
+    const grams = editorState ? editorState.items.map(item => Number(item.grams)) : assistantActionDraftGrams(action);
     if (grams.some(value => !Number.isFinite(value) || value < 1 || value > 10000)) {
       showToast('Перевір вагу кожного інгредієнта', '⚠️');
       return;
     }
     const date = document.getElementById(`assistantActionDate_${messageId}`).value;
-    const time = document.getElementById(`assistantActionTime_${messageId}`).value || getCurrentTimeStr();
-    saveAssistantActionDraft(messageId);
-    const meal = document.querySelector(`#assistantActionMeal_${messageId} button.active`)?.dataset.meal || action.formDraft?.meal || action.meal || 'snack';
-    const plateId = document.getElementById(`assistantActionPlate_${messageId}`).value || null;
+    const time = (editingItemState?.context === 'assistant' ? dishEditorElement('editItemTime')?.value : document.getElementById(`assistantAction_editItemTime_${messageId}`)?.value) || getCurrentTimeStr();
+    const meal = editorState?.meal || action.formDraft?.meal || action.meal || 'snack';
+    const plateId = editorState?.plateId || action.formDraft?.plateId || null;
     const selectedPlate = appState.plates.find(plate => plate.id === plateId) || null;
     const netTotalGrams = grams.reduce((sum, value) => sum + Math.round(value || 0), 0);
-    const draftGross = Number(action.formDraft?.grossGrams || action.grossGrams || 0);
+    const draftGross = Number(editorState?.grossGrams || action.formDraft?.grossGrams || action.grossGrams || 0);
     const savedGrossGrams = selectedPlate && action.tareEligible !== false ? (draftGross || netTotalGrams + Number(selectedPlate.weight || 0)) : null;
     if (!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) { showToast('Перевір дату та час запису', '⚠️'); return; }
     const allowedMeals = ['breakfast', 'lunch', 'dinner', 'snack'];
@@ -4104,7 +4180,7 @@ ${foodGuidance}
     const totalGrams = safeItems.reduce((sum, entry) => sum + entry.grams, 0);
     const initialPlateId = groupItems.find(entry => entry.plateId)?.plateId || '';
     const firstGross = groupItems.find(entry => entry.grossGrams)?.grossGrams || null;
-    const plateSelect = document.getElementById('editItemPlateSelect');
+    const plateSelect = dishEditorElement('editItemPlateSelect');
     plateSelect.innerHTML = `<option value="">Без посуду</option>` +
       appState.plates.map(plate => `<option value="${plate.id}">${esc(plate.name)} (−${plate.weight} г)</option>`).join('');
     plateSelect.value = initialPlateId;
@@ -4139,12 +4215,12 @@ ${foodGuidance}
 
     document.getElementById('editItemName').value = item.name;
     document.getElementById('editItemTime').value = item.time || getCurrentTimeStr();
-    document.getElementById('editItemGrams').value = isGroup ? totalGrams : item.grams;
+    dishEditorElement('editItemGrams').value = isGroup ? totalGrams : item.grams;
     document.getElementById('editItemSlider').value = Math.min(800, isGroup ? totalGrams : item.grams);
     document.getElementById('editItemSlider').classList.toggle('hidden', isGroup);
 
     const activePlate = appState.plates.find(plate => plate.id === initialPlateId);
-    document.getElementById('editItemGrossGrams').value = firstGross || (activePlate ? totalGrams + activePlate.weight : '');
+    dishEditorElement('editItemGrossGrams').value = firstGross || (activePlate ? totalGrams + activePlate.weight : '');
     syncEditPlateUI(totalGrams);
     selectEditMeal(item.meal);
     if (isGroup) renderDishEditor();
@@ -4185,24 +4261,39 @@ ${foodGuidance}
     });
   }
 
+  function getDishEditorTareWeight(plate) {
+    if (!plate) return 0;
+    if (editingItemState?.context === 'assistant' && editingItemState.tareEligible === false) return 0;
+    return Math.max(0, Number(plate.weight) || 0);
+  }
+
+  function getDishEditorTareHint(gross, plate, net) {
+    if (editingItemState?.context === 'assistant' && editingItemState.tareEligible === false) {
+      return 'Вага інгредієнтів задана окремо — тару не віднімаємо.';
+    }
+    return `${gross} г брутто − ${Math.round(Number(plate?.weight) || 0)} г (${plate?.name || 'посуд'}) = ${net} г нетто`;
+  }
+
   function setDishTotalGrams(total, updateInput = true) {
     if (!editingItemState?.isGroup) return;
     const items = editingItemState.items;
     const grams = distributeDishGrams(total, items.map(entry => entry.grams));
     items.forEach((entry, index) => { entry.grams = grams[index]; });
     editingItemState.totalGrams = grams.reduce((sum,value) => sum+value,0);
-    if (updateInput) document.getElementById('editItemGrams').value = editingItemState.totalGrams;
+    if (updateInput) dishEditorElement('editItemGrams').value = editingItemState.totalGrams;
     const plate = appState.plates.find(p => p.id === editingItemState.plateId);
     if (plate) {
-      const gross = editingItemState.totalGrams + plate.weight;
-      document.getElementById('editItemGrossGrams').value = gross;
+      const tareWeight = getDishEditorTareWeight(plate);
+      const gross = editingItemState.totalGrams + tareWeight;
+      dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
-      const hint = document.getElementById('editTareFormulaHint');
-      hint.textContent = `${gross} г брутто − ${plate.weight} г (${plate.name}) = ${editingItemState.totalGrams} г нетто`;
+      const hint = dishEditorElement('editTareFormulaHint');
+      hint.textContent = getDishEditorTareHint(gross, plate, editingItemState.totalGrams);
       hint.classList.remove('hidden');
     }
     renderDishEditor();
     updateEditPreview(editingItemState.totalGrams);
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function setDishIngredientName(index, value) {
@@ -4210,9 +4301,10 @@ ${foodGuidance}
     if (!entry) return;
     entry.name = value;
     if (editingItemState.selectedIngredientIndex === index) {
-      const title = document.getElementById('dishSelectedTitle');
+      const title = dishEditorElement('dishSelectedTitle');
       if (title) title.textContent = value.trim() || 'Без назви';
     }
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function setDishIngredientGrams(index, value) {
@@ -4232,16 +4324,18 @@ ${foodGuidance}
       items.forEach((entry, i) => { entry.grams = i === index ? target : rest[cursor++]; });
       editingItemState.totalGrams = total;
     }
-    document.getElementById('editItemGrams').value = editingItemState.totalGrams;
+    dishEditorElement('editItemGrams').value = editingItemState.totalGrams;
     const plate = appState.plates.find(p => p.id === editingItemState.plateId);
     if (plate) {
-      const gross = editingItemState.totalGrams + plate.weight;
-      document.getElementById('editItemGrossGrams').value = gross;
+      const tareWeight = getDishEditorTareWeight(plate);
+      const gross = editingItemState.totalGrams + tareWeight;
+      dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
-      document.getElementById('editTareFormulaHint').textContent = `${gross} г брутто − ${plate.weight} г (${plate.name}) = ${editingItemState.totalGrams} г нетто`;
+      dishEditorElement('editTareFormulaHint').textContent = getDishEditorTareHint(gross, plate, editingItemState.totalGrams);
     }
     renderDishEditor();
     updateEditPreview(editingItemState.totalGrams);
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function setDishIngredientShare(value) {
@@ -4258,16 +4352,18 @@ ${foodGuidance}
     state.items[index].grams = targetGrams;
     otherIndexes.forEach((itemIndex, n) => { state.items[itemIndex].grams = redistributed[n]; });
     state.totalGrams = total;
-    document.getElementById('editItemGrams').value = total;
+    dishEditorElement('editItemGrams').value = total;
     const plate = appState.plates.find(p => p.id === state.plateId);
     if (plate) {
-      const gross = total + plate.weight;
-      document.getElementById('editItemGrossGrams').value = gross;
+      const tareWeight = getDishEditorTareWeight(plate);
+      const gross = total + tareWeight;
+      dishEditorElement('editItemGrossGrams').value = gross;
       state.grossGrams = gross;
-      document.getElementById('editTareFormulaHint').textContent = `${gross} г брутто − ${plate.weight} г (${plate.name}) = ${total} г нетто`;
+      dishEditorElement('editTareFormulaHint').textContent = getDishEditorTareHint(gross, plate, total);
     }
     refreshDishEditorVisuals();
     updateEditPreview(total);
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function selectDishIngredient(index) {
@@ -4291,16 +4387,18 @@ ${foodGuidance}
     editingItemState.items.splice(index, 1);
     editingItemState.selectedIngredientIndex = Math.max(0, Math.min(editingItemState.selectedIngredientIndex, editingItemState.items.length - 1));
     editingItemState.totalGrams = getDishTotalGrams();
-    document.getElementById('editItemGrams').value = editingItemState.totalGrams;
+    dishEditorElement('editItemGrams').value = editingItemState.totalGrams;
     const plate = appState.plates.find(p => p.id === editingItemState.plateId);
     if (plate) {
-      const gross = editingItemState.totalGrams + plate.weight;
-      document.getElementById('editItemGrossGrams').value = gross;
+      const tareWeight = getDishEditorTareWeight(plate);
+      const gross = editingItemState.totalGrams + tareWeight;
+      dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
-      document.getElementById('editTareFormulaHint').textContent = `${gross} г брутто − ${plate.weight} г (${plate.name}) = ${editingItemState.totalGrams} г нетто`;
+      dishEditorElement('editTareFormulaHint').textContent = getDishEditorTareHint(gross, plate, editingItemState.totalGrams);
     }
     renderDishEditor();
     updateEditPreview(editingItemState.totalGrams);
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   const DISH_SLICE_COLORS = ['#D8B98A','#0A84FF','#FF9F0A','#BF5AF2','#FF6482','#64D2FF','#A1A1AA','#D0A5FF'];
@@ -4349,24 +4447,24 @@ ${foodGuidance}
     editingItemState.selectedIngredientIndex = index;
     const selected = items[index];
     const share = selected ? selected.grams / total * 100 : 0;
-    const svg = document.getElementById('dishPieSvg');
+    const svg = dishEditorElement('dishPieSvg');
     if (svg) svg.innerHTML = buildDishPieSvg();
-    const title = document.getElementById('dishSelectedTitle');
-    const meta = document.getElementById('dishSelectedMeta');
+    const title = dishEditorElement('dishSelectedTitle');
+    const meta = dishEditorElement('dishSelectedMeta');
     if (title) title.textContent = selected?.name || 'Обери сектор';
     if (meta) meta.textContent = selected ? `${selected.grams} г · ${formatOneDecimal(share)}% від тарілки` : '—';
-    const value = document.getElementById('dishShareValue');
+    const value = dishEditorElement('dishShareValue');
     if (value) value.textContent = `${Math.round(share)}%`;
-    const slider = document.getElementById('dishShareSlider');
+    const slider = dishEditorElement('dishShareSlider');
     if (slider) {
       slider.value = String(Math.max(1,Math.min(99,Math.round(share))));
       slider.style.setProperty('--range-progress', `${Math.max(1,Math.min(99,share))}%`);
       slider.disabled = items.length < 2;
       slider.max = String(Math.max(1,Math.floor(100*(total-(items.length-1))/total)));
     }
-    const count = document.getElementById('dishIngredientCount');
+    const count = dishEditorElement('dishIngredientCount');
     if (count) count.textContent = `${items.length} ${items.length === 1 ? 'продукт' : items.length < 5 ? 'продукти' : 'продуктів'}`;
-    const list = document.getElementById('dishIngredientsList');
+    const list = dishEditorElement('dishIngredientsList');
     if (list && updateList) list.innerHTML = items.map((entry,i) => {
       const pct = entry.grams / total * 100;
       return `<div class="dish-ingredient-row ${i===index?'selected':''}" onclick="selectDishIngredient(${i})">
@@ -4386,68 +4484,76 @@ ${foodGuidance}
 
   function syncEditPlateUI(currentNetGrams) {
     if (!editingItemState) return;
-    const plateId = document.getElementById('editItemPlateSelect').value;
+    const plateSelect = dishEditorElement('editItemPlateSelect');
+    const plateId = plateSelect?.value || '';
     editingItemState.plateId = plateId;
     const plate = appState.plates.find(p => p.id === plateId);
-    const grossRow = document.getElementById('editGrossRow');
-    const hintEl = document.getElementById('editTareFormulaHint');
+    const grossRow = dishEditorElement('editGrossRow');
+    const hintEl = dishEditorElement('editTareFormulaHint');
     const net = editingItemState.isGroup ? getDishTotalGrams() : currentNetGrams;
 
     if (plate) {
       grossRow.classList.remove('hidden');
-      const grossInp = document.getElementById('editItemGrossGrams');
-      const grossVal = parseInt(grossInp.value, 10) || (net + plate.weight);
+      const grossInp = dishEditorElement('editItemGrossGrams');
+      const tareWeight = getDishEditorTareWeight(plate);
+      const grossVal = parseInt(grossInp.value, 10) || (net + tareWeight);
       grossInp.value = grossVal;
-      const netVal = Math.max(1, grossVal - plate.weight);
+      const netVal = Math.max(1, grossVal - tareWeight);
       if (!editingItemState.isGroup) {
-        document.getElementById('editItemGrams').value = netVal;
-        document.getElementById('editItemSlider').value = Math.min(800, netVal);
+        dishEditorElement('editItemGrams').value = netVal;
+        dishEditorElement('editItemSlider').value = Math.min(800, netVal);
       }
-      hintEl.textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+      hintEl.textContent = getDishEditorTareHint(grossVal, plate, netVal);
       hintEl.classList.remove('hidden');
+      if (editingItemState.context === 'assistant') editingItemState.grossGrams = grossVal;
       updateEditPreview(editingItemState.isGroup ? net : netVal);
     } else {
       grossRow.classList.add('hidden');
       hintEl.classList.add('hidden');
+      editingItemState.grossGrams = null;
       updateEditPreview(net);
     }
   }
 
   function handleEditPlateChange() {
     if (!editingItemState) return;
-    const netNow = editingItemState.isGroup ? getDishTotalGrams() : (parseInt(document.getElementById('editItemGrams').value, 10) || 100);
-    const plateId = document.getElementById('editItemPlateSelect').value;
+    const netNow = editingItemState.isGroup ? getDishTotalGrams() : (parseInt(dishEditorElement('editItemGrams').value, 10) || 100);
+    const plateId = dishEditorElement('editItemPlateSelect').value;
     const plate = appState.plates.find(p => p.id === plateId);
     editingItemState.plateId = plateId;
     if (plate) {
-      const gross = netNow + plate.weight;
-      document.getElementById('editItemGrossGrams').value = gross;
+      const gross = netNow + getDishEditorTareWeight(plate);
+      dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
     } else {
       editingItemState.grossGrams = null;
     }
     syncEditPlateUI(netNow);
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function handleEditGrossInput() {
     if (!editingItemState) return;
     const plate = appState.plates.find(p => p.id === editingItemState.plateId);
     if (!plate) return;
-    const grossVal = Math.max(0, parseInt(document.getElementById('editItemGrossGrams').value, 10) || 0);
-    const netVal = Math.max(1, grossVal - plate.weight);
+    const grossVal = Math.max(0, parseInt(dishEditorElement('editItemGrossGrams').value, 10) || 0);
+    const tareWeight = getDishEditorTareWeight(plate);
+    const netVal = Math.max(1, grossVal - tareWeight);
     if (editingItemState.isGroup) {
       setDishTotalGrams(netVal);
     } else {
-      document.getElementById('editItemGrams').value = netVal;
-      document.getElementById('editItemSlider').value = Math.min(800, netVal);
-      document.getElementById('editTareFormulaHint').textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+      dishEditorElement('editItemGrams').value = netVal;
+      dishEditorElement('editItemSlider').value = Math.min(800, netVal);
+      dishEditorElement('editTareFormulaHint').textContent = getDishEditorTareHint(grossVal, plate, netVal);
       updateEditPreview(netVal);
     }
     editingItemState.grossGrams = grossVal;
+    if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   function closeEditSheet() {
     if (editingItemState?.isSaving) return;
+    const stateBeingClosed = editingItemState;
     const bd = document.getElementById('editBackdrop');
     const sh = document.getElementById('editSheet');
     bd.classList.remove('open');
@@ -4456,7 +4562,7 @@ ${foodGuidance}
       if (!sh.classList.contains('open')) {
         bd.classList.remove('visible');
         sh.classList.remove('visible');
-        editingItemState = null;
+        if (editingItemState === stateBeingClosed) editingItemState = null;
       }
     }, 340);
   }
@@ -4476,49 +4582,58 @@ ${foodGuidance}
       const pg = editingItemState.perGram;
       nutrition = { kcal:pg.kcal*g, protein:pg.protein*g, fat:pg.fat*g, carb:pg.carb*g };
     }
-    document.getElementById('previewKcal').textContent = `${Math.round(nutrition.kcal)} ккал`;
-    document.getElementById('previewProtein').textContent = `${formatOneDecimal(nutrition.protein)} г`;
-    document.getElementById('previewFat').textContent = `${formatOneDecimal(nutrition.fat)} г`;
-    document.getElementById('previewCarb').textContent = `${formatOneDecimal(nutrition.carb)} г`;
+    dishEditorElement('previewKcal').textContent = `${Math.round(nutrition.kcal)} ккал`;
+    dishEditorElement('previewProtein').textContent = `${formatOneDecimal(nutrition.protein)} г`;
+    dishEditorElement('previewFat').textContent = `${formatOneDecimal(nutrition.fat)} г`;
+    dishEditorElement('previewCarb').textContent = `${formatOneDecimal(nutrition.carb)} г`;
   }
 
   document.getElementById('editItemSlider').addEventListener('input', (e) => {
     if (editingItemState?.isGroup) return;
     const netVal = parseInt(e.target.value, 10);
-    document.getElementById('editItemGrams').value = netVal;
+    dishEditorElement('editItemGrams').value = netVal;
     const plate = appState.plates.find(p => p.id === editingItemState?.plateId);
     if (plate) {
       const grossVal = netVal + plate.weight;
-      document.getElementById('editItemGrossGrams').value = grossVal;
-      document.getElementById('editTareFormulaHint').textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+      dishEditorElement('editItemGrossGrams').value = grossVal;
+      dishEditorElement('editTareFormulaHint').textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
     }
     updateEditPreview(netVal);
   });
 
-  document.getElementById('editItemGrams').addEventListener('input', (e) => {
+  dishEditorElement('editItemGrams').addEventListener('input', (e) => {
     if (!editingItemState) return;
     const netVal = Math.max(editingItemState.isGroup ? editingItemState.items.length : 1, parseInt(e.target.value, 10) || 1);
     if (editingItemState.isGroup) {
       setDishTotalGrams(netVal, false);
       return;
     }
-    document.getElementById('editItemSlider').value = Math.min(800, netVal);
+    dishEditorElement('editItemSlider').value = Math.min(800, netVal);
     const plate = appState.plates.find(p => p.id === editingItemState?.plateId);
     if (plate) {
       const grossVal = netVal + plate.weight;
-      document.getElementById('editItemGrossGrams').value = grossVal;
-      document.getElementById('editTareFormulaHint').textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
+      dishEditorElement('editItemGrossGrams').value = grossVal;
+      dishEditorElement('editTareFormulaHint').textContent = `${grossVal} г брутто − ${plate.weight} г (${plate.name}) = ${netVal} г нетто`;
     }
     updateEditPreview(netVal);
   });
 
+  function assistantActionTotalGramsChanged() {
+    if (editingItemState?.context !== 'assistant' || !editingItemState.isGroup) return;
+    const input = dishEditorElement('editItemGrams');
+    const requested = Math.max(editingItemState.items.length, parseInt(input?.value, 10) || 1);
+    setDishTotalGrams(requested, false);
+    saveAssistantActionDraft(editingItemState.messageId);
+  }
+
   function selectEditMeal(mealId) {
     if (editingItemState) editingItemState.meal = mealId;
-    document.querySelectorAll('#editMealSelector button').forEach(btn => {
+    (dishEditorElement('editMealSelector')?.querySelectorAll('button') || []).forEach(btn => {
       btn.className = btn.dataset.meal === mealId
         ? 'py-1.5 rounded-[9px] text-[12px] font-semibold bg-[#1C1C1E] text-white shadow transition'
         : 'py-1.5 rounded-[9px] text-[12px] font-medium text-[#8E8E93] transition';
     });
+    if (editingItemState?.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
   async function recalculateEditedFoodWithGemini(name, grams, meal) {
@@ -4560,8 +4675,8 @@ ${foodGuidance}
     const time = document.getElementById('editItemTime').value || getCurrentTimeStr();
     const meal = state.meal;
     const plate = appState.plates.find(p => p.id === state.plateId);
-    const newGrams = Math.max(state.isGroup ? state.items.length : 1, parseInt(document.getElementById('editItemGrams').value, 10) || 1);
-    const grossVal = plate ? (parseInt(document.getElementById('editItemGrossGrams').value, 10) || newGrams + plate.weight) : null;
+    const newGrams = Math.max(state.isGroup ? state.items.length : 1, parseInt(dishEditorElement('editItemGrams').value, 10) || 1);
+    const grossVal = plate ? (parseInt(dishEditorElement('editItemGrossGrams').value, 10) || newGrams + plate.weight) : null;
 
     if (state.isGroup) {
       if (!state.items.length) return;

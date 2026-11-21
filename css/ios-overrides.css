@@ -280,11 +280,10 @@
 }
 
 
-/* v18.2.11 — adjust the tab-button lift to 5px, between the prior 3px and 8px positions.
-   Keep the nav surface and safe-area dimensions unchanged. */
+/* v18.2.12 — move only tab-button content 10px upward; preserve the nav surface and safe-area. */
 @media screen and (max-width:479px) and (orientation:portrait) {
   html.pwa-standalone #appShell > nav.shrink-0 > button {
     position:relative !important;
-    top:-5px !important;
+    top:-10px !important;
   }
 }

@@ -19,9 +19,7 @@
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     const standaloneMode = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
     if (standaloneMode) document.documentElement.classList.add('pwa-standalone');
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => { pwaRegistration = reg; }).catch(() => {});
-    }
+    initializePwaUpdates();
     if (appState.gdrive.connected) syncGdrive('', true);
   });
 

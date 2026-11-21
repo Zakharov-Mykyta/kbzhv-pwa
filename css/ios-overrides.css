@@ -5,6 +5,19 @@
       --bg-surface-2:#2C2C2E;
       --accent:#D8B98A;
     }
+
+    /* iOS standalone PWA bottom safe area.
+       Do not use black-translucent for the status bar: WebKit can keep the
+       bottom Home Indicator strip outside the paintable area of app elements.
+       The root fallback uses the tab-bar surface color so any system-owned
+       overscan area blends with the navigation bar instead of appearing black. */
+    html.pwa-standalone { background-color:#1C1C1E; }
+    html.pwa-standalone body { background-color:#000000; }
+    html.pwa-standalone #appShell > nav.shrink-0 {
+      background-color:#1C1C1E !important;
+      background-image:none !important;
+      background-clip:border-box;
+    }
     body,.desktop-stage { background:#000000 !important; }
     .iphone-shell { background:#000000 !important; }
     #appShell > nav.shrink-0 {

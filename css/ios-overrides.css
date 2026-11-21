@@ -309,3 +309,20 @@
     min-height:44px !important;
   }
 }
+
+
+/* v18.2.14 — lift the complete tab bar (buttons + surface) above Home Indicator.
+   v18.2.13 extended both .desktop-stage and nav by the same safe-area amount,
+   so the flex layout cancelled the change and left the buttons at the old Y.
+   Keep the stage extension for painting the bottom edge, but add 14px only to
+   the nav flex item. Its bottom edge stays attached to the shell; its top edge
+   and all four tab buttons move up together. No per-button offsets are used. */
+@media screen and (max-width:479px) and (orientation:portrait) {
+  html.pwa-standalone #appShell > nav.shrink-0 {
+    height:calc(50px + var(--ios-home-indicator-reserve, 34px) + 14px) !important;
+    min-height:calc(50px + var(--ios-home-indicator-reserve, 34px) + 14px) !important;
+    max-height:none !important;
+    flex:0 0 auto !important;
+    align-content:start !important;
+  }
+}

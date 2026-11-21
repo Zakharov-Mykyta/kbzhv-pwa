@@ -280,10 +280,32 @@
 }
 
 
-/* v18.2.12 — move only tab-button content 10px upward; preserve the nav surface and safe-area. */
+/* v18.2.13 — reserve a real Home Indicator zone inside the bottom tab bar.
+   Some iOS standalone configurations report safe-area-inset-bottom as 0.
+   A minimum 34px reserved zone keeps tab labels above the system Home Indicator
+   without translating buttons or moving the tab bar background. */
 @media screen and (max-width:479px) and (orientation:portrait) {
-  html.pwa-standalone #appShell > nav.shrink-0 > button {
-    position:relative !important;
-    top:-10px !important;
+  :root {
+    --ios-home-indicator-reserve: max(env(safe-area-inset-bottom, 0px), 34px);
+  }
+
+  #appShell > nav.shrink-0 {
+    height:calc(50px + var(--ios-home-indicator-reserve)) !important;
+    min-height:calc(50px + var(--ios-home-indicator-reserve)) !important;
+    max-height:none !important;
+    padding:3px 8px calc(var(--ios-home-indicator-reserve) + 2px) !important;
+    grid-template-rows:44px !important;
+    align-content:start !important;
+    box-sizing:border-box !important;
+  }
+
+  #appShell > nav.shrink-0 > button {
+    position:static !important;
+    top:auto !important;
+    transform:none !important;
+    margin:0 !important;
+    align-self:start !important;
+    height:44px !important;
+    min-height:44px !important;
   }
 }

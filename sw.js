@@ -1,7 +1,7 @@
-/* Krykhta PWA Service Worker — v18.2.12
+/* Krykhta PWA Service Worker — v18.2.13
    Network-first for app code and documents, cache fallback for offline use.
    The new worker only activates after every required app file is available. */
-const CACHE = 'krykhta-v18.2.12';
+const CACHE = 'krykhta-v18.2.13';
 const REQUIRED_SHELL = [
   './index.html',
   './tailwind.css',

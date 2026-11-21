@@ -1,4 +1,4 @@
-const CACHE = 'krykhta-v18.2.3';
+const CACHE = 'krykhta-v18.2.4';
 const SHELL = ['./', './index.html', './tailwind.css', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', event => {

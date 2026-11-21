@@ -233,7 +233,7 @@
     ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }
 
 
-/* v18.2.8 — compensate for the shortened standalone iOS viewport.
+/* v18.2.9 — compensate for the shortened standalone iOS viewport.
    On affected iOS releases, 100dvh in an installed PWA can stop at the
    top of the Home Indicator safe area. Extending only the nav is ineffective
    because .desktop-stage clips its children with overflow:hidden. Extend the
@@ -276,5 +276,15 @@
     box-sizing:border-box !important;
     background:#1C1C1E !important;
     background-image:none !important;
+  }
+}
+
+
+/* v18.2.9 — lift the tab buttons slightly above the iPhone Home Indicator zone.
+   Keep the nav surface and safe-area dimensions unchanged so no black gap returns. */
+@media screen and (max-width:479px) and (orientation:portrait) {
+  html.pwa-standalone #appShell > nav.shrink-0 > button {
+    position:relative !important;
+    top:-8px !important;
   }
 }

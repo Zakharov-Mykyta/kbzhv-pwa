@@ -243,7 +243,15 @@
 
   async function shareBackup() {
     const file = new File([JSON.stringify({ ...appState, apiKey: '', gdrive: undefined }, null, 2)], `kbzhv-backup-${TODAY_KEY}.json`, { type: 'application/json' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'КБЖВ — резервна копія' }); } catch (e) {}
-    } else exportDataJson();
+    // On iOS, share only the file. Supplying title/text metadata alongside a file
+    // can make some share targets treat the payload as a second text item.
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+      } catch (error) {
+        if (error && error.name !== 'AbortError') showToast('Не вдалося відкрити меню збереження', '⚠️');
+      }
+    } else {
+      exportDataJson();
+    }
   }

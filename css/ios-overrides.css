@@ -1,0 +1,220 @@
+    /* v17.0 — unified native iOS visual system */
+    :root {
+      --bg-canvas:#000000;
+      --bg-surface-1:#1C1C1E;
+      --bg-surface-2:#2C2C2E;
+      --accent:#D8B98A;
+    }
+    body,.desktop-stage { background:#000000 !important; }
+    .iphone-shell { background:#000000 !important; }
+    #appShell > nav.shrink-0 {
+      background:rgba(28,28,30,.96) !important;
+      border-top:1px solid rgba(255,255,255,.09) !important;
+      -webkit-backdrop-filter:blur(24px);
+      backdrop-filter:blur(24px);
+      transition:transform .24s ease,opacity .2s ease;
+    }
+    /* Sheets own the full bottom edge; hide tab bar while any sheet is open. */
+    #appShell:has(.bottom-sheet.open) > nav.shrink-0,
+    #appShell:has(.sheet-backdrop.visible) > nav.shrink-0 {
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
+      transform:translateY(12px);
+    }
+    .bottom-sheet { bottom:0 !important; max-height:90% !important; }
+    #editSheet { bottom:0 !important; max-height:90% !important; }
+    /* Accent color for native controls, calendar selection, and focus states. */
+    input,select,textarea,button { accent-color:var(--accent); }
+    input[type="checkbox"],input[type="radio"],input[type="range"] { accent-color:var(--accent) !important; }
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
+      outline:2px solid rgba(216,185,138,.72);
+      outline-offset:2px;
+    }
+    button[class*="text-[#8E8E93]"]:active,
+    button[class*="text-gray"]:active { color:var(--accent) !important; }
+    .tab-icon { color:inherit; }
+    #appShell > nav button[aria-current="page"] { color:var(--accent) !important; }
+    #appShell > nav button[aria-current="false"] { color:#8E8E93 !important; }
+    #calendarDaysGrid button.bg-\\[\\#D8B98A\\],
+    #calendarDaysGrid button[class*="D8B98A"] { background:var(--accent) !important; color:#241D13 !important; }
+    .composer-attach.is-open { color:var(--accent) !important; }
+    .composer-send,.assistant-action-primary { background:var(--accent) !important; }
+    .composer-field,.composer-field:focus-within {
+      background:rgba(44,44,46,.94) !important;
+      border:1px solid rgba(255,255,255,.10) !important;
+      box-shadow:0 5px 22px rgba(0,0,0,.24) !important;
+      -webkit-backdrop-filter:blur(20px) !important;
+      backdrop-filter:blur(20px) !important;
+    }
+    .assistant-composer-dock {
+      background:transparent !important;
+      box-shadow:none !important;
+      -webkit-backdrop-filter:none !important;
+      backdrop-filter:none !important;
+    }
+
+    /* The composer keeps its surface while focused; no extra focus frame. */
+    .composer-field:focus-within { border-color:rgba(255,255,255,.10) !important; background:rgba(44,44,46,.94) !important; box-shadow:0 5px 22px rgba(0,0,0,.24) !important; }
+    .composer-input:focus,.composer-input:focus-visible { outline:none !important; box-shadow:none !important; border:0 !important; }
+    .assistant-action-card { background:#1C1C1E !important; }
+    /* Compact iOS settings rows instead of oversized white action tiles. */
+    .backup-action-btn {
+      min-height:46px !important; padding:7px 10px !important;
+      border-radius:12px !important; background:#1C1C1E !important;
+      border:1px solid rgba(255,255,255,.07) !important;
+      color:#F2F2F7 !important; font-size:13px !important;
+    }
+    .backup-action-primary { background:#1C1C1E !important; color:#F2F2F7 !important; }
+    .backup-action-secondary { background:#1C1C1E !important; color:var(--accent) !important; }
+    .backup-action-icon { width:30px !important; height:30px !important; flex-basis:30px !important; background:rgba(216,185,138,.12) !important; color:var(--accent) !important; }
+    /* Quiet, compact empty meal rows. */
+    .meal-entry-card { background:#1C1C1E !important; border-color:rgba(255,255,255,.07) !important; }
+    .meal-entry-card .text-\\[11px\\].font-medium.text-\\[\\#A1A1AA\\] { color:#A1A1AA !important; }
+    /* Quiet semantic macro colors: readable at a glance without loud badges. */
+    .meal-entry-card .flex.items-center.gap-1\.5.mt-1\.5.flex-wrap { gap:7px !important; }
+    .meal-entry-card .flex.items-center.gap-1\.5.mt-1\.5.flex-wrap span { background:transparent !important; padding:0 !important; border-radius:0 !important; }
+    .meal-entry-card .flex.items-center.gap-1\.5.mt-1\.5.flex-wrap span:nth-child(2) { color:#79B8F5 !important; }
+    .meal-entry-card .flex.items-center.gap-1\.5.mt-1\.5.flex-wrap span:nth-child(3) { color:#E7B36F !important; }
+    .meal-entry-card .flex.items-center.gap-1\.5.mt-1\.5.flex-wrap span:nth-child(4) { color:#C4A0E8 !important; }
+
+    /* Brand accent on actions throughout the app; destructive/status controls keep their meaning. */
+    button[class*="bg-white"]:not(.meal-entry-card),
+    button[class*="bg-\[\#D8B98A\]"]:not(.meal-entry-card) { background:var(--accent) !important; color:#241D13 !important; border-color:rgba(216,185,138,.65) !important; }
+    button[class*="bg-\[\#2C2C2E\]"]:not(.meal-entry-card),
+    button[class*="bg-\[\#1C1C1E\]"]:not(.meal-entry-card) { background:rgba(216,185,138,.10) !important; border-color:rgba(216,185,138,.20) !important; color:var(--accent) !important; }
+    .backup-action-primary { background:rgba(216,185,138,.12) !important; color:var(--accent) !important; }
+    .composer-send,.assistant-action-primary { background:var(--accent) !important; color:#241D13 !important; }
+
+    /* iOS Home Screen PWA: keep the app inside the real viewport.
+       The safe-area belongs to the navigation bar, not to the shell height. */
+    html.pwa-standalone,
+    html.pwa-standalone body {
+      height:100%;
+      min-height:0;
+      overflow:hidden;
+    }
+    html.pwa-standalone .desktop-stage {
+      position:fixed !important;
+      inset:0 !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+      width:100vw !important;
+      overflow:hidden !important;
+      background:#000000 !important;
+    }
+    html.pwa-standalone .iphone-shell {
+      height:100% !important;
+      min-height:0 !important;
+      max-height:none !important;
+      box-sizing:border-box;
+      overflow:hidden;
+    }
+    html.pwa-standalone #appShell > nav.shrink-0 {
+      position:relative !important;
+      inset:auto !important;
+      bottom:auto !important;
+      flex:0 0 auto !important;
+      flex-shrink:0 !important;
+      min-height:76px;
+      padding-top:9px !important;
+      padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+      margin:0 !important;
+      z-index:60;
+      background:#1C1C1E !important;
+      -webkit-backdrop-filter:none !important;
+      backdrop-filter:none !important;
+    }
+    html.pwa-standalone #appShell > main {
+      min-height:0;
+      overscroll-behavior:contain;
+    }
+    /* iOS tab bar: opaque surface continues through the Home Indicator safe area. */
+    html.pwa-standalone,
+    html.pwa-standalone body { width:100%; min-height:100%; }
+    html.pwa-standalone .iphone-shell { width:100%; height:100% !important; padding-bottom:0 !important; }
+    html.pwa-standalone #appShell > nav.shrink-0::after { content:none; }
+    html.barcode-scanner-open #appShell > nav.shrink-0 { display:none !important; }
+    @media not all and (min-width:480px) and (hover:hover) and (pointer:fine) {
+      .desktop-stage { position:fixed !important; inset:0 !important; height:100dvh !important; min-height:100dvh !important; }
+      #appShell > nav.shrink-0 {
+        background:#1C1C1E !important;
+        padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+      }
+    }
+
+    /* iPhone portrait: one compact tab bar, with the Home Indicator area painted by the same surface. */
+    @media screen and (max-width:479px) and (orientation:portrait) {
+      .desktop-stage {
+        height:100dvh !important;
+        min-height:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+      }
+      .iphone-shell {
+        height:100dvh !important;
+        min-height:0 !important;
+        padding-top:env(safe-area-inset-top, 0px) !important;
+        padding-bottom:0 !important;
+        box-sizing:border-box !important;
+      }
+      #appShell > nav.shrink-0,
+      html.pwa-standalone #appShell > nav.shrink-0 {
+        position:relative !important;
+        inset:auto !important;
+        bottom:auto !important;
+        flex:0 0 auto !important;
+        flex-shrink:0 !important;
+        height:calc(50px + env(safe-area-inset-bottom, 0px)) !important;
+        min-height:0 !important;
+        max-height:none !important;
+        padding:3px 8px calc(env(safe-area-inset-bottom, 0px) + 2px) !important;
+        margin:0 !important;
+        display:grid !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+        grid-template-rows:44px !important;
+        align-items:stretch !important;
+        box-sizing:border-box !important;
+        background:#1C1C1E !important;
+        background-image:none !important;
+        border-top:1px solid rgba(255,255,255,.08) !important;
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+        transform:none;
+      }
+      #appShell > nav.shrink-0 > button {
+        width:100%;
+        height:44px;
+        min-height:44px;
+        min-width:0;
+        padding:0 !important;
+        margin:0 !important;
+        align-self:start;
+        justify-content:center;
+        gap:2px !important;
+      }
+    }
+
+    /* Keep assistant messages legible: normal word boundaries, no mid-word splitting. */
+    .assistant-bubble-user { background:#D8B98A !important; color:#241D13 !important; }
+    .assistant-message-user .assistant-bubble { overflow-wrap:break-word !important; word-break:normal !important; }
+
+    /* The manual barcode lookup control uses the same full-height button language as the app. */
+    #barcodeSheet .barcode-lookup-row { display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px; align-items:stretch; margin-bottom:1rem; }
+    #barcodeLookupBtn { justify-self:stretch; }
+    #barcodeLookupBtn {
+      display:flex; align-items:center; justify-content:center; align-self:stretch;
+      min-width:92px; min-height:44px; padding:0 14px !important;
+      border:1px solid rgba(216,185,138,.72); border-radius:12px;
+      background:#D8B98A !important; color:#241D13 !important;
+      font-size:14px !important; font-weight:750 !important; line-height:1.1;
+      box-shadow:0 2px 8px rgba(0,0,0,.18);
+    }
+    #barcodeLookupBtn:active { transform:scale(.97); }
+
+    /* Explicit dimensions prevent iOS Safari from collapsing the update SVG. */
+    #updatePwaBtn .pwa-update-icon { display:block; width:20px; height:20px; flex:0 0 20px; overflow:visible; }
+    #updatePwaBtn:disabled { opacity:.65; }
+
+
+    ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }

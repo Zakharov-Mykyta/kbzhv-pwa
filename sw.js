@@ -1,5 +1,7 @@
-const CACHE = 'krykhta-v18.2.5';
-const SHELL = ['./', './index.html', './tailwind.css', './manifest.webmanifest',
+const CACHE = 'krykhta-v18.2.6';
+const SHELL = ['./', './index.html', './tailwind.css', './css/base.css', './css/components.css', './css/assistant.css', './css/ios-overrides.css', './manifest.webmanifest',
+  './js/core.js', './js/diary.js', './js/food-input.js', './js/assistant.js', './js/barcode.js',
+  './js/dish-editor.js', './js/dashboard.js', './js/gdrive.js', './js/settings.js', './js/pwa-update.js', './js/bootstrap.js',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));

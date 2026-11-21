@@ -1,0 +1,228 @@
+    :root {
+      --bg-canvas: #000000;
+      --bg-surface-1: #1C1C1E;
+      --bg-surface-2: #2C2C2E;
+      --bg-surface-3: #3A3A3C;
+      --glass-bar: rgba(20, 20, 22, 0.88);
+      --border-hairline: rgba(255, 255, 255, 0.08);
+      --text-primary: #FFFFFF;
+      --text-secondary: #8E8E93;
+      --color-kcal: #D8B98A;
+      --color-protein: #0A84FF;
+      --color-fat: #FF9F0A;
+      --color-carb: #BF5AF2;
+      --color-danger: #FF453A;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      background-color: #000000;
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Desktop iPhone 16 Pro Viewport */
+    @media (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .desktop-stage {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 16px;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(10, 132, 255, 0.10), transparent 42%),
+          radial-gradient(circle at 80% 85%, rgba(216, 185, 138, 0.08), transparent 42%),
+          #070709;
+      }
+
+      .iphone-shell {
+        width: 402px;
+        height: 856px;
+        max-height: 94vh;
+        background: var(--bg-canvas);
+        border-radius: 52px;
+        border: 3px solid var(--bg-surface-2);
+        box-shadow:
+          0 0 0 2px #141416,
+          0 32px 84px rgba(0, 0, 0, 0.88);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    /* Mobile Fullscreen PWA */
+    @media not all and (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .desktop-stage {
+        height: 100dvh;
+        width: 100vw;
+        background: var(--bg-canvas);
+      }
+
+      .iphone-shell {
+        width: 100%;
+        height: 100dvh;
+        background: var(--bg-canvas);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .desktop-only-status {
+        display: none !important;
+      }
+    }
+
+    .spring-transition {
+      transition: all 0.34s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* Strict Sheet Visibility (Never lingers on screen) */
+    .sheet-backdrop {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sheet-backdrop.visible {
+      display: block;
+    }
+    .sheet-backdrop.open {
+      opacity: 1;
+    }
+
+    .bottom-sheet {
+      display: none;
+      transform: translateY(100%);
+      transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .bottom-sheet.visible {
+      display: block;
+    }
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+
+    /* Opaque Popover Menus */
+    .opaque-menu {
+      background-color: var(--bg-surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Voice Waveform */
+    @keyframes waveBar {
+      0%, 100% { height: 5px; }
+      50% { height: 18px; }
+    }
+    .wave-bar {
+      width: 3px;
+      background-color: var(--color-danger);
+      border-radius: 999px;
+      animation: waveBar 0.7s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.25s; }
+
+    /* iOS Toast */
+    .ios-toast {
+      transform: translate(-50%, -28px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .ios-toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    /* iOS Range Slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: #1C1C1E;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      margin-top: -9px;
+    }
+
+    /* Native Time Input Dark Styling */
+    input[type="time"] {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+      @media not all and (min-width: 480px) and (hover: hover) and (pointer: fine) {
+      .iphone-shell { padding-top: env(safe-area-inset-top); }
+    }
+    nav.shrink-0 { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+    html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
+    #appShell { overscroll-behavior:none; touch-action:pan-y; }
+    #appShell > nav.shrink-0 { position:sticky; bottom:0; flex:0 0 auto; flex-shrink:0; z-index:60; touch-action:pan-x; overscroll-behavior:contain; user-select:none; -webkit-user-select:none; box-sizing:border-box; }
+
+
+
+    /* New photo and barcode controls styled to match the original dark FoodNoms UI */
+    .barcode-field {
+      display:block; width:100%; min-width:0; max-width:100%; box-sizing:border-box;
+      background:#2C2C2E; color:#FFFFFF; border:1px solid rgba(255,255,255,.08);
+      border-radius:12px; padding:11px 12px; font-size:14px; outline:none;
+    }
+    .barcode-field:focus { border-color:#D8B98A; }
+    .barcode-field::placeholder { color:#8E8E93; }
+    .barcode-status {
+      padding:10px 12px; border-radius:12px; background:#2C2C2E;
+      border:1px solid rgba(255,255,255,.08); color:#EBEBF5; font-size:13px; line-height:1.45;
+    }
+    .barcode-status.error { background:rgba(255,69,58,.12); border-color:rgba(255,69,58,.28); color:#FF8A82; }
+    .barcode-status.success { background:rgba(216,185,138,.10); border-color:rgba(216,185,138,.24); color:#7EE49A; }
+    #barcodeReader { width:100%; min-height:220px; border-radius:14px; overflow:hidden; background:#070709; }
+    #barcodeReader video { width:100% !important; object-fit:cover !important; border-radius:12px; }
+    #barcodeReader img { display:none !important; }
+    .barcode-result-img { width:60px; height:60px; flex:0 0 60px; object-fit:contain; background:#1C1C1E; border-radius:10px; border:1px solid rgba(255,255,255,.08); }
+    #foodRequestPhoto { max-width:100%; object-fit:contain; }
+    #foodRequestGrams { min-width:0; max-width:100%; }
+    #barcodeSheet { padding-bottom:max(20px, env(safe-area-inset-bottom)); }

@@ -198,10 +198,9 @@
       @media not all and (min-width: 480px) and (hover: hover) and (pointer: fine) {
       .iphone-shell { padding-top: env(safe-area-inset-top); }
     }
-    nav.shrink-0 { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
     html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
     #appShell { overscroll-behavior:none; touch-action:pan-y; }
-    #appShell > nav.shrink-0 { position:sticky; bottom:0; flex:0 0 auto; flex-shrink:0; z-index:60; touch-action:pan-x; overscroll-behavior:contain; user-select:none; -webkit-user-select:none; box-sizing:border-box; }
+    #appShell > nav.shrink-0 { flex:0 0 auto; flex-shrink:0; z-index:60; touch-action:pan-x; overscroll-behavior:contain; user-select:none; -webkit-user-select:none; box-sizing:border-box; }
 
 
 

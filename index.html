@@ -501,6 +501,69 @@
       .assistant-food-weight { width:64px; }
       .assistant-action-card .assistant-action-buttons { grid-template-columns:minmax(0,1.4fr) minmax(76px,.8fr); }
     }
+    /* AI food confirmation: dedicated popup sheet, not an inline chat card. */
+    .assistant-action-cta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:9px 0 3px 35px; max-width:calc(100% - 35px); padding:10px 12px; border-radius:14px; background:#1C1C1E; border:1px solid rgba(216,185,138,.18); }
+    .assistant-action-cta-label { min-width:0; color:#D1D1D6; font-size:12px; font-weight:600; }
+    .assistant-action-cta button { flex:0 0 auto; min-height:40px; border-radius:11px; padding:0 13px; background:#D8B98A; color:#241D13; font-size:13px; font-weight:750; }
+    .assistant-action-backdrop { position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.76); opacity:0; pointer-events:none; transition:opacity .24s ease; }
+    .assistant-action-backdrop.visible { display:block; opacity:0; pointer-events:auto; }
+    .assistant-action-backdrop.open { opacity:1; }
+    .assistant-action-sheet { position:fixed; z-index:90; left:0; right:0; bottom:var(--assistant-action-bottom, 0px); width:100%; max-height:min(94dvh, var(--assistant-action-vh, 94dvh)); display:none; flex-direction:column; overflow:hidden; background:#1C1C1E; border:1px solid rgba(255,255,255,.12); border-bottom:0; border-radius:27px 27px 0 0; box-shadow:0 -18px 60px rgba(0,0,0,.42); transform:translateY(105%); transition:transform .32s cubic-bezier(.32,.72,0,1); padding-top:10px; padding-bottom:max(12px, env(safe-area-inset-bottom, 0px)); }
+    .assistant-action-sheet.visible { display:flex; }
+    .assistant-action-sheet.open { transform:translateY(0); }
+    .assistant-action-grabber { flex:0 0 auto; width:38px; height:5px; border-radius:99px; background:rgba(255,255,255,.24); margin:0 auto 12px; }
+    .assistant-action-modal-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px 13px; border-bottom:1px solid rgba(255,255,255,.07); flex:0 0 auto; }
+    .assistant-action-modal-title { margin:0; color:#F5F5F7; font-size:21px; line-height:1.2; font-weight:750; letter-spacing:-.25px; }
+    .assistant-action-modal-close { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:50%; background:#2C2C2E; color:#B8B8BE; font-size:19px; line-height:1; }
+    .assistant-action-modal-body { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:15px 20px 18px; }
+    .assistant-modal-food-list { display:flex; flex-direction:column; gap:0; }
+    .assistant-modal-food-line { display:grid; grid-template-columns:minmax(0,1fr) 108px; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.075); }
+    .assistant-modal-food-line:first-child { padding-top:2px; }
+    .assistant-modal-food-line:last-child { border-bottom:0; }
+    .assistant-modal-food-name { color:#F5F5F7; font-size:16px; line-height:1.3; font-weight:650; overflow-wrap:anywhere; }
+    .assistant-modal-food-meta { margin-top:4px; color:#A1A1AA; font-size:12px; line-height:1.4; overflow-wrap:anywhere; }
+    .assistant-modal-food-weight { position:relative; min-width:0; }
+    .assistant-modal-food-weight input { display:block; width:100%; height:48px; min-height:48px; border:1px solid rgba(255,255,255,.1); border-radius:13px; background:#2C2C2E; color:#F7F7FA; padding:0 30px 0 10px; text-align:right; font-size:17px; font-weight:650; font-variant-numeric:tabular-nums; outline:none; }
+    .assistant-modal-food-weight span { position:absolute; top:50%; right:10px; transform:translateY(-50%); color:#A1A1AA; font-size:13px; pointer-events:none; }
+    .assistant-modal-food-weight input:focus { border-color:#D8B98A; }
+    .assistant-modal-summary { margin-top:12px; padding:13px; border-radius:16px; background:#252528; border:1px solid rgba(255,255,255,.07); }
+    .assistant-modal-summary-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .assistant-modal-summary-main { display:flex; flex-direction:column; gap:3px; }
+    .assistant-modal-summary-label { color:#A1A1AA; font-size:12px; line-height:1.2; }
+    .assistant-modal-summary-value { color:#F5F5F7; font-size:20px; line-height:1.2; font-weight:750; font-variant-numeric:tabular-nums; }
+    .assistant-modal-summary-kcal { color:#D8B98A; font-size:22px; }
+    .assistant-modal-macros { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px; padding-top:11px; border-top:1px solid rgba(255,255,255,.07); }
+    .assistant-modal-macro { min-width:0; display:flex; flex-direction:column; gap:4px; }
+    .assistant-modal-macro span { color:#A1A1AA; font-size:11px; }
+    .assistant-modal-macro strong { color:#F2F2F7; font-size:16px; line-height:1.2; font-weight:700; font-variant-numeric:tabular-nums; }
+    .assistant-modal-macro.protein strong { color:#79B8F5; }
+    .assistant-modal-macro.fat strong { color:#E7B36F; }
+    .assistant-modal-macro.carb strong { color:#C4A0E8; }
+    .assistant-modal-tare { margin:9px 2px 0; color:#A1A1AA; font-size:11px; line-height:1.35; }
+    .assistant-modal-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px 12px; margin-top:18px; }
+    .assistant-modal-field { display:flex; flex-direction:column; min-width:0; gap:6px; }
+    .assistant-modal-field label { color:#B7B7BE; font-size:13px; line-height:1.2; font-weight:650; }
+    .assistant-modal-field input,.assistant-modal-field select { display:block; width:100%; min-width:0; height:50px; min-height:50px; border:1px solid rgba(255,255,255,.1); border-radius:13px; background:#2C2C2E; color:#F7F7FA; padding:0 12px; font-size:16px; line-height:1.2; outline:none; }
+    .assistant-modal-field input:focus,.assistant-modal-field select:focus { border-color:#D8B98A; }
+    .assistant-modal-field select { -webkit-appearance:none; appearance:none; padding-right:34px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='m2.5 5 4.5 4 4.5-4' fill='none' stroke='%23B7B7BE' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; background-size:14px; }
+    .assistant-action-modal-footer { flex:0 0 auto; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(112px,.85fr); gap:10px; padding:12px 20px 0; border-top:1px solid rgba(255,255,255,.07); background:#1C1C1E; }
+    .assistant-action-modal-footer button { min-width:0; min-height:54px; border-radius:14px; padding:10px 12px; font-size:15px; line-height:1.2; font-weight:750; }
+    .assistant-action-modal-confirm { background:#D8B98A; color:#241D13; }
+    .assistant-action-modal-cancel { background:#2C2C2E; color:#D1D1D6; }
+    @media (max-width:360px) {
+      .assistant-action-modal-header { padding-inline:16px; }
+      .assistant-action-modal-body { padding-inline:16px; }
+      .assistant-action-modal-footer { padding-inline:16px; grid-template-columns:minmax(0,1.4fr) minmax(100px,.8fr); gap:8px; }
+      .assistant-modal-food-line { grid-template-columns:minmax(0,1fr) 94px; gap:9px; }
+      .assistant-modal-food-name { font-size:15px; }
+      .assistant-action-modal-footer button { font-size:14px; }
+    }
+    @media (min-width:640px) and (hover:hover) and (pointer:fine) {
+      .assistant-action-sheet { left:50%; right:auto; bottom:50%; width:min(560px, calc(100vw - 36px)); max-height:min(88vh, 860px); border:1px solid rgba(255,255,255,.13); border-radius:26px; padding-bottom:16px; transform:translate(-50%, calc(50% + 22px)); }
+      .assistant-action-sheet.open { transform:translate(-50%, 50%); }
+      .assistant-action-modal-footer { border-radius:0 0 26px 26px; }
+    }
+    @media (prefers-reduced-motion:reduce) { .assistant-action-sheet,.assistant-action-backdrop { transition:none !important; } }
     .assistant-summary-card { margin:9px 0 2px 35px; padding:12px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:#1C1C1E; max-width:calc(100% - 35px); }
     .assistant-summary-row { display:flex; align-items:center; gap:8px; padding:5px 0; }
     .assistant-summary-label { width:64px; flex:0 0 64px; font-size:10px; color:#A1A1AA; }
@@ -1514,11 +1577,23 @@
     </div>
     <p class="text-[10px] text-[#8E8E93] leading-relaxed mt-3">Дані: <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener noreferrer" class="text-[#D8B98A] underline">Open Food Facts</a> (ODbL). Перевір етикетку.</p>
   </section>
+
+  <!-- AI food confirmation popup -->
+  <div id="assistantActionBackdrop" class="sheet-backdrop assistant-action-backdrop" onclick="closeAssistantActionModal()" aria-hidden="true"></div>
+  <section id="assistantActionSheet" class="assistant-action-sheet" role="dialog" aria-modal="true" aria-labelledby="assistantActionModalTitle" aria-hidden="true">
+    <div class="assistant-action-grabber" aria-hidden="true"></div>
+    <header class="assistant-action-modal-header">
+      <h2 id="assistantActionModalTitle" class="assistant-action-modal-title">Перевір запис</h2>
+      <button type="button" class="assistant-action-modal-close" onclick="closeAssistantActionModal()" aria-label="Закрити вікно">×</button>
+    </header>
+    <div id="assistantActionModalBody" class="assistant-action-modal-body"></div>
+    <footer id="assistantActionModalFooter" class="assistant-action-modal-footer"></footer>
+  </section>
 </div>
 
 <script>
   // ==================== CONSTANTS & HISTORICAL DATA ====================
-  const APP_VERSION = '18.2.2';
+  const APP_VERSION = '18.2.3';
   let TODAY_KEY = toDateKey(new Date());
 
   const DEFAULT_GEMINI_PROMPT = `Ти — уважний шеф для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
@@ -1600,6 +1675,8 @@
   let assistantMessages = loadAssistantMessages();
   let assistantBusy = false;
   let assistantPendingCounter = 0;
+  let assistantActionActiveMessageId = null;
+  let assistantActionModalSession = 0;
 
   function loadAssistantMessages() {
     try {
@@ -1715,6 +1792,7 @@
   function closeAllOverlays() {
     const periodMenu = document.getElementById('periodDropdownMenu');
     if (periodMenu) periodMenu.classList.add('hidden');
+    closeAssistantActionModal();
     closeFoodRequestSheet();
     closeEditSheet();
     closeCalendarSheet();
@@ -2904,7 +2982,7 @@
 - Якщо користувач указав загальну вагу, розподіли її між інгредієнтами так, щоб сума grams дорівнювала цій вазі. Не призначай загальну вагу кожному інгредієнту.
 - Не додавай олію, цукор, соуси чи інші інгредієнти, яких не згадано або не видно на фото.
 - Якщо фото і текст суперечать одне одному, пріоритет має текст. Якщо фото не є їжею або вміст незрозумілий, постав уточнювальне запитання замість вигаданого складу.
-- ДОДАВАННЯ НЕ ВИКОНУЄТЬСЯ АВТОМАТИЧНО. Застосунок покаже картку-підтвердження, користувач сам натисне «Додати до щоденника».
+- ДОДАВАННЯ НЕ ВИКОНУЄТЬСЯ АВТОМАТИЧНО. Застосунок відкриє вікно підтвердження, користувач сам натисне «Додати до щоденника».
 - Ніколи не заявляй, що запис уже збережено, доки користувач не підтвердив картку.
 - Не змінюй і не видаляй старі записи. Для запитів на редагування/видалення поясни, що це можна зробити в самому щоденнику.
 
@@ -3012,16 +3090,146 @@ ${foodGuidance}
     if (action.status === 'added') {
       return `<section class="assistant-action-card"><div class="flex items-center gap-2"><span class="text-[#D8B98A] text-[17px]">✓</span><div class="min-w-0 flex-1"><div class="text-[12px] font-bold text-white">Додано до щоденника</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">${assistantDateLabel(action.date)} · ${esc(action.time || '')}</div></div></div><button type="button" class="assistant-action-secondary w-full mt-2" onclick="assistantGoToDiary('${esc(action.date)}')">Відкрити цей день</button></section>`;
     }
-    const total = assistantTotals(action.items);
-    const meal = action.meal || 'snack';
+    return `<section class="assistant-action-cta"><span class="assistant-action-cta-label">Запис підготовлено</span><button type="button" onclick="openAssistantActionModal('${messageId}')">Перевірити запис</button></section>`;
+  }
+
+  function assistantActionModalContent(action, messageId) {
+    const draft = action.formDraft || {};
+    const meal = draft.meal || action.meal || 'snack';
     const mealOptions = [{ id: 'breakfast', name: 'Сніданок' }, { id: 'lunch', name: 'Обід' }, { id: 'dinner', name: 'Вечеря' }, { id: 'snack', name: 'Перекуси' }];
-    const plateOptions = `<option value="">Без посуду</option>` + appState.plates.map(p => `<option value="${esc(p.id)}" ${p.id === action.appliedPlateId ? 'selected' : ''}>${esc(p.name)} · ${p.weight} г</option>`).join('');
-    const lines = action.items.map((item, i) => `<div class="assistant-food-line"><div><div class="assistant-food-name">${esc(item.name)}</div><div id="assistantActionNutrition_${messageId}_${i}" class="assistant-food-meta">${Math.round(item.kcal)} ккал · Б ${formatOneDecimal(item.protein)} · Ж ${formatOneDecimal(item.fat)} · В ${formatOneDecimal(item.carb)}</div></div><div class="assistant-food-weight"><input type="number" min="1" max="10000" step="1" inputmode="numeric" aria-label="Грами: ${esc(item.name)}" id="assistantActionGrams_${messageId}_${i}" value="${Math.round(item.grams)}" oninput="updateAssistantActionTotal('${messageId}')" /><span aria-hidden="true">г</span></div></div>`).join('');
-    const selectedDate = action.date || selectedDateKey;
-    const tareLine = action.appliedPlateId && action.tareWeight
-      ? `${Math.round(action.grossGrams)} г − ${Math.round(action.tareWeight)} г тари = ${Math.round(total.grams)} г`
+    const selectedPlateId = draft.plateId !== undefined ? draft.plateId : (action.appliedPlateId || '');
+    const plateOptions = `<option value="">Без посуду</option>` + appState.plates.map(p => `<option value="${esc(p.id)}" ${p.id === selectedPlateId ? 'selected' : ''}>${esc(p.name)} · ${p.weight} г</option>`).join('');
+    const gramsValues = action.items.map((item, index) => {
+      const value = Array.isArray(draft.grams) ? Number(draft.grams[index]) : NaN;
+      return Number.isFinite(value) && value > 0 ? value : Math.round(item.grams);
+    });
+    const lines = action.items.map((item, i) => {
+      const grams = gramsValues[i];
+      const ratio = grams / Math.max(1, Number(item.grams) || 1);
+      const kcal = Math.round(Number(item.kcal || 0) * ratio);
+      const protein = Number(item.protein || 0) * ratio;
+      const fat = Number(item.fat || 0) * ratio;
+      const carb = Number(item.carb || 0) * ratio;
+      return `<div class="assistant-modal-food-line"><div class="min-w-0"><div class="assistant-modal-food-name">${esc(item.name)}</div><div id="assistantActionNutrition_${messageId}_${i}" class="assistant-modal-food-meta">${kcal} ккал · Б ${formatOneDecimal(protein)} · Ж ${formatOneDecimal(fat)} · В ${formatOneDecimal(carb)}</div></div><div class="assistant-modal-food-weight"><input type="number" min="1" max="10000" step="1" inputmode="numeric" aria-label="Грами: ${esc(item.name)}" id="assistantActionGrams_${messageId}_${i}" value="${Math.round(grams)}" oninput="updateAssistantActionTotal('${messageId}')" /><span aria-hidden="true">г</span></div></div>`;
+    }).join('');
+    const totals = action.items.reduce((sum, item, index) => {
+      const ratio = gramsValues[index] / Math.max(1, Number(item.grams) || 1);
+      sum.grams += gramsValues[index];
+      sum.kcal += Number(item.kcal || 0) * ratio;
+      sum.protein += Number(item.protein || 0) * ratio;
+      sum.fat += Number(item.fat || 0) * ratio;
+      sum.carb += Number(item.carb || 0) * ratio;
+      return sum;
+    }, { grams:0, kcal:0, protein:0, fat:0, carb:0 });
+    const tareLine = action.appliedPlateId
+      ? (action.tareEligible === false
+          ? 'Вага інгредієнтів задана окремо — тару не віднімаємо.'
+          : `${Math.round((action.grossGrams || totals.grams + Number(action.tareWeight || 0)))} г − ${Math.round(Number(action.tareWeight || 0))} г тари = ${Math.round(totals.grams)} г`)
       : '';
-    return `<section class="assistant-action-card"><div class="assistant-action-heading">Перевір запис</div><div class="assistant-action-items">${lines}</div><div class="assistant-action-total"><span>Усього</span><b id="assistantActionTotal_${messageId}">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="assistant-action-tare ${tareLine ? '' : 'hidden'}">${tareLine}</p><div class="assistant-action-fields"><div class="assistant-action-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div class="assistant-action-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="assistant-action-field"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="assistant-action-field"><label for="assistantActionPlate_${messageId}">Посуд</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="assistant-action-buttons"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
+    const selectedDate = draft.date || action.date || selectedDateKey;
+    const selectedTime = draft.time || action.time || getCurrentTimeStr();
+    return `<div class="assistant-modal-food-list">${lines}</div>
+      <section class="assistant-modal-summary">
+        <div class="assistant-modal-summary-top">
+          <div class="assistant-modal-summary-main"><span class="assistant-modal-summary-label">Усього</span><strong id="assistantActionTotal_${messageId}" class="assistant-modal-summary-value">${Math.round(totals.grams)} г</strong></div>
+          <div class="assistant-modal-summary-main" style="text-align:right"><span class="assistant-modal-summary-label">Калорійність</span><strong id="assistantActionKcal_${messageId}" class="assistant-modal-summary-value assistant-modal-summary-kcal">${Math.round(totals.kcal)} ккал</strong></div>
+        </div>
+        <div class="assistant-modal-macros">
+          <div class="assistant-modal-macro protein"><span>Білки</span><strong id="assistantActionProtein_${messageId}">${formatOneDecimal(totals.protein)} г</strong></div>
+          <div class="assistant-modal-macro fat"><span>Жири</span><strong id="assistantActionFat_${messageId}">${formatOneDecimal(totals.fat)} г</strong></div>
+          <div class="assistant-modal-macro carb"><span>Вуглеводи</span><strong id="assistantActionCarb_${messageId}">${formatOneDecimal(totals.carb)} г</strong></div>
+        </div>
+      </section>
+      <p id="assistantActionTare_${messageId}" class="assistant-modal-tare ${tareLine ? '' : 'hidden'}">${tareLine}</p>
+      <div class="assistant-modal-fields">
+        <div class="assistant-modal-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" onchange="saveAssistantActionDraft('${messageId}')" /></div>
+        <div class="assistant-modal-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(selectedTime)}" onchange="saveAssistantActionDraft('${messageId}')" /></div>
+        <div class="assistant-modal-field"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}" onchange="saveAssistantActionDraft('${messageId}')">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div>
+        <div class="assistant-modal-field"><label for="assistantActionPlate_${messageId}">Посуд</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div>
+      </div>`;
+  }
+
+  function saveAssistantActionDraft(messageId) {
+    const message = assistantMessages.find(m => m.id === messageId);
+    if (!message?.action || message.action.status !== 'pending') return;
+    const date = document.getElementById(`assistantActionDate_${messageId}`);
+    const time = document.getElementById(`assistantActionTime_${messageId}`);
+    const meal = document.getElementById(`assistantActionMeal_${messageId}`);
+    const plate = document.getElementById(`assistantActionPlate_${messageId}`);
+    const grams = message.action.items.map((item, index) => Number(document.getElementById(`assistantActionGrams_${messageId}_${index}`)?.value) || Number(item.grams) || 0);
+    message.action.formDraft = {
+      date: date?.value || message.action.date || selectedDateKey,
+      time: time?.value || message.action.time || getCurrentTimeStr(),
+      meal: meal?.value || message.action.meal || 'snack',
+      plateId: plate ? plate.value : (message.action.appliedPlateId || ''),
+      grams
+    };
+    persistAssistantMessages();
+  }
+
+  function updateAssistantActionModalViewport() {
+    const sheet = document.getElementById('assistantActionSheet');
+    if (!sheet || !assistantActionActiveMessageId) return;
+    const viewport = window.visualViewport;
+    if (viewport) {
+      const visibleHeight = Math.max(220, Math.round(viewport.height));
+      const bottomInset = Math.max(0, Math.round(window.innerHeight - viewport.height - viewport.offsetTop));
+      sheet.style.setProperty('--assistant-action-vh', `${visibleHeight}px`);
+      sheet.style.setProperty('--assistant-action-bottom', `${bottomInset}px`);
+    } else {
+      sheet.style.removeProperty('--assistant-action-vh');
+      sheet.style.removeProperty('--assistant-action-bottom');
+    }
+  }
+
+  function openAssistantActionModal(messageId) {
+    const message = assistantMessages.find(m => m.id === messageId);
+    if (!message?.action || message.action.status !== 'pending') return;
+    closeAllOverlays();
+    assistantActionActiveMessageId = messageId;
+    const backdrop = document.getElementById('assistantActionBackdrop');
+    const sheet = document.getElementById('assistantActionSheet');
+    const body = document.getElementById('assistantActionModalBody');
+    const footer = document.getElementById('assistantActionModalFooter');
+    body.innerHTML = assistantActionModalContent(message.action, messageId);
+    footer.innerHTML = `<button type="button" class="assistant-action-modal-confirm" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-modal-cancel" onclick="discardAssistantAction('${messageId}')">Скасувати</button>`;
+    const session = ++assistantActionModalSession;
+    backdrop.classList.add('visible');
+    sheet.classList.add('visible');
+    backdrop.setAttribute('aria-hidden', 'false');
+    sheet.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('assistant-action-modal-open');
+    updateAssistantActionModalViewport();
+    requestAnimationFrame(() => {
+      if (session !== assistantActionModalSession || assistantActionActiveMessageId !== messageId) return;
+      backdrop.classList.add('open');
+      sheet.classList.add('open');
+    });
+  }
+
+  function closeAssistantActionModal(saveDraft = true) {
+    if (!assistantActionActiveMessageId) return;
+    const messageId = assistantActionActiveMessageId;
+    if (saveDraft) saveAssistantActionDraft(messageId);
+    assistantActionActiveMessageId = null;
+    const session = ++assistantActionModalSession;
+    const backdrop = document.getElementById('assistantActionBackdrop');
+    const sheet = document.getElementById('assistantActionSheet');
+    if (!backdrop || !sheet) return;
+    backdrop.classList.remove('open');
+    sheet.classList.remove('open');
+    backdrop.setAttribute('aria-hidden', 'true');
+    sheet.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('assistant-action-modal-open');
+    if (sheet.style) {
+      sheet.style.removeProperty('--assistant-action-vh');
+      sheet.style.removeProperty('--assistant-action-bottom');
+    }
+    setTimeout(() => {
+      if (session !== assistantActionModalSession || assistantActionActiveMessageId) return;
+      backdrop.classList.remove('visible');
+      sheet.classList.remove('visible');
+    }, 340);
   }
 
   function renderAssistantChat() {
@@ -3075,7 +3283,8 @@ ${foodGuidance}
       if (result.type === 'add_food') {
         const id = `action_${Date.now()}_${++assistantPendingCounter}`;
         const action = { items: result.items.map(item => ({...item})), grossItems: result.items.map(item => ({...item})), grossGrams: result.items.reduce((sum, item) => sum + Number(item.grams || 0), 0), tareEligible: !hasMultipleExplicitFoodWeights(text), meal: result.meal, time: result.time, date: result.date || selectedDateKey, status: 'pending' };
-        addAssistantMessage('assistant', result.reply || 'Підготував позиції для щоденника. Перевір їх перед додаванням.', { action, id });
+        const actionMessage = addAssistantMessage('assistant', result.reply || 'Підготував позиції для щоденника. Перевір їх перед додаванням.', { action, id });
+        openAssistantActionModal(actionMessage.id);
       } else {
         addAssistantMessage('assistant', result.reply, { showSummary: result.showSummary });
       }
@@ -3169,6 +3378,7 @@ ${foodGuidance}
         : '';
       tareLine.classList.toggle('hidden', !showTare);
     }
+    updateAssistantActionTotal(messageId);
     persistAssistantMessages();
   }
 
@@ -3176,17 +3386,41 @@ ${foodGuidance}
     const msg = assistantMessages.find(m => m.id === messageId);
     if (!msg?.action) return;
     const grams = msg.action.items.map((item, i) => Number(document.getElementById(`assistantActionGrams_${messageId}_${i}`)?.value) || 0);
+    const totals = { grams:0, kcal:0, protein:0, fat:0, carb:0 };
     grams.forEach((value, i) => {
       const item = msg.action.items[i];
       const ratio = value / Math.max(1, Number(item.grams) || 1);
+      const kcal = Number(item.kcal || 0) * ratio;
+      const protein = Number(item.protein || 0) * ratio;
+      const fat = Number(item.fat || 0) * ratio;
+      const carb = Number(item.carb || 0) * ratio;
+      totals.grams += value;
+      totals.kcal += kcal;
+      totals.protein += protein;
+      totals.fat += fat;
+      totals.carb += carb;
       const nutrition = document.getElementById(`assistantActionNutrition_${messageId}_${i}`);
-      if (nutrition) nutrition.textContent = `${Math.round(Number(item.kcal || 0) * ratio)} ккал · Б ${formatOneDecimal(Number(item.protein || 0) * ratio)} · Ж ${formatOneDecimal(Number(item.fat || 0) * ratio)} · В ${formatOneDecimal(Number(item.carb || 0) * ratio)}`;
+      if (nutrition) nutrition.textContent = `${Math.round(kcal)} ккал · Б ${formatOneDecimal(protein)} · Ж ${formatOneDecimal(fat)} · В ${formatOneDecimal(carb)}`;
     });
-    const total = grams.reduce((sum, value) => sum + value, 0);
-    const target = document.getElementById(`assistantActionTotal_${messageId}`);
-    if (target) target.textContent = `${Math.round(total)} г`;
+    const setText = (suffix, value) => {
+      const el = document.getElementById(`assistantAction${suffix}_${messageId}`);
+      if (el) el.textContent = value;
+    };
+    setText('Total', `${Math.round(totals.grams)} г`);
+    setText('Kcal', `${Math.round(totals.kcal)} ккал`);
+    setText('Protein', `${formatOneDecimal(totals.protein)} г`);
+    setText('Fat', `${formatOneDecimal(totals.fat)} г`);
+    setText('Carb', `${formatOneDecimal(totals.carb)} г`);
     const tareLine = document.getElementById(`assistantActionTare_${messageId}`);
-    if (tareLine && msg.action.appliedPlateId) tareLine.textContent = `${Math.round(total + Number(msg.action.tareWeight || 0))} г − ${Math.round(msg.action.tareWeight || 0)} г тари = ${Math.round(total)} г` ;
+    if (tareLine && msg.action.appliedPlateId) {
+      if (msg.action.tareEligible === false) {
+        tareLine.textContent = 'Вага інгредієнтів задана окремо — тару не віднімаємо.';
+      } else {
+        const gross = totals.grams + Number(msg.action.tareWeight || 0);
+        tareLine.textContent = `${Math.round(gross)} г − ${Math.round(msg.action.tareWeight || 0)} г тари = ${Math.round(totals.grams)} г`;
+      }
+    }
+    saveAssistantActionDraft(messageId);
   }
 
   function confirmAssistantFood(messageId) {
@@ -3221,6 +3455,7 @@ ${foodGuidance}
       });
     });
     action.status = 'added'; action.date = date; action.time = time; action.meal = meal;
+    closeAssistantActionModal(false);
     persistState(); persistAssistantMessages();
     if (date === selectedDateKey) renderDiary();
     renderAssistantChat();
@@ -3236,6 +3471,7 @@ ${foodGuidance}
   function discardAssistantAction(messageId) {
     const message = assistantMessages.find(m => m.id === messageId);
     if (!message?.action) return;
+    if (assistantActionActiveMessageId === messageId) closeAssistantActionModal(false);
     message.action.status = 'discarded';
     message.action = null;
     message.text += '\n\nДодавання скасовано.';
@@ -4885,6 +5121,14 @@ ${foodGuidance}
     }
     if (appState.gdrive.connected) syncGdrive('', true);
   });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && assistantActionActiveMessageId) closeAssistantActionModal();
+  });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateAssistantActionModalViewport);
+    window.visualViewport.addEventListener('scroll', updateAssistantActionModalViewport);
+  }
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;

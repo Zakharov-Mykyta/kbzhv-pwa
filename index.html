@@ -660,6 +660,58 @@
       }
     }
 
+    /* iPhone portrait: one compact tab bar, with the Home Indicator area painted by the same surface. */
+    @media screen and (max-width:479px) and (orientation:portrait) {
+      .desktop-stage {
+        height:100dvh !important;
+        min-height:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+      }
+      .iphone-shell {
+        height:100dvh !important;
+        min-height:0 !important;
+        padding-top:env(safe-area-inset-top, 0px) !important;
+        padding-bottom:0 !important;
+        box-sizing:border-box !important;
+      }
+      #appShell > nav.shrink-0,
+      html.pwa-standalone #appShell > nav.shrink-0 {
+        position:relative !important;
+        inset:auto !important;
+        bottom:auto !important;
+        flex:0 0 auto !important;
+        flex-shrink:0 !important;
+        height:calc(50px + env(safe-area-inset-bottom, 0px)) !important;
+        min-height:0 !important;
+        max-height:none !important;
+        padding:3px 8px calc(env(safe-area-inset-bottom, 0px) + 2px) !important;
+        margin:0 !important;
+        display:grid !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+        grid-template-rows:44px !important;
+        align-items:stretch !important;
+        box-sizing:border-box !important;
+        background:#1C1C1E !important;
+        background-image:none !important;
+        border-top:1px solid rgba(255,255,255,.08) !important;
+        -webkit-backdrop-filter:none !important;
+        backdrop-filter:none !important;
+        transform:none;
+      }
+      #appShell > nav.shrink-0 > button {
+        width:100%;
+        height:44px;
+        min-height:44px;
+        min-width:0;
+        padding:0 !important;
+        margin:0 !important;
+        align-self:start;
+        justify-content:center;
+        gap:2px !important;
+      }
+    }
+
     /* Keep assistant messages legible: normal word boundaries, no mid-word splitting. */
     .assistant-bubble-user { background:#D8B98A !important; color:#241D13 !important; }
     .assistant-message-user .assistant-bubble { overflow-wrap:break-word !important; word-break:normal !important; }
@@ -757,12 +809,8 @@
 
         <!-- Daily Macro Rings -->
         <section class="macro-rings-card bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
-          <div class="flex items-center justify-between mb-3 px-0.5">
-            <div>
-              <h2 class="text-[13px] font-semibold text-white">Прогрес за день</h2>
-              <p class="text-[10px] text-[#8E8E93] mt-0.5">Спожито від добової цілі</p>
-            </div>
-            <span class="text-[10px] text-[#8E8E93] font-medium">КБЖВ</span>
+          <div class="mb-2 px-0.5">
+            <h2 class="text-[13px] font-semibold text-white">За день</h2>
           </div>
           <div class="grid grid-cols-4 gap-1.5">
             <div class="macro-ring-item" style="--ring-color:#D8B98A">
@@ -811,7 +859,7 @@
       <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08] flex items-center justify-between gap-2">
         <div>
           <h1 class="text-[22px] font-bold tracking-tight text-white">Статистика</h1>
-          <p id="statHeaderSubtitle" class="text-[12px] text-[#8E8E93] mt-0.5">Останні 7 днів</p>
+          <p id="statHeaderSubtitle" class="sr-only" aria-live="polite">Останні 7 днів</p>
         </div>
 
         <!-- Period Dropdown -->
@@ -880,7 +928,7 @@
             <div>
               <span id="chartMetricSubtitle" class="text-[11px] uppercase tracking-wider text-[#8E8E93] font-semibold">Середнє за день</span>
               <div class="flex items-baseline gap-1.5 mt-0.5">
-                <span id="chartAvgValue" class="text-[26px] font-bold text-white">1 725</span>
+                <span id="chartAvgValue" class="text-[26px] font-bold text-white">—</span>
                 <span id="chartAvgUnit" class="text-[14px] font-semibold text-[#D8B98A]">ккал</span>
               </div>
             </div>
@@ -891,7 +939,7 @@
           </div>
 
           <!-- Interactive Bar Tooltip -->
-          <div id="barDetailPill" class="mb-2 px-3 py-1.5 rounded-[10px] bg-[#2C2C2E] text-[12px] text-white flex items-center justify-between">
+          <div id="barDetailPill" class="hidden mb-2 px-3 py-1.5 rounded-[10px] bg-[#2C2C2E] text-[12px] text-white flex items-center justify-between">
             <span id="barDetailLabel" class="text-[#8E8E93]"></span>
             <span id="barDetailVal" class="font-semibold text-white"></span>
           </div>
@@ -910,24 +958,21 @@
         <!-- 2x2 Averages Summary -->
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
-            <span class="text-[12px] text-[#8E8E93] block">Середні калорії</span>
-            <span id="avgGridKcal" class="text-[20px] font-bold text-[#D8B98A] mt-0.5 block">1 725 ккал</span>
-            <span id="avgGridDeficit" class="text-[11px] text-[#8E8E93] mt-0.5 block">Дефіцит ~775 ккал/д</span>
+            <span class="text-[12px] text-[#8E8E93] block">Калорії</span>
+            <span id="avgGridKcal" class="text-[20px] font-bold text-[#D8B98A] mt-0.5 block">—</span>
+            <span id="avgGridDeficit" class="text-[11px] text-[#8E8E93] mt-0.5 block">—</span>
           </div>
           <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
-            <span class="text-[12px] text-[#8E8E93] block">Середній білок</span>
-            <span id="avgGridProtein" class="text-[20px] font-bold text-[#0A84FF] mt-0.5 block">112 г</span>
-            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Захист м'язів та кору</span>
+            <span class="text-[12px] text-[#8E8E93] block">Білки</span>
+            <span id="avgGridProtein" class="text-[20px] font-bold text-[#0A84FF] mt-0.5 block">—</span>
           </div>
           <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
-            <span class="text-[12px] text-[#8E8E93] block">Середні жири</span>
-            <span id="avgGridFat" class="text-[20px] font-bold text-[#FF9F0A] mt-0.5 block">61 г</span>
-            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Гормональний баланс</span>
+            <span class="text-[12px] text-[#8E8E93] block">Жири</span>
+            <span id="avgGridFat" class="text-[20px] font-bold text-[#FF9F0A] mt-0.5 block">—</span>
           </div>
           <div class="bg-[#1C1C1E] rounded-[20px] p-3.5 border border-white/[0.08]">
-            <span class="text-[12px] text-[#8E8E93] block">Середні вуглеводи</span>
-            <span id="avgGridCarb" class="text-[20px] font-bold text-[#BF5AF2] mt-0.5 block">164 г</span>
-            <span class="text-[11px] text-[#8E8E93] mt-0.5 block">Енергія на орбітрек</span>
+            <span class="text-[12px] text-[#8E8E93] block">Вуглеводи</span>
+            <span id="avgGridCarb" class="text-[20px] font-bold text-[#BF5AF2] mt-0.5 block">—</span>
           </div>
         </div>
       </main>
@@ -937,7 +982,7 @@
     <div id="viewAssistant" class="flex-1 flex flex-col overflow-hidden">
       <header class="shrink-0 px-4 pt-3 pb-3 bg-black border-b border-white/[0.08] flex items-center justify-between gap-3">
         <div class="min-w-0">
-          <h1 class="text-[22px] font-bold tracking-tight text-white">Шеф</h1><span id="assistantHeaderStatus" class="hidden" aria-hidden="true"></span>
+          <h1 class="text-[22px] font-bold tracking-tight text-white">Шеф</h1>
           
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -951,14 +996,8 @@
       </header>
 
       <main id="assistantScrollArea" class="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-4 space-y-3">
-        <section id="assistantWelcome" class="assistant-welcome rounded-[20px] border border-white/[0.08] bg-[#1C1C1E] p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="assistant-avatar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 13.5 9l6.2 1.5-6.2 1.5-1.5 6.2-1.5-6.2L4.3 10.5 10.5 9 12 2.8Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg></span>
-            <span class="text-[12px] font-semibold text-[#D8B98A]">ШЕФ</span>
-          </div>
-          
-          
-          <div class="assistant-quick-prompts mt-1">
+        <section id="assistantWelcome" class="assistant-welcome px-1">
+          <div class="assistant-quick-prompts">
             <button type="button" onclick="sendAssistantQuickPrompt('Підсумуй моє харчування за сьогодні та покажи прогрес КБЖВ.')">Підсумок за сьогодні</button>
             <button type="button" onclick="sendAssistantQuickPrompt('Що я вже з’їв сьогодні?')">Що я вже з’їв?</button>
             <button type="button" onclick="sendAssistantQuickPrompt('Порівняй моє харчування за останні 7 днів.')">Аналіз за тиждень</button>
@@ -986,9 +1025,8 @@
               <div class="wave-bar"></div>
               <div class="wave-bar"></div>
             </div>
-            <span class="text-[12px] font-medium text-[#FF453A]">Диктування iOS...</span>
+            <span class="text-[12px] font-medium text-[#FF453A]">Слухаю…</span>
           </div>
-          <span class="text-[11px] text-white/70">Слухаю</span>
         </div>
 
         <!-- AI Parsing Banner -->
@@ -1063,7 +1101,7 @@
             <span class="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style="background:rgba(216,185,138,.13);color:#D8B98A">
               <svg class="pwa-update-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2"/></svg>
             </span>
-            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span><span id="appVersionLabel" class="block text-[10px] text-[#77777F] mt-0.5">Версія 18.1.0</span></span>
+            <span class="flex-1 min-w-0"><span class="block text-[14px] font-semibold text-white">Оновити застосунок</span><span id="pwaUpdateStatus" class="block text-[11px] text-[#8E8E93] mt-0.5">Перевірити нову версію</span><span id="appVersionLabel" class="block text-[10px] text-[#77777F] mt-0.5">Версія 18.2.1</span></span>
             <svg class="w-4 h-4 text-[#8E8E93] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         </section>
@@ -1073,26 +1111,26 @@
           <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93] px-1 mb-2">Резервна копія</h2>
           <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
             <button type="button" onclick="shareBackup()" class="backup-action-btn backup-action-primary"><span class="backup-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h10a4 4 0 0 0 .3-8A5.5 5.5 0 0 0 6.7 9.2 4.7 4.7 0 0 0 7 18.5Z"/><path d="M12 12v7M9.5 16.5 12 19l2.5-2.5"/></svg></span><span>Зберегти копію у Файли / Диск</span></button>
-            <button type="button" onclick="document.getElementById('importFileInput').click()" class="backup-action-btn backup-action-secondary"><span class="backup-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8.5 7.5 12 4l3.5 3.5M5 14v5.5h14V14"/></svg></span><span>Відновити з файлу JSON</span></button>
+            <button type="button" onclick="document.getElementById('importFileInput').click()" class="backup-action-btn backup-action-secondary"><span class="backup-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8.5 7.5 12 4l3.5 3.5M5 14v5.5h14V14"/></svg></span><span>Відновити копію</span></button>
             <input id="importFileInput" type="file" accept="application/json,.json" class="hidden" onchange="importDataJson(event)" />
             <div class="pt-3 border-t border-white/[0.07] space-y-3">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-[12px] bg-[#2C2C2E] text-[#A1A1AA] flex items-center justify-center shrink-0"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h10a4 4 0 0 0 .3-8A5.5 5.5 0 0 0 6.7 9.2 4.7 4.7 0 0 0 7 18.5Z"/><path d="M8.5 14.5h7"/></svg></div>
                 <div class="min-w-0">
-                  <h3 class="text-[15px] font-semibold text-white">Синхронізація Google Диск</h3>
+                  <h3 class="text-[15px] font-semibold text-white">Google Диск</h3>
                   <p id="gdriveStatus" class="text-[12px] text-[#8E8E93]">Не підключено</p>
                 </div>
               </div>
               <div id="gdriveSetupView" class="space-y-2">
                 <input id="gdriveClientId" type="text" onfocus="gdLoadLib().catch(()=>{})" placeholder="OAuth Client ID (…apps.googleusercontent.com)" autocapitalize="off" autocorrect="off" spellcheck="false" class="w-full bg-[#2C2C2E] rounded-[12px] px-3 py-2.5 text-[13px] text-white outline-none placeholder:text-[#8E8E93]" />
-                <button type="button" onclick="connectGdrive()" class="w-full py-3 rounded-[14px] bg-white active:scale-[0.98] transition text-[15px] font-semibold text-black">Підключити Google Диск</button>
+                <button type="button" onclick="connectGdrive()" class="w-full py-3 rounded-[14px] bg-white active:scale-[0.98] transition text-[15px] font-semibold text-black">Підключити</button>
               </div>
               <div id="gdriveConnectedView" class="hidden space-y-3">
                 <div class="flex items-center justify-between">
-                  <span class="text-[13px] text-white">Автосинхронізація змін</span>
+                  <span class="text-[13px] text-white">Автосинхронізація</span>
                   <button type="button" id="gdriveAutoToggle" onclick="toggleGdriveAutoSync()" class="w-[46px] h-[28px] rounded-full bg-[#D8B98A] p-[2px] transition-colors flex items-center justify-end"><span class="w-[24px] h-[24px] rounded-full bg-white shadow block"></span></button>
                 </div>
-                <button type="button" onclick="syncGdrive('', false)" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.98] transition text-[13px] font-semibold text-[#D8B98A]">Синхронізувати зараз</button>
+                <button type="button" onclick="syncGdrive('', false)" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.98] transition text-[13px] font-semibold text-[#D8B98A]">Синхронізувати</button>
                 <button type="button" onclick="disconnectGdrive()" class="w-full py-2 text-[12px] font-semibold text-[#FF453A]">Відключити</button>
               </div>
             </div>
@@ -1102,16 +1140,16 @@
         <!-- 2. My Plates (Auto-Tare) -->
         <div id="platesSettingsSection" class="rounded-[22px] transition-all duration-500">
           <div class="flex items-center justify-between px-1 mb-2">
-            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Мій посуд (авто-тара)</h2>
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Мій посуд</h2>
           </div>
 
           <div class="bg-[#1C1C1E] rounded-[20px] border border-white/[0.08] overflow-hidden">
             <div id="platesSettingsList" class="divide-y divide-white/[0.07]"></div>
 
             <form onsubmit="addNewPlate(event)" class="p-3 bg-[#2C2C2E]/40 border-t border-white/[0.07] flex items-center gap-2">
-              <input id="newPlateName" type="text" placeholder="Напр. Чашка, піала або тарілка"
+              <input id="newPlateName" type="text" placeholder="Назва посуду"
                      class="flex-1 min-w-0 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-3 py-2 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]" />
-              <input id="newPlateWeight" type="number" min="10" max="2500" placeholder="Тара (г)"
+              <input id="newPlateWeight" type="number" min="10" max="2500" placeholder="Вага, г"
                      class="w-24 bg-[#2C2C2E] text-[13px] text-white placeholder-[#8E8E93] rounded-[10px] px-2.5 py-2 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]" />
               <button type="submit" class="px-3.5 py-2 rounded-[10px] bg-[#D8B98A] text-black font-bold text-[13px] active:scale-95 transition">
                 +
@@ -1149,39 +1187,38 @@
         <!-- 4. Gemini AI -->
         <section class="rounded-[22px]">
           <div class="px-1 mb-2">
-            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">ШІ-шеф · Gemini</h2>
+            <h2 class="text-[12px] font-semibold uppercase tracking-wider text-[#8E8E93]">Gemini</h2>
             
           </div>
           <div class="bg-[#1C1C1E] rounded-[20px] p-4 border border-white/[0.08] space-y-3">
             <div class="space-y-1.5">
-              <label for="apiKeyInput" class="text-[14px] font-medium text-white block">Gemini API-ключ</label>
+              <label for="apiKeyInput" class="text-[14px] font-medium text-white block">API-ключ</label>
               <div class="flex gap-2">
-                <input id="apiKeyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Встав API-ключ Google AI Studio"
+                <input id="apiKeyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="API-ключ"
                        class="flex-1 min-w-0 bg-[#2C2C2E] text-[14px] text-white placeholder-[#8E8E93] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]" />
                 <button type="button" onclick="toggleApiKeyVisibility()" aria-label="Показати або приховати ключ" class="px-3 py-2 rounded-[12px] bg-[#2C2C2E] text-[#8E8E93] hover:text-white"><svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></button>
               </div>
-              <p class="text-[11px] text-[#8E8E93] leading-relaxed">Ключ зберігається лише в локальному сховищі цього браузера й не додається до резервної копії або Google Диска. Не публікуй його у відкритому коді.</p>
+              <p class="text-[11px] text-[#8E8E93] leading-relaxed">Ключ зберігається в цьому браузері й не входить до резервної копії. Не додавай його до публічного коду.</p>
             </div>
 
-            <button id="loadGeminiModelsBtn" type="button" onclick="loadGeminiModels()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-[0.99] transition text-[13px] font-semibold text-[#D8B98A]">Перевірити ключ і завантажити моделі</button>
-            <p id="geminiStatus" role="status" aria-live="polite" class="text-[11px] text-[#8E8E93] leading-relaxed">Ще не перевірено. Встав ключ і завантаж доступні моделі.</p>
+            <button id="loadGeminiModelsBtn" type="button" onclick="loadGeminiModels()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] hover:bg-[#3A3A3C] active:scale-[0.99] transition text-[13px] font-semibold text-[#D8B98A]">Завантажити моделі</button>
+            <p id="geminiStatus" role="status" aria-live="polite" class="text-[11px] text-[#8E8E93] leading-relaxed"></p>
 
             <div class="pt-3 border-t border-white/[0.07] space-y-1.5">
-              <label for="geminiModelSelect" class="text-[13px] font-medium text-white block">Модель для розрахунку</label>
+              <label for="geminiModelSelect" class="text-[13px] font-medium text-white block">Модель</label>
               <select id="geminiModelSelect" class="w-full bg-[#2C2C2E] text-white text-[13px] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]">
-                <option value="">Спочатку завантаж моделі</option>
+                <option value="">Завантаж моделі</option>
               </select>
-              <p class="text-[11px] text-[#8E8E93]">У списку показуються моделі, які твій ключ може викликати через generateContent.</p>
-              <button id="testGeminiBtn" type="button" onclick="testGeminiConnection()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.99] transition text-[13px] font-semibold text-white">Тестувати роботу ШІ</button>
+              <button id="testGeminiBtn" type="button" onclick="testGeminiConnection()" class="w-full py-2.5 rounded-[12px] bg-[#2C2C2E] active:scale-[0.99] transition text-[13px] font-semibold text-white">Перевірити з'єднання</button>
             </div>
 
             <div class="pt-3 border-t border-white/[0.07] space-y-1.5">
-              <label for="geminiPromptInput" class="text-[13px] font-medium text-white block">Інструкція для ШІ (промт)</label>
+              <label for="geminiPromptInput" class="text-[13px] font-medium text-white block">Промт для ШІ</label>
               <textarea id="geminiPromptInput" rows="7" class="w-full resize-y bg-[#2C2C2E] text-[12px] leading-relaxed text-white placeholder:text-[#8E8E93] rounded-[12px] px-3 py-2.5 border border-white/[0.06] focus:outline-none focus:border-[#D8B98A]"></textarea>
-              <p class="text-[11px] text-[#8E8E93]">Саме ця інструкція визначає, як ШІ розбиває опис на позиції та оцінює КБЖВ. Можеш залишити стандартний текст або змінити його.</p>
+              <p class="text-[11px] text-[#8E8E93]">Визначає, як ШІ розпізнає страви та оцінює КБЖВ.</p>
             </div>
 
-            <button type="button" onclick="saveGeminiSettings()" class="w-full py-3 rounded-[14px] bg-[#D8B98A] active:scale-[0.98] transition text-[14px] font-semibold text-white">Зберегти налаштування ШІ</button>
+            <button type="button" onclick="saveGeminiSettings()" class="w-full py-3 rounded-[14px] bg-[#D8B98A] active:scale-[0.98] transition text-[14px] font-semibold text-white">Зберегти налаштування</button>
           </div>
         </section>
 
@@ -1194,7 +1231,7 @@
               <span class="text-base">↺</span>
             </button>
           </div>
-          <p class="text-[11px] text-[#8E8E93] px-1 mt-2">Перед скиданням радимо створити резервну копію вище.</p>
+          <p class="text-[11px] text-[#8E8E93] px-1 mt-2">Спершу збережи резервну копію.</p>
         </div>
 
       </main>
@@ -1265,32 +1302,29 @@
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-[18px] font-bold text-white">Деталі запису</h3>
-          <p class="text-[12px] text-[#8E8E93] mt-0.5">Перевір посуд, прийом їжі та час</p>
         </div>
         <button type="button" onclick="closeFoodRequestSheet()" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
       </div>
 
       <div class="rounded-[14px] bg-[#2C2C2E] border border-white/[0.06] px-3.5 py-3 mb-4">
-        <div class="text-[11px] font-semibold text-[#8E8E93] mb-1">Твій запит</div>
         <p id="foodRequestText" class="text-[14px] leading-relaxed text-white break-words"></p>
-        <div id="foodRequestPhotoWrap" class="hidden mt-3"><img id="foodRequestPhoto" alt="Фото для розпізнавання" class="max-h-36 max-w-full rounded-[12px] object-cover border border-white/[0.08]" /><p class="text-[11px] text-[#8E8E93] mt-2">Фото буде надіслано до Gemini API для аналізу. Зображення не зберігається в щоденнику.</p></div>
+        <div id="foodRequestPhotoWrap" class="hidden mt-3"><img id="foodRequestPhoto" alt="Фото для розпізнавання" class="max-h-36 max-w-full rounded-[12px] object-cover border border-white/[0.08]" /><p class="text-[11px] text-[#8E8E93] mt-2">Фото буде передано Gemini й не збережеться в щоденнику.</p></div>
       </div>
 
       <div class="space-y-4">
         <div class="space-y-1.5">
-          <label for="foodRequestGrams" class="text-[12px] text-[#8E8E93] font-medium block">Загальна вага страви</label>
+          <label for="foodRequestGrams" class="text-[12px] text-[#8E8E93] font-medium block">Вага, г</label>
           <div class="flex items-center gap-2">
             <input id="foodRequestGrams" type="number" min="1" max="10000" inputmode="numeric" placeholder="Не вказано" class="w-full min-w-0 bg-[#2C2C2E] text-white text-[16px] font-semibold rounded-[12px] px-3 py-3 border border-white/[0.08] focus:outline-none focus:border-[#D8B98A]" />
             <span class="text-[14px] font-semibold text-[#8E8E93]">г</span>
           </div>
-          <p id="foodRequestWeightHint" class="text-[11px] text-[#8E8E93]" aria-live="polite">Можеш вказати вагу однієї страви або загальну вагу всіх продуктів у запиті.</p>
+          <p id="foodRequestWeightHint" class="text-[11px] text-[#8E8E93]" aria-live="polite">Без ваги ШІ оцінить порцію.</p>
         </div>
         <div class="space-y-1.5">
           <label for="foodRequestPlateSelect" class="text-[12px] text-[#8E8E93] font-medium block">Посуд для зважування</label>
           <select id="foodRequestPlateSelect" class="w-full min-w-0 bg-[#2C2C2E] text-white text-[14px] rounded-[12px] px-3 py-3 border border-white/[0.08] focus:outline-none focus:border-[#D8B98A]">
             <option value="">Без посуду</option>
           </select>
-          <p class="text-[11px] text-[#8E8E93]">Якщо вказана загальна вага й вибраний посуд, тара віднімається автоматично.</p>
         </div>
 
         <div class="space-y-1.5">
@@ -1331,7 +1365,6 @@
           <div class="flex items-center justify-between">
             <div>
               <h4 class="text-[13px] font-semibold text-white">Склад тарілки</h4>
-              <p class="text-[10px] text-[#8E8E93] mt-0.5">Частка кожного продукту за вагою</p>
             </div>
             <span id="dishIngredientCount" class="text-[10px] text-[#8E8E93]"></span>
           </div>
@@ -1344,11 +1377,11 @@
           </div>
           <div class="rounded-[13px] bg-[#1C1C1E] border border-white/[0.06] p-3 space-y-2">
             <div class="flex items-center justify-between gap-2">
-              <label for="dishShareSlider" class="text-[11px] text-[#8E8E93]">Частка обраного продукту</label>
+              <label for="dishShareSlider" class="text-[11px] text-[#8E8E93]">Частка продукту</label>
               <strong id="dishShareValue" class="text-[13px] text-white tabular-nums">0%</strong>
             </div>
             <input id="dishShareSlider" type="range" min="1" max="99" step="1" value="50" class="w-full" oninput="setDishIngredientShare(this.value)" />
-            <p class="text-[10px] text-[#77777F]">Зміна частки автоматично перерозподіляє решту ваги між іншими продуктами.</p>
+            <p class="text-[10px] text-[#77777F]">Решта — автоматично.</p>
           </div>
           <div class="space-y-2">
             <div class="flex items-center justify-between">
@@ -1388,7 +1421,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-2 border-t border-white/[0.07]">
-            <span class="text-[13px] font-medium text-white">Чиста вага їжі (нетто)</span>
+            <span class="text-[13px] font-medium text-white">Вага їжі</span>
             <div class="flex items-center gap-1">
               <input id="editItemGrams" type="number" min="5" max="2000" class="w-20 text-right bg-[#1C1C1E] text-[#D8B98A] font-bold text-[16px] rounded-[8px] px-2 py-1 focus:outline-none" />
               <span class="text-[13px] text-[#8E8E93]">г</span>
@@ -1448,11 +1481,11 @@
   <section id="barcodeSheet" class="bottom-sheet absolute bottom-0 left-0 right-0 z-50 p-5 max-h-[92%] overflow-y-auto no-scrollbar bg-[#1C1C1E] rounded-t-[28px] border-t border-white/15 shadow-2xl">
     <div class="w-10 h-1.5 rounded-full bg-white/20 mx-auto mb-4"></div>
     <div class="flex items-center justify-between mb-3">
-      <div><h3 class="text-[19px] font-semibold text-white">Сканер продуктів</h3><p class="text-[12px] text-[#8E8E93] mt-0.5">Наведи камеру на штрихкод упаковки</p></div>
+      <div><h3 class="text-[19px] font-semibold text-white">Сканер продуктів</h3></div>
       <button type="button" onclick="closeBarcodeSheet()" aria-label="Закрити сканер" class="w-8 h-8 rounded-full bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center text-sm">✕</button>
     </div>
     <div id="barcodeReader" class="mb-3"></div>
-    <p id="barcodeStatus" class="barcode-status mb-3" role="status" aria-live="polite">Готую камеру… Дозволь доступ до камери.</p>
+    <p id="barcodeStatus" class="barcode-status mb-3" role="status" aria-live="polite">Підключаю камеру…</p>
     <div class="barcode-lookup-row">
       <input id="barcodeManualInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Або введи штрихкод вручну" class="barcode-field" />
       <button type="button" id="barcodeLookupBtn" onclick="lookupBarcodeManually()" class="rounded-[12px] bg-[#D8B98A] text-[#241D13] text-[14px] font-bold">Знайти</button>
@@ -1476,13 +1509,13 @@
       <div class="mt-3 flex items-center justify-between"><span class="text-[12px] text-[#8E8E93]">Калорійність порції</span><b id="barcodeServingKcal" class="text-[18px] text-[#D8B98A]">— ккал</b></div>
       <button type="button" onclick="addScannedProduct()" class="w-full rounded-[12px] py-3 mt-3 font-semibold bg-[#D8B98A] text-black active:scale-95 transition">Додати продукт</button>
     </div>
-    <p class="text-[10px] text-[#8E8E93] leading-relaxed mt-3">Дані надає <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener noreferrer" class="text-[#D8B98A] underline">Open Food Facts</a> (ODbL). Перевіряй етикетку: дані спільноти можуть бути неповними або застарілими.</p>
+    <p class="text-[10px] text-[#8E8E93] leading-relaxed mt-3">Дані: <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener noreferrer" class="text-[#D8B98A] underline">Open Food Facts</a> (ODbL). Перевір етикетку.</p>
   </section>
 </div>
 
 <script>
   // ==================== CONSTANTS & HISTORICAL DATA ====================
-  const APP_VERSION = '18.1.0';
+  const APP_VERSION = '18.2.1';
   let TODAY_KEY = toDateKey(new Date());
 
   const DEFAULT_GEMINI_PROMPT = `Ти — уважний шеф для щоденного обліку харчування. Проаналізуй повідомлення користувача українською мовою та, якщо додано фото, саме фото разом із текстом. Перетвори дані на список з'їдених або випитих позицій.
@@ -1550,7 +1583,11 @@
   let barcodeScannerInstance = null;
   let barcodeScannerStarting = false;
   let barcodeStartPromise = null;
+  let barcodeStopPromise = null;
+  let barcodeActiveStream = null;
   let barcodeSessionId = 0;
+  let barcodeResumePending = false;
+  let barcodeResultHandled = false;
   let scannedProduct = null;
   let barcodeLibraryPromise = null;
   let geminiAvailableModels = [];
@@ -1774,7 +1811,7 @@
 
       let bodyHtml = '';
       if (groups.length === 0) {
-        bodyHtml = `<div class="px-4 py-2"><span class="text-[11px] text-[#8E8E93]/70">Поки порожньо</span></div>`;
+        bodyHtml = '';
       } else {
         bodyHtml = `<div class="divide-y divide-white/[0.06]">` + groups.map(group => {
           const groupItems = group.items;
@@ -1786,8 +1823,7 @@
           const fat = groupItems.reduce((sum, item) => sum + Number(item.fat || 0), 0);
           const carb = groupItems.reduce((sum, item) => sum + Number(item.carb || 0), 0);
           const title = isDish ? groupItems.map(x => x.name).join(' · ') : first.name;
-          const plate = appState.plates.find(p => p.id === group.plateId);
-          const meta = `${esc(group.time || first.time || '')} · ${formatSpacedInt(grams)} г${isDish && groupItems.length > 1 ? ` · ${groupItems.length} ${groupItems.length < 5 ? 'складники' : 'складників'}` : ''}${plate ? ` · ${esc(plate.name)}` : ''}`;
+          const meta = `${esc(group.time || first.time || '')} · ${formatSpacedInt(grams)} г`;
           return `
             <button onclick="openEditSheet('${first.id}')" class="meal-entry-card w-full text-left px-4 py-3 hover:bg-white/[0.03] active:bg-white/[0.06] transition flex items-center justify-between gap-3">
               <div class="min-w-0 flex-1">
@@ -2102,7 +2138,7 @@
   let _rec = null;
   let _recCleanupTimer = null;
   function resetVoiceRecognition(rec) {
-    if (_rec !== rec) return;
+    if (rec && _rec !== rec) return;
     _rec = null;
     if (_recCleanupTimer) { clearTimeout(_recCleanupTimer); _recCleanupTimer = null; }
     const banner = document.getElementById('voiceBanner');
@@ -2112,6 +2148,24 @@
     mic?.setAttribute('aria-pressed', 'false');
     updateComposerActions();
   }
+  function scheduleVoiceCleanup(rec, delay = 1800) {
+    if (_rec !== rec) return;
+    if (_recCleanupTimer) clearTimeout(_recCleanupTimer);
+    _recCleanupTimer = setTimeout(() => {
+      if (_rec !== rec) return;
+      // Some iOS standalone sessions fail to dispatch `end` after stop/abort.
+      // Release the recognizer anyway so the next tap always creates a fresh session.
+      try { rec.abort(); } catch (ignored) {}
+      resetVoiceRecognition(rec);
+    }, delay);
+  }
+  function cancelVoiceRecognitionForBackground() {
+    const rec = _rec;
+    if (!rec) return;
+    // Clear our state before aborting so late WebKit callbacks cannot touch a new session.
+    resetVoiceRecognition(rec);
+    try { rec.abort(); } catch (ignored) {}
+  }
   document.getElementById('micBtn').addEventListener('click', () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     const banner = document.getElementById('voiceBanner');
@@ -2119,7 +2173,14 @@
     const mic = document.getElementById('micBtn');
     if (!SR) { showToast('Голос недоступний. Скористайся 🎤 на клавіатурі', '🎙'); input.focus(); return; }
     if (_rec) {
-      try { _rec.stop(); } catch (error) { resetVoiceRecognition(_rec); }
+      const activeRec = _rec;
+      try {
+        activeRec.stop();
+        scheduleVoiceCleanup(activeRec, 1800);
+      } catch (error) {
+        try { activeRec.abort(); } catch (ignored) {}
+        resetVoiceRecognition(activeRec);
+      }
       return;
     }
     let rec;
@@ -2132,6 +2193,7 @@
       const base = input.value ? input.value.trim() + ' ' : '';
       rec.onstart = () => {
         if (_rec !== rec) return;
+        if (_recCleanupTimer) { clearTimeout(_recCleanupTimer); _recCleanupTimer = null; }
         banner.classList.remove('hidden');
         mic.classList.add('is-recording');
         mic.setAttribute('aria-pressed', 'true');
@@ -2142,14 +2204,13 @@
         updateComposerActions();
       };
       rec.onerror = event => {
+        if (_rec !== rec) return;
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           showToast('Немає доступу до мікрофона. Перевір дозвіл для сайту в налаштуваннях iPhone.', '⚠️');
         } else if (event.error !== 'aborted' && event.error !== 'no-speech') {
           showToast('Голосове введення перервано. Спробуй ще раз.', '⚠️');
         }
-        try { rec.abort(); } catch (error) {}
-        if (_recCleanupTimer) clearTimeout(_recCleanupTimer);
-        _recCleanupTimer = setTimeout(() => resetVoiceRecognition(rec), 1200);
+        scheduleVoiceCleanup(rec, 700);
       };
       rec.onend = () => resetVoiceRecognition(rec);
       rec.start();
@@ -2477,17 +2538,17 @@
     if (Number.isFinite(value) && value > 0 && plate && !hasMultipleExplicitFoodWeights(pendingFoodRequest?.text)) {
       const net = Math.round(value) - Number(plate.weight || 0);
       hint.textContent = net > 0
-        ? `${Math.round(value)} г брутто − ${Math.round(plate.weight)} г тари (${plate.name}) = ${net} г чистої їжі. Саме ${net} г буде розподілено між інгредієнтами.`
-        : 'Вага посуду має бути меншою за загальну вагу.';
+        ? `Брутто ${Math.round(value)} г − тара ${Math.round(plate.weight)} г = ${net} г їжі.`
+        : 'Вага менша за тару.';
       hint.classList.toggle('text-[#FF9F0A]', net <= 0);
     } else if (Number.isFinite(value) && value > 0 && plate) {
       hint.classList.remove('text-[#FF9F0A]');
-      hint.textContent = `У запиті вказано вагу інгредієнтів окремо. Тара ${plate.weight} г не відніматиметься від їхньої суми.`;
+      hint.textContent = `Вага інгредієнтів задана окремо — тару не віднімаю.`;
     } else {
       hint.classList.remove('text-[#FF9F0A]');
       hint.textContent = Number.isFinite(value) && value > 0
-        ? `Буде передано ${Math.round(value)} г чистої ваги їжі.`
-        : 'Вагу не визначено. Можеш ввести її вручну або залишити поле порожнім.';
+        ? `Вага їжі: ${Math.round(value)} г.`
+        : 'Без ваги ШІ оцінить порцію.';
     }
   }
 
@@ -2714,7 +2775,7 @@
         document.getElementById('foodImagePreviewName').textContent = file.name || 'Фото страви';
         document.getElementById('foodImagePreview').classList.remove('hidden');
         updateComposerActions();
-        showToast('Фото додано до запиту', '📷');
+        showToast('Фото додано', '📷');
       } catch (error) {
         removeFoodImage();
         showToast(error.message || 'Не вдалося додати фото', '⚠️');
@@ -2746,15 +2807,6 @@
   });
 
   // ==================== ШЕФ ASSISTANT ====================
-  function updateAssistantHeaderStatus() {
-    const el = document.getElementById('assistantHeaderStatus');
-    if (!el) return;
-    el.textContent = appState.apiKey && appState.geminiModel
-      ? `Gemini · ${appState.geminiModel}`
-      : 'Gemini не налаштовано · відкрий Налаштування';
-    el.className = `text-[12px] mt-0.5 truncate ${appState.apiKey && appState.geminiModel ? 'text-[#D8B98A]' : 'text-[#FF9F0A]'}`;
-  }
-
   function scrollAssistantToBottom() {
     const area = document.getElementById('assistantScrollArea');
     if (area) area.scrollTop = area.scrollHeight;
@@ -2833,7 +2885,7 @@
     const foodGuidance = (appState.geminiPrompt || DEFAULT_GEMINI_PROMPT)
       .replace(/9\. Відповідай виключно[\s\S]*$/i, '')
       .trim();
-    return `Ти — Шеф, персональний шеф Крихти з харчування та щоденника КБЖВ. Завжди відповідай українською, природно, доброзичливо та по суті.
+    return `Ти — Шеф, персональний шеф Крихти з харчування та щоденника КБЖВ. Завжди відповідай українською, природно, доброзичливо та по суті. Пиши коротко: без вступів, повторів запиту, очевидних пояснень і декоративних підзаголовків. Зазвичай достатньо 1–3 коротких речень. Списки використовуй лише коли вони справді полегшують сприйняття.
 
 ТВОЇ ЗАВДАННЯ:
 - Відповідай на запитання про калорійність, КБЖВ, продукти, приготування та загальні принципи харчування.
@@ -2950,7 +3002,7 @@ ${foodGuidance}
       const d = parseDateKey(row.date);
       return `<div class="flex-1 flex flex-col items-center gap-1"><div class="h-16 w-full flex items-end"><div class="w-full rounded-t-[5px]" style="height:${h}%;background:#D8B98A;opacity:${row.totals.kcal ? 1 : .2}"></div></div><span class="text-[9px] text-[#8E8E93]">${d.getDate()}/${d.getMonth()+1}</span></div>`;
     }).join('');
-    return `<section class="assistant-summary-card"><div class="flex items-center justify-between mb-2"><b class="text-[12px] text-white">Середнє за ${period === '7d' ? '7' : '30'} днів</b><span class="text-[10px] text-[#8E8E93]">${activeDays} дн. із записами</span></div><div class="grid grid-cols-2 gap-2 mb-3"><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Калорії / день</span><b class="text-[16px] text-[#D8B98A]">${Math.round(avg.kcal)}</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Білок / день</span><b class="text-[16px] text-[#0A84FF]">${Math.round(avg.protein)} г</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Жири / день</span><b class="text-[16px] text-[#FF9F0A]">${Math.round(avg.fat)} г</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Вуглеводи / день</span><b class="text-[16px] text-[#BF5AF2]">${Math.round(avg.carb)} г</b></div></div><div class="flex items-end gap-2 h-[84px]">${bars}</div></section>`;
+    return `<section class="assistant-summary-card"><div class="flex items-center justify-between mb-2"><b class="text-[12px] text-white">Середнє за ${period === '7d' ? '7' : '30'} днів</b><span class="text-[10px] text-[#8E8E93]">${activeDays} дн. із записами</span></div><div class="grid grid-cols-2 gap-2 mb-3"><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Калорії</span><b class="text-[16px] text-[#D8B98A]">${Math.round(avg.kcal)}</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Білок</span><b class="text-[16px] text-[#0A84FF]">${Math.round(avg.protein)} г</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Жири</span><b class="text-[16px] text-[#FF9F0A]">${Math.round(avg.fat)} г</b></div><div class="rounded-[10px] bg-[#2C2C2E] p-2"><span class="text-[9px] text-[#8E8E93] block">Вуглеводи</span><b class="text-[16px] text-[#BF5AF2]">${Math.round(avg.carb)} г</b></div></div><div class="flex items-end gap-2 h-[84px]">${bars}</div></section>`;
   }
 
   function assistantActionCard(action, messageId) {
@@ -2964,9 +3016,9 @@ ${foodGuidance}
     const lines = action.items.map((item, i) => `<div class="assistant-food-line"><div class="min-w-0"><div class="text-[11px] text-white font-medium truncate">${esc(item.name)}</div><div id="assistantActionNutrition_${messageId}_${i}" class="text-[9px] text-[#8E8E93] mt-0.5">${Math.round(item.kcal)} ккал · Б ${formatOneDecimal(item.protein)} · Ж ${formatOneDecimal(item.fat)} · В ${formatOneDecimal(item.carb)}</div></div><div><input type="number" min="1" max="10000" step="1" inputmode="numeric" aria-label="Грами: ${esc(item.name)}" id="assistantActionGrams_${messageId}_${i}" value="${Math.round(item.grams)}" oninput="updateAssistantActionTotal('${messageId}')" /></div></div>`).join('');
     const selectedDate = action.date || selectedDateKey;
     const tareLine = action.appliedPlateId && action.tareWeight
-      ? `${Math.round(action.grossGrams)} г брутто − ${Math.round(action.tareWeight)} г тари = ${Math.round(total.grams)} г їжі`
-      : 'Якщо вибереш посуд, його вагу буде віднято від загальної ваги.';
-    return `<section class="assistant-action-card"><div class="flex items-start justify-between gap-2 mb-2"><div><div class="text-[12px] font-bold text-white">Додати до щоденника?</div><div class="text-[10px] text-[#A1A1AA] mt-0.5">Перевір інгредієнти та вагу перед збереженням</div></div><span class="text-[10px] text-[#D8B98A] font-semibold">${action.items.length} поз.</span></div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Чиста вага їжі</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed">${tareLine}</p><div class="assistant-action-fields mt-2"><div class="assistant-action-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div class="assistant-action-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="assistant-action-field col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="assistant-action-field col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="assistant-action-buttons mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
+      ? `${Math.round(action.grossGrams)} г − ${Math.round(action.tareWeight)} г тари = ${Math.round(total.grams)} г`
+      : '';
+    return `<section class="assistant-action-card"><div class="text-[12px] font-bold text-white mb-2">Перевір запис</div><div class="mb-2">${lines}</div><div class="flex items-center justify-between py-2 border-t border-white/[0.07]"><span class="text-[10px] text-[#A1A1AA]">Усього</span><b id="assistantActionTotal_${messageId}" class="text-[12px] text-white">${Math.round(total.grams)} г</b></div><p id="assistantActionTare_${messageId}" class="text-[9px] text-[#8E8E93] leading-relaxed ${tareLine ? '' : 'hidden'}">${tareLine}</p><div class="assistant-action-fields mt-2"><div class="assistant-action-field"><label for="assistantActionDate_${messageId}">Дата</label><input type="date" id="assistantActionDate_${messageId}" value="${esc(selectedDate)}" /></div><div class="assistant-action-field"><label for="assistantActionTime_${messageId}">Час</label><input type="time" id="assistantActionTime_${messageId}" value="${esc(getCurrentTimeStr())}" /></div><div class="assistant-action-field col-span-2"><label for="assistantActionMeal_${messageId}">Прийом їжі</label><select id="assistantActionMeal_${messageId}">${mealOptions.map(m => `<option value="${m.id}" ${m.id === meal ? 'selected' : ''}>${m.name}</option>`).join('')}</select></div><div class="assistant-action-field col-span-2"><label for="assistantActionPlate_${messageId}">Посуд (необов'язково)</label><select id="assistantActionPlate_${messageId}" onchange="assistantActionPlateChanged('${messageId}')">${plateOptions}</select></div></div><div class="assistant-action-buttons mt-3"><button type="button" class="assistant-action-primary" onclick="confirmAssistantFood('${messageId}')">Додати до щоденника</button><button type="button" class="assistant-action-secondary" onclick="discardAssistantAction('${messageId}')">Скасувати</button></div></section>`;
   }
 
   function renderAssistantChat() {
@@ -2976,7 +3028,7 @@ ${foodGuidance}
     welcome.classList.toggle('hidden', assistantMessages.length > 0);
     list.innerHTML = assistantMessages.map((message) => {
       const isUser = message.role === 'user';
-      const bubble = `<div class="assistant-message ${isUser ? 'assistant-message-user' : 'assistant-message-bot'}">${!isUser ? '<span class="assistant-avatar assistant-avatar-small"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 13.5 9l6.2 1.5-6.2 1.5-1.5 6.2-1.5-6.2L4.3 10.5 10.5 9 12 2.8Z"/></svg></span>' : ''}<div class="min-w-0"><div class="assistant-bubble ${isUser ? 'assistant-bubble-user' : 'assistant-bubble-bot'}">${assistantFormatText(message.text)}</div>${message.hasImage ? '<div class="assistant-photo-chip">▧ Фото додано до запиту</div>' : ''}<div class="assistant-message-meta">${esc(message.timeLabel || '')}</div></div></div>`;
+      const bubble = `<div class="assistant-message ${isUser ? 'assistant-message-user' : 'assistant-message-bot'}">${!isUser ? '<span class="assistant-avatar assistant-avatar-small"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 13.5 9l6.2 1.5-6.2 1.5-1.5 6.2-1.5-6.2L4.3 10.5 10.5 9 12 2.8Z"/></svg></span>' : ''}<div class="min-w-0"><div class="assistant-bubble ${isUser ? 'assistant-bubble-user' : 'assistant-bubble-bot'}">${assistantFormatText(message.text)}</div>${message.hasImage ? '<div class="assistant-photo-chip">▧ Фото</div>' : ''}<div class="assistant-message-meta">${esc(message.timeLabel || '')}</div></div></div>`;
       const summary = !isUser && ['today', 'selected', '7d', '30d'].includes(message.showSummary) ? assistantSummaryCard(message.showSummary) : '';
       const action = !isUser && message.action ? assistantActionCard(message.action, message.id) : '';
       return bubble + summary + action;
@@ -3107,9 +3159,13 @@ ${foodGuidance}
     const total = action.items.reduce((sum, item) => sum + Number(item.grams || 0), 0);
     const totalEl = document.getElementById(`assistantActionTotal_${messageId}`);
     if (totalEl) totalEl.textContent = `${Math.round(total)} г`;
-    if (tareLine) tareLine.textContent = plate && action.appliedPlateId && tareEligible
-      ? `${Math.round(grossTotal)} г брутто − ${Math.round(tare)} г тари (${plate.name}) = ${Math.round(total)} г чистої їжі`
-      : plate && action.appliedPlateId ? 'Вага інгредієнтів задана окремо — тару не віднімаємо.' : 'Якщо вибереш посуд, його вагу буде віднято від загальної ваги.';
+    if (tareLine) {
+      const showTare = Boolean(plate && action.appliedPlateId);
+      tareLine.textContent = showTare
+        ? (tareEligible ? `${Math.round(grossTotal)} г − ${Math.round(tare)} г тари = ${Math.round(total)} г` : 'Вага інгредієнтів задана окремо — тару не віднімаємо.')
+        : '';
+      tareLine.classList.toggle('hidden', !showTare);
+    }
     persistAssistantMessages();
   }
 
@@ -3127,7 +3183,7 @@ ${foodGuidance}
     const target = document.getElementById(`assistantActionTotal_${messageId}`);
     if (target) target.textContent = `${Math.round(total)} г`;
     const tareLine = document.getElementById(`assistantActionTare_${messageId}`);
-    if (tareLine && msg.action.appliedPlateId) tareLine.textContent = `${Math.round(total + Number(msg.action.tareWeight || 0))} г брутто − ${Math.round(msg.action.tareWeight || 0)} г тари = ${Math.round(total)} г чистої їжі`;
+    if (tareLine && msg.action.appliedPlateId) tareLine.textContent = `${Math.round(total + Number(msg.action.tareWeight || 0))} г − ${Math.round(msg.action.tareWeight || 0)} г тари = ${Math.round(total)} г` ;
   }
 
   function confirmAssistantFood(messageId) {
@@ -3224,52 +3280,55 @@ ${foodGuidance}
 
   function releaseBarcodeVideoTracks() {
     const reader = document.getElementById('barcodeReader');
-    if (!reader) return;
-    reader.querySelectorAll('video').forEach(video => {
+    const streams = new Set();
+    if (barcodeActiveStream) streams.add(barcodeActiveStream);
+    reader?.querySelectorAll('video').forEach(video => {
+      if (video.srcObject && typeof video.srcObject.getTracks === 'function') streams.add(video.srcObject);
       try { video.pause(); } catch (ignored) {}
-      const stream = video.srcObject;
-      if (stream && typeof stream.getTracks === 'function') {
-        stream.getTracks().forEach(track => {
-          try { track.stop(); } catch (ignored) {}
-        });
-      }
+    });
+    streams.forEach(stream => {
+      if (!stream || typeof stream.getTracks !== 'function') return;
+      stream.getTracks().forEach(track => {
+        try { track.stop(); } catch (ignored) {}
+      });
+    });
+    reader?.querySelectorAll('video').forEach(video => {
       try { video.srcObject = null; } catch (ignored) {}
     });
+    barcodeActiveStream = null;
   }
 
-  async function openBarcodeSheet() {
-    if (document.getElementById('barcodeSheet').classList.contains('open') && (barcodeScannerStarting || barcodeScannerInstance)) return;
-    const session = ++barcodeSessionId;
-    scannedProduct = null;
-    document.getElementById('barcodeProductPanel').classList.add('hidden');
-    document.getElementById('barcodeManualInput').value = '';
-    document.getElementById('barcodeServingGrams').value = 100;
-    document.getElementById('barcodeTime').value = getCurrentTimeStr();
-    document.documentElement.classList.add('barcode-scanner-open');
-    setBarcodeStatus('Підключаю камеру… Дозволь доступ до камери, коли браузер запитає.');
-    document.getElementById('barcodeBackdrop').classList.add('visible');
-    document.getElementById('barcodeSheet').classList.add('visible');
-    requestAnimationFrame(() => {
-      if (session !== barcodeSessionId) return;
-      document.getElementById('barcodeBackdrop').classList.add('open');
-      document.getElementById('barcodeSheet').classList.add('open');
-    });
+  async function disposeBarcodeScanner(scanner) {
+    const reader = document.getElementById('barcodeReader');
+    const video = reader?.querySelector('video');
+    if (video?.srcObject) barcodeActiveStream = video.srcObject;
+    if (scanner) {
+      try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
+    }
+    // Stop the actual MediaStream before html5-qrcode clears/removes its video node.
+    releaseBarcodeVideoTracks();
+    if (scanner) {
+      try { scanner.clear(); } catch (ignored) {}
+    }
+    releaseBarcodeVideoTracks();
+  }
 
-    // Finish a previous start/stop cycle before requesting the camera again.
-    await stopBarcodeScanner();
-    if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
-
+  async function startBarcodeScanner(session) {
     let scanner = null;
+    let startPromise = null;
     try {
       const Scanner = await loadBarcodeLibrary();
-      if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
+      const sheet = document.getElementById('barcodeSheet');
+      if (session !== barcodeSessionId || !sheet?.classList.contains('visible') || document.hidden) return;
+      const reader = document.getElementById('barcodeReader');
+      if (reader) reader.innerHTML = '';
       const formats = window.Html5QrcodeSupportedFormats;
       const supported = formats ? [formats.EAN_13, formats.EAN_8, formats.UPC_A, formats.UPC_E, formats.CODE_128, formats.ITF].filter(v => v !== undefined) : undefined;
 
       scanner = new Scanner('barcodeReader', { formatsToSupport: supported, verbose: false });
       barcodeScannerInstance = scanner;
       barcodeScannerStarting = true;
-      const startPromise = scanner.start(
+      startPromise = scanner.start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 270, height: 140 }, aspectRatio: 1.7, rememberLastUsedCamera: false },
         code => handleBarcodeDetected(code),
@@ -3279,43 +3338,80 @@ ${foodGuidance}
       await startPromise;
 
       if (barcodeStartPromise === startPromise) barcodeStartPromise = null;
-      if (session !== barcodeSessionId || !document.getElementById('barcodeSheet').classList.contains('open')) return;
-      barcodeScannerStarting = false;
-      setBarcodeStatus('Камера активна. Наведи штрихкод у рамку.');
-    } catch (error) {
-      if (session !== barcodeSessionId) return;
-      barcodeScannerStarting = false;
-      barcodeStartPromise = null;
-      if (scanner) {
-        try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
-        try { scanner.clear(); } catch (ignored) {}
-        releaseBarcodeVideoTracks();
-        if (barcodeScannerInstance === scanner) barcodeScannerInstance = null;
+      const video = reader?.querySelector('video');
+      if (video?.srcObject) barcodeActiveStream = video.srcObject;
+      if (session !== barcodeSessionId || !sheet.classList.contains('visible') || document.hidden) {
+        if (barcodeScannerInstance === scanner) {
+          await stopBarcodeScanner();
+        } else if (barcodeStopPromise) {
+          await barcodeStopPromise;
+        }
+        return;
       }
-      setBarcodeStatus(`${error.message || 'Не вдалося запустити камеру.'} Можеш ввести код вручну. Переконайся, що сайт відкритий через HTTPS.`, 'error');
+      barcodeScannerStarting = false;
+      setBarcodeStatus('Наведи штрихкод у рамку.');
+    } catch (error) {
+      if (barcodeStartPromise === startPromise) barcodeStartPromise = null;
+      if (barcodeScannerInstance === scanner && scanner) {
+        await stopBarcodeScanner();
+      } else if (barcodeStopPromise) {
+        await barcodeStopPromise;
+      } else if (scanner) {
+        await disposeBarcodeScanner(scanner);
+      }
+      if (session !== barcodeSessionId || document.hidden) return;
+      barcodeScannerStarting = false;
+      setBarcodeStatus(`${error.message || 'Не вдалося запустити камеру.'} Перевір HTTPS або введи код вручну.`, 'error');
     }
   }
 
   async function stopBarcodeScanner() {
-    const pendingStart = barcodeStartPromise;
-    if (pendingStart) {
-      try { await pendingStart; } catch (ignored) {}
-    }
+    if (barcodeStopPromise) return barcodeStopPromise;
     const scanner = barcodeScannerInstance;
+    const pendingStart = barcodeStartPromise;
     barcodeScannerInstance = null;
-    if (scanner) {
-      try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
-      try { scanner.clear(); } catch (ignored) {}
-    }
-    releaseBarcodeVideoTracks();
-    barcodeScannerStarting = false;
     barcodeStartPromise = null;
-    const reader = document.getElementById('barcodeReader');
-    if (reader) reader.innerHTML = '';
+    barcodeScannerStarting = false;
+    barcodeStopPromise = (async () => {
+      if (pendingStart) {
+        try { await pendingStart; } catch (ignored) {}
+      }
+      await disposeBarcodeScanner(scanner);
+      const reader = document.getElementById('barcodeReader');
+      if (reader) reader.innerHTML = '';
+    })().finally(() => { barcodeStopPromise = null; });
+    return barcodeStopPromise;
+  }
+
+  async function openBarcodeSheet() {
+    const sheet = document.getElementById('barcodeSheet');
+    if (sheet.classList.contains('open') && (barcodeScannerStarting || barcodeScannerInstance)) return;
+    const session = ++barcodeSessionId;
+    barcodeResumePending = false;
+    barcodeResultHandled = false;
+    scannedProduct = null;
+    document.getElementById('barcodeProductPanel').classList.add('hidden');
+    document.getElementById('barcodeManualInput').value = '';
+    document.getElementById('barcodeServingGrams').value = 100;
+    document.getElementById('barcodeTime').value = getCurrentTimeStr();
+    document.documentElement.classList.add('barcode-scanner-open');
+    setBarcodeStatus('Підключаю камеру…');
+    document.getElementById('barcodeBackdrop').classList.add('visible');
+    sheet.classList.add('visible');
+    requestAnimationFrame(() => {
+      if (session !== barcodeSessionId) return;
+      document.getElementById('barcodeBackdrop').classList.add('open');
+      sheet.classList.add('open');
+    });
+
+    await stopBarcodeScanner();
+    if (session !== barcodeSessionId || !sheet.classList.contains('visible')) return;
+    await startBarcodeScanner(session);
   }
 
   async function closeBarcodeSheet() {
     const closingSession = ++barcodeSessionId;
+    barcodeResumePending = false;
     document.getElementById('barcodeBackdrop').classList.remove('open');
     document.getElementById('barcodeSheet').classList.remove('open');
     await stopBarcodeScanner();
@@ -3328,19 +3424,48 @@ ${foodGuidance}
   }
 
   async function handleBarcodeDetected(code) {
-    if (barcodeScannerStarting || !barcodeScannerInstance) return;
+    if (barcodeScannerStarting || !barcodeScannerInstance || barcodeResultHandled) return;
     const normalized = String(code || '').replace(/\s+/g, '');
     if (!/^\d{8,14}$/.test(normalized)) return;
-    const scanner = barcodeScannerInstance;
-    barcodeScannerInstance = null;
-    barcodeStartPromise = null;
-    try { if (scanner.isScanning) await scanner.stop(); } catch (ignored) {}
-    try { scanner.clear(); } catch (ignored) {}
-    releaseBarcodeVideoTracks();
+    barcodeResultHandled = true;
+    barcodeScannerStarting = false;
+    await stopBarcodeScanner();
     const reader = document.getElementById('barcodeReader');
     if (reader) reader.innerHTML = '';
     await lookupOpenFoodFacts(normalized);
   }
+
+  function suspendMediaForBackground() {
+    cancelVoiceRecognitionForBackground();
+    const sheet = document.getElementById('barcodeSheet');
+    const scannerWasActive = Boolean(barcodeScannerStarting || barcodeScannerInstance || barcodeStartPromise);
+    if (sheet?.classList.contains('open') && scannerWasActive) {
+      barcodeResumePending = true;
+      ++barcodeSessionId;
+      stopBarcodeScanner();
+    }
+  }
+
+  async function resumeBarcodeScannerAfterForeground() {
+    if (!barcodeResumePending || document.hidden) return;
+    barcodeResumePending = false;
+    const sheet = document.getElementById('barcodeSheet');
+    if (!sheet?.classList.contains('open')) return;
+    const session = ++barcodeSessionId;
+    setBarcodeStatus('Повторно підключаю камеру…');
+    await stopBarcodeScanner();
+    if (session !== barcodeSessionId || document.hidden || !sheet.classList.contains('open')) return;
+    await startBarcodeScanner(session);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) suspendMediaForBackground();
+    else resumeBarcodeScannerAfterForeground();
+  });
+  window.addEventListener('pagehide', suspendMediaForBackground);
+  window.addEventListener('pageshow', () => {
+    if (!document.hidden) resumeBarcodeScannerAfterForeground();
+  });
 
   async function lookupBarcodeManually() {
     const code = document.getElementById('barcodeManualInput').value.trim().replace(/\s+/g, '');
@@ -3352,7 +3477,7 @@ ${foodGuidance}
   }
 
   async function lookupOpenFoodFacts(code) {
-    setBarcodeStatus(`Шукаю продукт за кодом ${code} у базі Open Food Facts…`);
+    setBarcodeStatus('Шукаю продукт…');
     document.getElementById('barcodeProductPanel').classList.add('hidden');
     try {
       const url = `https://world.openfoodfacts.org/api/v3/product/${encodeURIComponent(code)}?fields=code,status,product_name,product_name_uk,product_name_en,brands,quantity,image_front_small_url,nutriments&lc=uk&cc=ua`;
@@ -3387,7 +3512,7 @@ ${foodGuidance}
       document.getElementById('barcodeTime').value = getCurrentTimeStr();
       document.getElementById('barcodeProductPanel').classList.remove('hidden');
       updateBarcodeServingPreview();
-      setBarcodeStatus('Продукт знайдено. Перевір дані, вкажи свою порцію та додай запис.', 'success');
+      setBarcodeStatus('Перевір дані та порцію.', 'success');
     } catch (error) {
       setBarcodeStatus(error.message || 'Не вдалося отримати дані продукту.', 'error');
     }
@@ -4058,7 +4183,6 @@ ${foodGuidance}
     if (tab === 'stats') renderStats();
     if (tab === 'assistant') {
       renderAssistantChat();
-      updateAssistantHeaderStatus();
       requestAnimationFrame(scrollAssistantToBottom);
     }
     if (tab === 'settings') populateSettingsInputs();
@@ -4234,6 +4358,7 @@ ${foodGuidance}
     const targetPx = Math.min(plotHeightPx - 6, Math.round((cfg.target / maxDataVal) * plotHeightPx));
     document.getElementById('chartTargetLine').style.bottom = `${targetPx}px`;
 
+    document.getElementById('barDetailPill').classList.add('hidden');
     const plotArea = document.getElementById('chartPlotArea');
     const xAxis = document.getElementById('chartXAxis');
     plotArea.querySelectorAll('.bar-slot').forEach(el => el.remove());
@@ -4252,6 +4377,7 @@ ${foodGuidance}
       slot.type = 'button';
       slot.className = 'bar-slot flex-1 h-full flex items-end justify-center group focus:outline-none z-20';
       slot.onclick = () => {
+        document.getElementById('barDetailPill').classList.remove('hidden');
         document.getElementById('barDetailLabel').textContent = point.fullTitle;
         document.getElementById('barDetailVal').textContent = `${formatSpacedInt(val)} ${statMacro === 'kcal' ? 'ккал' : 'г'}`;
         document.getElementById('barDetailVal').style.color = cfg.color;
@@ -4420,8 +4546,8 @@ ${foodGuidance}
     setup.classList.toggle('hidden', g.connected);
     document.getElementById('gdriveConnectedView').classList.toggle('hidden', !g.connected);
     setGdStatus(!g.connected ? 'Не підключено'
-      : g.needsAuth ? 'Потрібен повторний вхід — натисни «Синхронізувати зараз»'
-      : `Підключено · остання синхронізація: ${g.lastSync || '—'}`);
+      : g.needsAuth ? 'Потрібен повторний вхід'
+      : `Остання синхронізація: ${g.lastSync || 'ще не було'}`);
     const b = document.getElementById('gdriveAutoToggle');
     if (b) b.className = g.autoSync ? 'w-[46px] h-[28px] rounded-full bg-[#D8B98A] p-[2px] transition-colors flex items-center justify-end' : 'w-[46px] h-[28px] rounded-full bg-[#2C2C2E] p-[2px] transition-colors flex items-center justify-start';
   }
@@ -4471,7 +4597,7 @@ ${foodGuidance}
     if (!geminiAvailableModels.length) {
       select.innerHTML = current
         ? `<option value="${esc(current)}">${esc(current)} · збережена модель</option>`
-        : '<option value="">Спочатку завантаж моделі</option>';
+        : '<option value="">Завантаж моделі</option>';
       return;
     }
     select.innerHTML = geminiAvailableModels.map(model =>
@@ -4511,14 +4637,14 @@ ${foodGuidance}
     const key = document.getElementById('apiKeyInput').value.trim();
     const button = document.getElementById('loadGeminiModelsBtn');
     if (!key) {
-      setGeminiStatus('Спочатку встав API-ключ Google AI Studio.', true);
+      setGeminiStatus('Додай API-ключ.', true);
       showToast('Потрібен Gemini API-ключ', '⚠️');
       return;
     }
 
     button.disabled = true;
-    button.textContent = 'Завантажую список моделей…';
-    setGeminiStatus('Перевіряю ключ і запитую моделі в Gemini API…');
+    button.textContent = 'Завантажую…';
+    setGeminiStatus('Завантажую моделі…');
 
     try {
       const all = [];
@@ -4550,12 +4676,12 @@ ${foodGuidance}
       });
       geminiAvailableModels = [...byId.values()].sort(compareGeminiModels);
       if (!geminiAvailableModels.length) {
-        throw new Error('Ключ прийнято, але API не повернув текстових Gemini-моделей із підтримкою generateContent. Перевір доступ до моделей у Google AI Studio.');
+        throw new Error('Ключ прийнято, але Gemini-моделі недоступні для цього ключа. Перевір доступ у Google AI Studio.');
       }
 
       const savedChoice = document.getElementById('geminiModelSelect').value || appState.geminiModel;
       renderGeminiModelsSelect(savedChoice);
-      setGeminiStatus(`Ключ працює. Знайдено ${geminiAvailableModels.length} доступних текстових моделей. Обери модель і натисни «Зберегти налаштування ШІ».`);
+      setGeminiStatus(`Ключ працює · ${geminiAvailableModels.length} моделей доступно.`);
       showToast(`Знайдено моделей: ${geminiAvailableModels.length}`, '✅');
     } catch (error) {
       const message = String(error.message || 'Невідома помилка').replace(/\s+/g, ' ').slice(0, 220);
@@ -4563,7 +4689,7 @@ ${foodGuidance}
       showToast('Не вдалося перевірити Gemini', '⚠️');
     } finally {
       button.disabled = false;
-      button.textContent = 'Перевірити ключ і завантажити моделі';
+      button.textContent = 'Завантажити моделі';
     }
   }
 
@@ -4584,8 +4710,7 @@ ${foodGuidance}
     appState.geminiPrompt = prompt;
     geminiInputsDirty = false;
     persistState(true);
-    setGeminiStatus(key ? `Збережено. Активна модель: ${model}.` : 'Збережено. Без API-ключа використовуватиметься локальний парсер.');
-    updateAssistantHeaderStatus();
+    setGeminiStatus(key ? 'Збережено.' : 'Локальний режим.');
     showToast('Налаштування ШІ збережено', '✨');
   }
 
@@ -4594,19 +4719,19 @@ ${foodGuidance}
     const model = document.getElementById('geminiModelSelect').value || appState.geminiModel;
     const button = document.getElementById('testGeminiBtn');
     if (!key || !model) {
-      setGeminiStatus('Встав ключ, завантаж моделі та вибери одну з них перед тестом.', true);
+      setGeminiStatus('Додай ключ і вибери модель.', true);
       showToast('Немає ключа або моделі', '⚠️');
       return;
     }
     button.disabled = true;
     button.textContent = 'Перевіряю…';
-    setGeminiStatus(`Надсилаю короткий тестовий запит до ${model}…`);
+    setGeminiStatus('Перевіряю з’єднання…');
     try {
       const raw = await geminiRequest(model, key,
         'Ти перевіряєш з’єднання. Відповідай тільки коротким JSON-об’єктом.',
         'Поверни JSON: {"status":"ok"}');
       JSON.parse(raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim());
-      setGeminiStatus(`Тест успішний. Модель ${model} прийняла запит і повернула JSON.`);
+      setGeminiStatus('З’єднання працює.');
       showToast('Gemini працює', '✅');
     } catch (error) {
       const message = String(error.message || 'Невідома помилка').replace(/\s+/g, ' ').slice(0, 220);
@@ -4614,7 +4739,7 @@ ${foodGuidance}
       showToast('Gemini не пройшов тест', '⚠️');
     } finally {
       button.disabled = false;
-      button.textContent = 'Тестувати роботу ШІ';
+      button.textContent = "Перевірити з’єднання";
     }
   }
 
@@ -4685,7 +4810,7 @@ ${foodGuidance}
     const version = document.getElementById('appVersionLabel');
     if (version) version.textContent = `Версія ${APP_VERSION}`;
     if (!('serviceWorker' in navigator)) {
-      if (status) status.textContent = `Оновлення недоступне · ${APP_VERSION}`;
+      if (status) status.textContent = 'Оновлення недоступне.';
       showToast('Оновлення недоступне в цьому браузері', '⚠️');
       return;
     }
@@ -4720,11 +4845,11 @@ ${foodGuidance}
         return;
       }
 
-      if (status) status.textContent = `Версія ${APP_VERSION} · Застосунок актуальний`;
+      if (status) status.textContent = 'Застосунок актуальний.';
       showToast('Оновлень немає — у тебе остання версія', '✓');
     } catch (error) {
       console.error('PWA update failed:', error);
-      if (status) status.textContent = `Не вдалося перевірити · ${APP_VERSION}`;
+      if (status) status.textContent = 'Не вдалося перевірити оновлення.';
       showToast('Не вдалося оновити. Перевір інтернет', '⚠️');
     } finally {
       if (button) button.disabled = false;
@@ -4749,7 +4874,6 @@ ${foodGuidance}
     renderAssistantChat();
     const versionLabel = document.getElementById('appVersionLabel');
     if (versionLabel) versionLabel.textContent = `Версія ${APP_VERSION}`;
-    updateAssistantHeaderStatus();
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     const standaloneMode = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
     if (standaloneMode) document.documentElement.classList.add('pwa-standalone');

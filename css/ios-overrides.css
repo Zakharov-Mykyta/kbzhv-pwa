@@ -280,11 +280,11 @@
 }
 
 
-/* v18.2.9 — lift the tab buttons slightly above the iPhone Home Indicator zone.
-   Keep the nav surface and safe-area dimensions unchanged so no black gap returns. */
+/* v18.2.10 — use a subtle 3px lift; the previous 8px shift placed the icons too close to the nav top edge.
+   Keep the nav surface and safe-area dimensions unchanged. */
 @media screen and (max-width:479px) and (orientation:portrait) {
   html.pwa-standalone #appShell > nav.shrink-0 > button {
     position:relative !important;
-    top:-8px !important;
+    top:-3px !important;
   }
 }

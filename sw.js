@@ -1,4 +1,4 @@
-const CACHE = 'krykhta-v18.2.10';
+const CACHE = 'krykhta-v18.2.11';
 const SHELL = ['./', './index.html', './tailwind.css', './css/base.css', './css/components.css', './css/assistant.css', './css/ios-overrides.css', './manifest.webmanifest',
   './js/core.js', './js/diary.js', './js/food-input.js', './js/assistant.js', './js/barcode.js',
   './js/dish-editor.js', './js/dashboard.js', './js/gdrive.js', './js/settings.js', './js/pwa-update.js', './js/bootstrap.js',

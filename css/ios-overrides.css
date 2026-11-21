@@ -99,114 +99,109 @@
     .backup-action-primary { background:rgba(216,185,138,.12) !important; color:var(--accent) !important; }
     .composer-send,.assistant-action-primary { background:var(--accent) !important; color:#241D13 !important; }
 
-    /* iOS Home Screen PWA: keep the app inside the real viewport.
-       The safe-area belongs to the navigation bar, not to the shell height. */
+    /* ================================================================
+       Layout shell + bottom tab bar  (clean rewrite, replaces v18.2.x patches)
+
+       REQUIREMENTS in index.html:
+         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+       Without viewport-fit=cover iOS letterboxes the standalone PWA and
+       env(safe-area-inset-bottom) is 0 — CSS cannot paint that black strip.
+
+       Model: the stage fills the WHOLE screen (position:fixed; inset:0).
+       The nav is a normal flex item at the bottom of the shell:
+         height = 49px of tabs (native iOS size) + safe-area-inset-bottom.
+       No fake reserves, no stage extension, no per-button offsets.
+       ================================================================ */
     html.pwa-standalone,
     html.pwa-standalone body {
+      width:100%;
       height:100%;
       min-height:0;
       overflow:hidden;
+      overscroll-behavior:none;
     }
     html.pwa-standalone .desktop-stage {
       position:fixed !important;
       inset:0 !important;
-      height:100dvh !important;
-      min-height:100dvh !important;
-      width:100vw !important;
+      width:auto !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+      padding:0 !important;
       overflow:hidden !important;
       background:#000000 !important;
     }
     html.pwa-standalone .iphone-shell {
+      width:100% !important;
       height:100% !important;
       min-height:0 !important;
       max-height:none !important;
-      box-sizing:border-box;
-      overflow:hidden;
-    }
-    html.pwa-standalone #appShell > nav.shrink-0 {
-      position:relative !important;
-      inset:auto !important;
-      bottom:auto !important;
-      flex:0 0 auto !important;
-      flex-shrink:0 !important;
-      min-height:76px;
-      padding-top:9px !important;
-      padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
-      margin:0 !important;
-      z-index:60;
-      background:#1C1C1E !important;
-      -webkit-backdrop-filter:none !important;
-      backdrop-filter:none !important;
+      padding-top:env(safe-area-inset-top, 0px) !important;
+      padding-bottom:0 !important;
+      box-sizing:border-box !important;
+      overflow:hidden !important;
+      background:#000000 !important;
     }
     html.pwa-standalone #appShell > main {
       min-height:0;
       overscroll-behavior:contain;
     }
-    /* iOS tab bar: opaque surface continues through the Home Indicator safe area. */
-    html.pwa-standalone,
-    html.pwa-standalone body { width:100%; min-height:100%; }
-    html.pwa-standalone .iphone-shell { width:100%; height:100% !important; padding-bottom:0 !important; }
-    html.pwa-standalone #appShell > nav.shrink-0::after { content:none; }
-    html.barcode-scanner-open #appShell > nav.shrink-0 { display:none !important; }
-    @media not all and (min-width:480px) and (hover:hover) and (pointer:fine) {
-      .desktop-stage { position:fixed !important; inset:0 !important; height:100dvh !important; min-height:100dvh !important; }
-      #appShell > nav.shrink-0 {
-        background:#1C1C1E !important;
-        padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
-      }
-    }
 
-    /* iPhone portrait: one compact tab bar, with the Home Indicator area painted by the same surface. */
-    @media screen and (max-width:479px) and (orientation:portrait) {
-      .desktop-stage {
+    /* Regular Safari tab on a phone (not installed): same idea via dvh. */
+    @media screen and (max-width:479px) {
+      html:not(.pwa-standalone) .desktop-stage {
+        position:fixed !important;
+        inset:0 !important;
         height:100dvh !important;
         min-height:0 !important;
         padding:0 !important;
         overflow:hidden !important;
       }
-      .iphone-shell {
-        height:100dvh !important;
+      html:not(.pwa-standalone) .iphone-shell {
+        height:100% !important;
         min-height:0 !important;
         padding-top:env(safe-area-inset-top, 0px) !important;
         padding-bottom:0 !important;
         box-sizing:border-box !important;
       }
-      #appShell > nav.shrink-0,
-      html.pwa-standalone #appShell > nav.shrink-0 {
-        position:relative !important;
-        inset:auto !important;
-        bottom:auto !important;
-        flex:0 0 auto !important;
-        flex-shrink:0 !important;
-        height:calc(50px + env(safe-area-inset-bottom, 0px)) !important;
-        min-height:0 !important;
-        max-height:none !important;
-        padding:3px 8px calc(env(safe-area-inset-bottom, 0px) + 2px) !important;
-        margin:0 !important;
-        display:grid !important;
-        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-        grid-template-rows:44px !important;
-        align-items:stretch !important;
-        box-sizing:border-box !important;
-        background:#1C1C1E !important;
-        background-image:none !important;
-        border-top:1px solid rgba(255,255,255,.08) !important;
-        -webkit-backdrop-filter:none !important;
-        backdrop-filter:none !important;
-        transform:none;
-      }
-      #appShell > nav.shrink-0 > button {
-        width:100%;
-        height:44px;
-        min-height:44px;
-        min-width:0;
-        padding:0 !important;
-        margin:0 !important;
-        align-self:start;
-        justify-content:center;
-        gap:2px !important;
-      }
     }
+
+    /* Tab bar: 4 equal columns, 49px row, Home Indicator area is padding of the SAME surface. */
+    #appShell > nav.shrink-0,
+    html.pwa-standalone #appShell > nav.shrink-0 {
+      position:relative !important;
+      inset:auto !important;
+      flex:0 0 auto !important;
+      display:grid !important;
+      grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+      grid-template-rows:49px !important;
+      grid-auto-rows:0 !important;
+      align-items:stretch !important;
+      height:auto !important;
+      min-height:0 !important;
+      max-height:none !important;
+      margin:0 !important;
+      padding:0 max(8px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(8px, env(safe-area-inset-left, 0px)) !important;
+      box-sizing:border-box !important;
+      background:#1C1C1E !important;
+      background-image:none !important;
+      border-top:1px solid rgba(255,255,255,.08) !important;
+      -webkit-backdrop-filter:none !important;
+      backdrop-filter:none !important;
+      z-index:60;
+    }
+    #appShell > nav.shrink-0 > button {
+      width:100%;
+      height:49px;
+      min-width:0;
+      min-height:0;
+      padding:0 !important;
+      margin:0 !important;
+      justify-content:center;
+      gap:2px !important;
+    }
+    html.pwa-standalone #appShell > nav.shrink-0::after { content:none; }
+    html.barcode-scanner-open #appShell > nav.shrink-0 { display:none !important; }
 
     /* Keep assistant messages legible: normal word boundaries, no mid-word splitting. */
     .assistant-bubble-user { background:#D8B98A !important; color:#241D13 !important; }
@@ -231,98 +226,3 @@
 
 
     ::selection { background:rgba(216,185,138,.32); color:#FFFFFF; }
-
-
-/* v18.2.9 — compensate for the shortened standalone iOS viewport.
-   On affected iOS releases, 100dvh in an installed PWA can stop at the
-   top of the Home Indicator safe area. Extending only the nav is ineffective
-   because .desktop-stage clips its children with overflow:hidden. Extend the
-   fixed stage itself by the bottom inset, then let the flex shell fill it.
-   Also paint the document behind the stage with the tab-bar surface color so
-   any WebKit-owned area outside the page viewport blends with the tab bar. */
-:root { --ios-pwa-bottom-inset: env(safe-area-inset-bottom, 0px); }
-
-@media screen and (max-width:479px) and (orientation:portrait) {
-  html.pwa-standalone,
-  html.pwa-standalone body {
-    background-color:#1C1C1E !important;
-  }
-
-  html.pwa-standalone .desktop-stage {
-    position:fixed !important;
-    inset:0 0 auto 0 !important;
-    height:calc(100dvh + var(--ios-pwa-bottom-inset, 0px)) !important;
-    min-height:calc(100dvh + var(--ios-pwa-bottom-inset, 0px)) !important;
-    max-height:none !important;
-    overflow:hidden !important;
-    background:#000000 !important;
-  }
-
-  html.pwa-standalone .iphone-shell {
-    height:100% !important;
-    min-height:100% !important;
-    max-height:none !important;
-    padding-top:env(safe-area-inset-top, 0px) !important;
-    padding-bottom:0 !important;
-    overflow:hidden !important;
-    background:#000000 !important;
-  }
-
-  html.pwa-standalone #appShell > nav.shrink-0 {
-    height:calc(50px + var(--ios-pwa-bottom-inset, 0px)) !important;
-    min-height:calc(50px + var(--ios-pwa-bottom-inset, 0px)) !important;
-    padding-top:3px !important;
-    padding-bottom:calc(var(--ios-pwa-bottom-inset, 0px) + 2px) !important;
-    box-sizing:border-box !important;
-    background:#1C1C1E !important;
-    background-image:none !important;
-  }
-}
-
-
-/* v18.2.13 — reserve a real Home Indicator zone inside the bottom tab bar.
-   Some iOS standalone configurations report safe-area-inset-bottom as 0.
-   A minimum 34px reserved zone keeps tab labels above the system Home Indicator
-   without translating buttons or moving the tab bar background. */
-@media screen and (max-width:479px) and (orientation:portrait) {
-  :root {
-    --ios-home-indicator-reserve: max(env(safe-area-inset-bottom, 0px), 34px);
-  }
-
-  #appShell > nav.shrink-0 {
-    height:calc(50px + var(--ios-home-indicator-reserve)) !important;
-    min-height:calc(50px + var(--ios-home-indicator-reserve)) !important;
-    max-height:none !important;
-    padding:3px 8px calc(var(--ios-home-indicator-reserve) + 2px) !important;
-    grid-template-rows:44px !important;
-    align-content:start !important;
-    box-sizing:border-box !important;
-  }
-
-  #appShell > nav.shrink-0 > button {
-    position:static !important;
-    top:auto !important;
-    transform:none !important;
-    margin:0 !important;
-    align-self:start !important;
-    height:44px !important;
-    min-height:44px !important;
-  }
-}
-
-
-/* v18.2.14 — lift the complete tab bar (buttons + surface) above Home Indicator.
-   v18.2.13 extended both .desktop-stage and nav by the same safe-area amount,
-   so the flex layout cancelled the change and left the buttons at the old Y.
-   Keep the stage extension for painting the bottom edge, but add 14px only to
-   the nav flex item. Its bottom edge stays attached to the shell; its top edge
-   and all four tab buttons move up together. No per-button offsets are used. */
-@media screen and (max-width:479px) and (orientation:portrait) {
-  html.pwa-standalone #appShell > nav.shrink-0 {
-    height:calc(50px + var(--ios-home-indicator-reserve, 34px) + 14px) !important;
-    min-height:calc(50px + var(--ios-home-indicator-reserve, 34px) + 14px) !important;
-    max-height:none !important;
-    flex:0 0 auto !important;
-    align-content:start !important;
-  }
-}

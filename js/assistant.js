@@ -254,7 +254,9 @@ ${foodGuidance}
       isGroup: true, items, selectedIngredientIndex: Math.max(0, Math.min(Number(draft.selectedIngredientIndex ?? action.selectedIngredientIndex) || 0, items.length - 1)),
       meal: draft.meal || action.meal || 'snack', plateId,
       grossGrams: Number(draft.grossGrams || action.grossGrams) || (selectedPlate ? totalGrams + Number(selectedPlate.weight || 0) : null),
-      totalGrams, tareEligible: action.tareEligible !== false, isSaving: false
+      totalGrams, tareEligible: action.tareEligible !== false,
+      sourceGrossGrams: Number(action.sourceGrossGrams) || null,
+      isSaving: false
     };
   }
 
@@ -812,7 +814,9 @@ ${foodGuidance}
       const result = await requestAssistantResponse(text || 'Проаналізуй їжу на фото. Якщо я явно прошу занести її до щоденника, підготуй запис; інакше просто опиши побачене та приблизне КБЖВ.', imageDataUrl);
       if (result.type === 'add_food') {
         const id = `action_${Date.now()}_${++assistantPendingCounter}`;
-        const action = { items: result.items.map(item => ({...item})), grossItems: result.items.map(item => ({...item})), originalNames: result.items.map(item => String(item.name || '')), grossGrams: result.items.reduce((sum, item) => sum + Number(item.grams || 0), 0), tareEligible: !hasMultipleExplicitFoodWeights(text), meal: result.meal, time: result.time, date: result.date || selectedDateKey, status: 'pending' };
+        const hasSeparateItemWeights = hasMultipleExplicitFoodWeights(text);
+        const sourceGrossGrams = !hasSeparateItemWeights ? parseExplicitFoodGrams(text) : null;
+        const action = { items: result.items.map(item => ({...item})), grossItems: result.items.map(item => ({...item})), originalNames: result.items.map(item => String(item.name || '')), grossGrams: result.items.reduce((sum, item) => sum + Number(item.grams || 0), 0), sourceGrossGrams, tareEligible: !hasSeparateItemWeights, meal: result.meal, time: result.time, date: result.date || selectedDateKey, status: 'pending' };
         const actionMessage = addAssistantMessage('assistant', result.reply || 'Підготував позиції для щоденника. Перевір їх перед додаванням.', { action, id });
         openAssistantActionModal(actionMessage.id);
       } else {

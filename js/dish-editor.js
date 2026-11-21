@@ -133,6 +133,9 @@
       const gross = editingItemState.totalGrams + tareWeight;
       dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
+      if (editingItemState.context === 'assistant' && editingItemState.sourceGrossGrams != null) {
+        editingItemState.sourceGrossGrams = gross;
+      }
       const hint = dishEditorElement('editTareFormulaHint');
       hint.textContent = getDishEditorTareHint(gross, plate, editingItemState.totalGrams);
       hint.classList.remove('hidden');
@@ -366,13 +369,37 @@
     const netNow = editingItemState.isGroup ? getDishTotalGrams() : (parseInt(dishEditorElement('editItemGrams').value, 10) || 100);
     const plateId = dishEditorElement('editItemPlateSelect').value;
     const plate = appState.plates.find(p => p.id === plateId);
+    const previousPlateId = editingItemState.plateId || '';
     editingItemState.plateId = plateId;
     if (plate) {
-      const gross = netNow + getDishEditorTareWeight(plate);
+      const tareWeight = getDishEditorTareWeight(plate);
+      const explicitGross = editingItemState.context === 'assistant' &&
+        editingItemState.tareEligible !== false &&
+        Number(editingItemState.sourceGrossGrams) > 0
+        ? Math.round(Number(editingItemState.sourceGrossGrams))
+        : null;
+      const gross = explicitGross || netNow + tareWeight;
+      const net = gross - tareWeight;
+      if (editingItemState.isGroup && net < editingItemState.items.length) {
+        editingItemState.plateId = previousPlateId;
+        dishEditorElement('editItemPlateSelect').value = previousPlateId;
+        showToast('Після віднімання тари має залишитися достатньо ваги для всіх інгредієнтів', '⚠️');
+        return;
+      }
       dishEditorElement('editItemGrossGrams').value = gross;
       editingItemState.grossGrams = gross;
+      if (explicitGross != null && editingItemState.isGroup) {
+        setDishTotalGrams(net);
+      } else if (!explicitGross && editingItemState.context === 'assistant' && editingItemState.sourceGrossGrams != null) {
+        editingItemState.sourceGrossGrams = gross;
+      }
     } else {
       editingItemState.grossGrams = null;
+      if (previousPlateId && editingItemState.context === 'assistant' &&
+          editingItemState.tareEligible !== false && Number(editingItemState.sourceGrossGrams) > 0 &&
+          editingItemState.isGroup) {
+        setDishTotalGrams(Math.round(Number(editingItemState.sourceGrossGrams)));
+      }
     }
     syncEditPlateUI(netNow);
     if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
@@ -394,6 +421,9 @@
       updateEditPreview(netVal);
     }
     editingItemState.grossGrams = grossVal;
+    if (editingItemState.context === 'assistant' && editingItemState.sourceGrossGrams != null) {
+      editingItemState.sourceGrossGrams = grossVal;
+    }
     if (editingItemState.context === 'assistant') saveAssistantActionDraft(editingItemState.messageId);
   }
 
